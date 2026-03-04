@@ -1,5 +1,9 @@
 <script>
-  let { lesson, hasNext, onNext, onBack } = $props()
+  let { lesson, hasNext, stats, onNext, onBack } = $props()
+
+  function formatTime(s) {
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+  }
 
   $effect(() => {
     function onKeydown(e) {
@@ -16,6 +20,12 @@
     <div class="check">[ done ]</div>
     <h2>lesson complete</h2>
     <p class="lesson-name">{lesson.title}</p>
+    {#if stats}
+      <div class="stats">
+        <div class="stat"><span class="stat-value">{stats.wpm}</span><span class="stat-label">wpm</span></div>
+        <div class="stat"><span class="stat-value">{formatTime(stats.elapsed)}</span><span class="stat-label">time</span></div>
+      </div>
+    {/if}
     <div class="actions">
       {#if hasNext}
         <button class="btn-primary" onclick={onNext}>next lesson →</button>
@@ -59,6 +69,30 @@
     font-size: 1.25rem;
     font-weight: 500;
     color: var(--correct);
+  }
+
+  .stats {
+    display: flex;
+    gap: 2rem;
+    margin: 0.5rem 0;
+  }
+
+  .stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.2rem;
+  }
+
+  .stat-value {
+    font-size: 1.5rem;
+    color: var(--correct);
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+    color: var(--muted);
+    letter-spacing: 0.08em;
   }
 
   .lesson-name {

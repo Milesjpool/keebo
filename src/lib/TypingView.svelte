@@ -6,9 +6,21 @@
   let lineIndex = $state(0)
   let typed = $state('')
   let shaking = $state(false)
+  let startTime = $state(null)
+  let elapsed = $state(0)
 
   const line = $derived(lesson.lines[lineIndex])
   const total = $derived(lesson.lines.length)
+
+  $effect(() => {
+    if (!startTime) return
+    const id = setInterval(() => { elapsed = Math.floor((Date.now() - startTime) / 1000) }, 500)
+    return () => clearInterval(id)
+  })
+
+  function formatTime(s) {
+    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
+  }
 
   $effect(() => {
     function onKeydown(e) {
@@ -24,7 +36,9 @@
             lineIndex++
             typed = ''
           } else {
-            onComplete()
+            const secs = startTime ? (Date.now() - startTime) / 1000 : 1
+            const chars = lesson.lines.reduce((n, l) => n + l.length, 0)
+            onComplete({ wpm: Math.round((chars / 5) / (secs / 60)), elapsed: Math.round(secs) })
           }
         } else {
           if (!shaking) {
@@ -42,6 +56,7 @@
       }
 
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (!startTime) startTime = Date.now()
         if (typed.length < line.length) {
           typed += e.key
         }
@@ -64,9 +79,21 @@
 <div class="typing-view">
   <nav>
     <button class="back-btn" onclick={onBack}>← back</button>
-    <span class="lesson-title">{lesson.title}</span>
-    <span class="line-progress">{lineIndex + 1} / {total}</span>
+    <span class="timer">{startTime ? formatTime(elapsed) : ''}</span>
+    <span class="accuracy"></span>
   </nav>
+
+  <div class="progress-bar">
+    {#each lesson.lines as _, i}
+      <div class="segment">
+        <div class="fill" style:width="{
+          i < lineIndex ? 100 :
+          i === lineIndex ? typed.length / line.length * 100 :
+          0
+        }%"></div>
+      </div>
+    {/each}
+  </div>
 
   <main>
     <div class="line-wrap" class:shaking>
@@ -103,14 +130,18 @@
     color: var(--text);
   }
 
-  .lesson-title {
+  .timer {
     font-size: 0.875rem;
     color: var(--muted);
+    min-width: 2.5rem;
+    text-align: center;
   }
 
-  .line-progress {
+  .accuracy {
     font-size: 0.875rem;
     color: var(--muted);
+    min-width: 3rem;
+    text-align: right;
   }
 
   main {
@@ -121,6 +152,24 @@
     justify-content: center;
     gap: 3rem;
     padding: 2rem;
+  }
+
+  .progress-bar {
+    display: flex;
+    gap: 2px;
+    height: 3px;
+  }
+
+  .segment {
+    flex: 1;
+    background: var(--border);
+    overflow: hidden;
+  }
+
+  .fill {
+    height: 100%;
+    background: var(--accent);
+    transition: width 0.05s linear;
   }
 
   .line-wrap {

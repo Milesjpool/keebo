@@ -78,8 +78,11 @@
     screen = 'typing'
   }
 
-  function completeLesson() {
+  let lastStats = $state(null)
+
+  function completeLesson(stats) {
     progress[currentFlatIdx] = true
+    lastStats = stats
     screen = 'complete'
   }
 
@@ -144,6 +147,7 @@
   <LessonComplete
     lesson={flatLessons[currentFlatIdx]}
     hasNext={currentFlatIdx < flatLessons.length - 1}
+    stats={lastStats}
     onNext={nextLesson}
     onBack={goToLessons}
   />
