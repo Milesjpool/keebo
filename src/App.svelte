@@ -153,6 +153,11 @@
   />
 {/if}
 
+<div class="mobile-message">
+  <p>keebo needs a real keyboard ⌨️</p>
+  <p>come back on a laptop or desktop</p>
+</div>
+
 <a class="author" href="https://www.milesjpool.com" target="_blank" rel="noreferrer">👾 Miles</a>
 
 <p class="footer">🤖 <strong>AI</strong> Coded, Human Approved</p>
@@ -205,5 +210,35 @@
   .label {
     color: var(--muted);
     min-width: 0;
+  }
+
+  .mobile-message {
+    display: none;
+  }
+
+  @media (hover: none) and (pointer: coarse) {
+    .mobile-message {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 100;
+      text-align: center;
+      padding: 2rem;
+    }
+
+    .mobile-message p:first-child {
+      font-size: 1.25rem;
+      color: var(--text);
+    }
+
+    .mobile-message p:last-child {
+      font-size: 0.875rem;
+      color: var(--muted);
+    }
   }
 </style>

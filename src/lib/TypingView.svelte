@@ -8,10 +8,6 @@
   let shaking = $state(false)
   let startTime = $state(null)
   let elapsed = $state(0)
-  let inputEl = $state(null)
-
-  $effect(() => { inputEl?.focus() })
-
   const line = $derived(lesson.lines[lineIndex])
   const total = $derived(lesson.lines.length)
 
@@ -58,19 +54,15 @@
         return
       }
 
+      if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
+        if (!startTime) startTime = Date.now()
+        if (typed.length < line.length) typed += e.key
+      }
     }
 
     window.addEventListener('keydown', onKeydown)
     return () => window.removeEventListener('keydown', onKeydown)
   })
-
-  function onInput(e) {
-    const char = e.data
-    if (!char) return
-    if (!startTime) startTime = Date.now()
-    if (typed.length < line.length) typed += char
-    inputEl.value = ''
-  }
 
   const currentChar = $derived(typed.length < line.length ? line[typed.length] : '\n')
 
@@ -100,9 +92,7 @@
     {/each}
   </div>
 
-  <input bind:this={inputEl} class="hidden-input" oninput={onInput} autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false" />
-
-  <main onclick={() => inputEl?.focus()}>
+  <main>
     <div class="line-wrap" class:shaking>
       <div class="line-display">
         {#each line.split('') as char, i}<span class="char {charState(i)}">{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="char" class:cursor={typed.length === line.length} style:visibility={typed.length === line.length ? 'visible' : 'hidden'}>↵</span>
@@ -177,14 +167,6 @@
     height: 100%;
     background: var(--accent);
     transition: width 0.05s linear;
-  }
-
-  .hidden-input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-    width: 0;
-    height: 0;
   }
 
   .line-wrap {
