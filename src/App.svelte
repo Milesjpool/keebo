@@ -155,7 +155,7 @@
 
 <a class="author" href="https://www.milesjpool.com" target="_blank" rel="noreferrer">👾 Miles</a>
 
-<p class="footer">🤖 AI Coded, Human Approved</p>
+<p class="footer">🤖 <strong>AI</strong> Coded, Human Approved</p>
 
 <button class="theme-toggle" onclick={e => { toggleTheme(); e.currentTarget.blur() }}>
   <span class="label">{label}</span>{ICONS[theme]}
