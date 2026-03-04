@@ -1,4 +1,6 @@
-# keebo
+![keebo](.github/keebo.png)
+
+[![Deploy](https://github.com/Milesjpool/keebo/actions/workflows/deploy.yml/badge.svg)](https://github.com/Milesjpool/keebo/actions/workflows/deploy.yml)
 
 A clean, keyboard-first touch typing trainer — step by step.
 
