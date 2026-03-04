@@ -78,11 +78,39 @@
   />
 {/if}
 
-<button class="theme-toggle" onclick={toggleTheme}>
+<a class="author" href="https://www.milesjpool.com" target="_blank" rel="noreferrer">👾 Miles</a>
+
+<p class="footer">🤖 AI Coded, Human Approved</p>
+
+<button class="theme-toggle" onclick={e => { toggleTheme(); e.currentTarget.blur() }}>
   <span class="label">{label}</span>{ICONS[theme]}
 </button>
 
 <style>
+  .author {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 1.75rem;
+    font-size: 0.75rem;
+    color: var(--muted);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+
+  .author:hover {
+    color: var(--text);
+  }
+
+  .footer {
+    position: fixed;
+    bottom: 1.5rem;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    color: var(--muted);
+    white-space: nowrap;
+  }
+
   .theme-toggle {
     position: fixed;
     bottom: 1.5rem;

@@ -1,5 +1,36 @@
 <script>
   let { lessons, progress, onSelect } = $props()
+
+  let focused = $state(0)
+
+  function isLocked(i) {
+    return i > 0 && !progress[i - 1]
+  }
+
+  const lastUnlocked = $derived(() => {
+    const idx = lessons.findIndex((_, i) => isLocked(i))
+    return idx === -1 ? lessons.length - 1 : idx - 1
+  })
+
+  $effect(() => {
+    function onKeydown(e) {
+      if (e.key === 'ArrowDown' || e.key === 's') {
+        e.preventDefault()
+        focused = Math.min(focused + 1, lastUnlocked())
+      } else if (e.key === 'ArrowUp' || e.key === 'w') {
+        e.preventDefault()
+        focused = Math.max(focused - 1, 0)
+      } else if (e.key === 'Enter') {
+        if (!isLocked(focused)) onSelect(focused)
+      } else if (/^[1-9]$/.test(e.key)) {
+        const idx = parseInt(e.key) - 1
+        if (idx < lessons.length) focused = idx
+      }
+    }
+
+    window.addEventListener('keydown', onKeydown)
+    return () => window.removeEventListener('keydown', onKeydown)
+  })
 </script>
 
 <div class="lesson-list">
@@ -11,13 +42,15 @@
   <ul>
     {#each lessons as lesson, i}
       {@const done = progress[i]}
-      {@const locked = i > 0 && !progress[i - 1]}
+      {@const locked = isLocked(i)}
       <li>
         <button
           class="lesson-btn"
           class:done
           class:locked
-          onclick={() => onSelect(i)}
+          class:focused={focused === i}
+          onclick={() => { focused = i; if (!locked) onSelect(i) }}
+          onmouseenter={() => focused = i}
           disabled={locked}
         >
           <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
@@ -78,13 +111,17 @@
     transition: border-color 0.15s, background 0.15s;
   }
 
-  .lesson-btn:not(.locked):hover {
+  .lesson-btn:not(.locked).focused {
     border-color: var(--accent);
     background: var(--surface-hover);
   }
 
   .lesson-btn.done {
     border-color: var(--border-done);
+  }
+
+  .lesson-btn.done.focused {
+    border-color: var(--accent);
   }
 
   .lesson-btn.locked {
