@@ -1,0 +1,46 @@
+[
+  {
+    "id": "lesson-1",
+    "title": "Home Row: Left Hand",
+    "keys": ["a", "s", "d", "f"],
+    "lines": [
+      "aaa sss ddd fff",
+      "as as as df df df",
+      "dad fad sad add",
+      "dads fads adds salads"
+    ]
+  },
+  {
+    "id": "lesson-2",
+    "title": "Home Row: Right Hand",
+    "keys": ["j", "k", "l", ";"],
+    "lines": [
+      "jjj kkk lll ;;;",
+      "jk jl j; kl k; l;",
+      "jkl; jkl; jkl;",
+      "jj kk ll ;; jkl;"
+    ]
+  },
+  {
+    "id": "lesson-3",
+    "title": "Home Row: Both Hands",
+    "keys": ["a", "s", "d", "f", "j", "k", "l", ";"],
+    "lines": [
+      "asdf jkl; asdf jkl;",
+      "add all ask fall flask",
+      "dad lads flask salsa",
+      "alfalfa falls lads asks"
+    ]
+  },
+  {
+    "id": "lesson-4",
+    "title": "Extend: G and H",
+    "keys": ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";"],
+    "lines": [
+      "ggg hhh ggg hhh",
+      "ash hash gash had has",
+      "glad flag half shall flash",
+      "dash lash shag gals hall"
+    ]
+  }
+]

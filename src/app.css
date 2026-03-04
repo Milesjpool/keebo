@@ -1,0 +1,54 @@
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --bg: #111;
+  --surface: #1c1c1c;
+  --border: #2a2a2a;
+  --text: #c8c8c8;
+  --dim: #444;
+  --correct: #e0e0e0;
+  --error-bg: rgba(224, 108, 117, 0.12);
+  --error: #e06c75;
+  --cursor-bg: #3b82f6;
+  --cursor-text: #fff;
+  --accent: #3b82f6;
+  --muted: #666;
+  --green: #6a9955;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: ui-monospace, 'Cascadia Code', 'SF Mono', 'Fira Code', monospace;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+  color: inherit;
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20%       { transform: translateX(-10px); }
+  40%       { transform: translateX(10px); }
+  60%       { transform: translateX(-6px); }
+  80%       { transform: translateX(6px); }
+}
+
+@keyframes blink {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0; }
+}
