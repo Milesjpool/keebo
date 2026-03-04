@@ -1,33 +1,38 @@
 <script>
-  let { lessons, progress, onSelect } = $props()
-
-  let focused = $state(0)
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0) } = $props()
 
   function isLocked(i) {
-    return i > 0 && !progress[i - 1]
+    const flatIdx = group.lessons[i].flatIdx
+    return flatIdx > 0 && !progress[flatIdx - 1]
   }
 
   const lastUnlocked = $derived(() => {
-    const idx = lessons.findIndex((_, i) => isLocked(i))
-    return idx === -1 ? lessons.length - 1 : idx - 1
+    for (let i = 0; i < group.lessons.length; i++) {
+      if (isLocked(i)) return Math.max(0, i - 1)
+    }
+    return group.lessons.length - 1
   })
+
+  const doneCount = $derived(
+    group.lessons.filter(l => progress[l.flatIdx]).length
+  )
 
   $effect(() => {
     function onKeydown(e) {
+      if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'a') { onBack(); return }
       if (e.key === 'ArrowDown' || e.key === 's') {
         e.preventDefault()
         focused = Math.min(focused + 1, lastUnlocked())
       } else if (e.key === 'ArrowUp' || e.key === 'w') {
         e.preventDefault()
         focused = Math.max(focused - 1, 0)
-      } else if (e.key === 'Enter') {
-        if (!isLocked(focused)) onSelect(focused)
+      } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
+        if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
       } else if (/^[1-9]$/.test(e.key)) {
         const idx = parseInt(e.key) - 1
-        if (idx < lessons.length) focused = idx
+        if (idx < group.lessons.length) focused = idx
       }
     }
-
     window.addEventListener('keydown', onKeydown)
     return () => window.removeEventListener('keydown', onKeydown)
   })
@@ -40,24 +45,38 @@
   </header>
 
   <ul>
-    {#each lessons as lesson, i}
-      {@const done = progress[i]}
+    <!-- Group header card — acts as back button -->
+    <li>
+      <button class="group-card" onclick={onBack}>
+        <span class="group-num">{String(groupIdx + 1).padStart(2, '0')}</span>
+        <div class="group-info">
+          <span class="group-title">{group.title}</span>
+          <span class="group-keys">{group.keys.join('  ')}</span>
+        </div>
+        <span class="group-status">
+          {#if doneCount === group.lessons.length}done
+          {:else if doneCount > 0}{doneCount}/{group.lessons.length}
+          {:else}←{/if}
+        </span>
+      </button>
+    </li>
+
+    <!-- Lesson cards, tabbed in -->
+    {#each group.lessons as lesson, i}
+      {@const done = progress[lesson.flatIdx]}
       {@const locked = isLocked(i)}
-      <li>
+      <li class="lesson-item">
         <button
           class="lesson-btn"
           class:done
           class:locked
           class:focused={focused === i}
-          onclick={() => { focused = i; if (!locked) onSelect(i) }}
+          onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
           onmouseenter={() => focused = i}
           disabled={locked}
         >
           <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
-          <div class="lesson-info">
-            <span class="lesson-title">{lesson.title}</span>
-            <span class="lesson-keys">{lesson.keys.join('  ')}</span>
-          </div>
+          <span class="lesson-subtitle">{lesson.subtitle}</span>
           <span class="lesson-status">
             {#if done}done{:else if locked}locked{:else}start{/if}
           </span>
@@ -98,6 +117,60 @@
     gap: 0.5rem;
   }
 
+  /* Group header card */
+  .group-card {
+    display: flex;
+    align-items: center;
+    gap: 1.25rem;
+    width: 100%;
+    padding: 1rem 1.25rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-align: left;
+    opacity: 0.7;
+    transition: opacity 0.15s, border-color 0.15s;
+  }
+
+  .group-card:hover {
+    opacity: 1;
+    border-color: var(--accent);
+  }
+
+  .group-num {
+    font-size: 0.75rem;
+    color: var(--muted);
+    min-width: 1.5rem;
+  }
+
+  .group-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+
+  .group-title {
+    font-size: 0.9rem;
+    color: var(--text);
+  }
+
+  .group-keys {
+    font-size: 0.75rem;
+    color: var(--muted);
+    letter-spacing: 0.15em;
+  }
+
+  .group-status {
+    font-size: 0.75rem;
+    color: var(--muted);
+  }
+
+  /* Lesson cards */
+  .lesson-item {
+    padding-left: 1.5rem;
+  }
+
   .lesson-btn {
     display: flex;
     align-items: center;
@@ -135,22 +208,10 @@
     min-width: 1.5rem;
   }
 
-  .lesson-info {
+  .lesson-subtitle {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
-  }
-
-  .lesson-title {
     font-size: 0.9rem;
     color: var(--text);
-  }
-
-  .lesson-keys {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
   }
 
   .lesson-status {

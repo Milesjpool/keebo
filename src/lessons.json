@@ -1,46 +1,102 @@
 [
   {
-    "id": "lesson-1",
+    "id": "group-1",
     "title": "Home Row: Left Hand",
     "keys": ["a", "s", "d", "f"],
-    "lines": [
-      "aaa sss ddd fff",
-      "as as as df df df",
-      "dad fad sad add",
-      "dads fads adds salads"
+    "lessons": [
+      {
+        "id": "1-1",
+        "subtitle": "drill",
+        "lines": [
+          "aaa sss ddd fff",
+          "as as as df df df",
+          "fd sa fd sa fd sa"
+        ]
+      },
+      {
+        "id": "1-2",
+        "subtitle": "words",
+        "lines": [
+          "dad fad sad add",
+          "dads fads adds salads",
+          "a sad dad adds fads"
+        ]
+      }
     ]
   },
   {
-    "id": "lesson-2",
+    "id": "group-2",
     "title": "Home Row: Right Hand",
     "keys": ["j", "k", "l", ";"],
-    "lines": [
-      "jjj kkk lll ;;;",
-      "jk jl j; kl k; l;",
-      "jkl; jkl; jkl;",
-      "jj kk ll ;; jkl;"
+    "lessons": [
+      {
+        "id": "2-1",
+        "subtitle": "drill",
+        "lines": [
+          "jjj kkk lll ;;;",
+          "jk jl j; kl k; l;",
+          "lj kj lk ;l ;k ;j"
+        ]
+      },
+      {
+        "id": "2-2",
+        "subtitle": "patterns",
+        "lines": [
+          "jkl; jkl; jkl;",
+          "jj kk ll ;; jkl;",
+          ";lkj ;lkj ;lkj"
+        ]
+      }
     ]
   },
   {
-    "id": "lesson-3",
+    "id": "group-3",
     "title": "Home Row: Both Hands",
     "keys": ["a", "s", "d", "f", "j", "k", "l", ";"],
-    "lines": [
-      "asdf jkl; asdf jkl;",
-      "add all ask fall flask",
-      "dad lads flask salsa",
-      "alfalfa falls lads asks"
+    "lessons": [
+      {
+        "id": "3-1",
+        "subtitle": "drill",
+        "lines": [
+          "asdf jkl; asdf jkl;",
+          "fjdk slak fjdk slak",
+          "asjk dfkl asjk dfkl"
+        ]
+      },
+      {
+        "id": "3-2",
+        "subtitle": "words",
+        "lines": [
+          "add all ask fall flask",
+          "dad lads flask salsa",
+          "alfalfa falls lads asks"
+        ]
+      }
     ]
   },
   {
-    "id": "lesson-4",
+    "id": "group-4",
     "title": "Extend: G and H",
     "keys": ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";"],
-    "lines": [
-      "ggg hhh ggg hhh",
-      "ash hash gash had has",
-      "glad flag half shall flash",
-      "dash lash shag gals hall"
+    "lessons": [
+      {
+        "id": "4-1",
+        "subtitle": "drill",
+        "lines": [
+          "ggg hhh ggg hhh",
+          "fg gh hj fg gh hj",
+          "gf hg jh gf hg jh"
+        ]
+      },
+      {
+        "id": "4-2",
+        "subtitle": "words",
+        "lines": [
+          "ash hash gash had has",
+          "glad flag half shall flash",
+          "dash lash shag gals hall"
+        ]
+      }
     ]
   }
 ]

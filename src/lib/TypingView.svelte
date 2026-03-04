@@ -12,7 +12,7 @@
 
   $effect(() => {
     function onKeydown(e) {
-      if (e.key === 'Escape') {
+      if (e.key === 'Escape' || e.key === 'ArrowLeft') {
         onBack()
         return
       }
@@ -75,7 +75,6 @@
       </div>
     </div>
     <FingerIndicator char={currentChar} />
-    <p class="hint">enter to advance · esc to go back</p>
   </main>
 </div>
 
@@ -163,9 +162,5 @@
     animation: blink 1s step-end infinite;
   }
 
-.hint {
-    font-size: 0.75rem;
-    color: var(--dim);
-    letter-spacing: 0.05em;
-  }
+
 </style>
