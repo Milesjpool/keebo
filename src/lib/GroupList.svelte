@@ -53,7 +53,7 @@
           class:complete={state.complete}
           class:focused={focused === i}
           onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
-          onmouseenter={() => focused = i}
+          onmouseenter={() => { if (!state.locked) focused = i }}
           disabled={state.locked}
         >
           <span class="group-num">{String(i + 1).padStart(2, '0')}</span>

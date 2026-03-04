@@ -72,7 +72,7 @@
           class:locked
           class:focused={focused === i}
           onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
-          onmouseenter={() => focused = i}
+          onmouseenter={() => { if (!locked) focused = i }}
           disabled={locked}
         >
           <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
