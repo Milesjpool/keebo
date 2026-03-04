@@ -80,11 +80,11 @@
 
   .lesson-btn:not(.locked):hover {
     border-color: var(--accent);
-    background: #1a1a24;
+    background: var(--surface-hover);
   }
 
   .lesson-btn.done {
-    border-color: #253525;
+    border-color: var(--border-done);
   }
 
   .lesson-btn.locked {

@@ -4,20 +4,81 @@
   padding: 0;
 }
 
-:root {
-  --bg: #111;
-  --surface: #1c1c1c;
-  --border: #2a2a2a;
-  --text: #c8c8c8;
-  --dim: #444;
-  --correct: #e0e0e0;
-  --error-bg: rgba(224, 108, 117, 0.12);
-  --error: #e06c75;
-  --cursor-bg: #3b82f6;
-  --cursor-text: #fff;
-  --accent: #3b82f6;
-  --muted: #666;
-  --green: #6a9955;
+:root,
+[data-theme="dark"] {
+  --bg: #100f08;
+  --surface: #1c1a10;
+  --surface-hover: #252218;
+  --border: #302c18;
+  --border-done: #3a4820;
+  --text: #c8b84a;
+  --dim: #483e1a;
+  --correct: #e8d458;
+  --error-bg: rgba(210, 80, 40, 0.15);
+  --error: #d46040;
+  --cursor-bg: #e8c828;
+  --cursor-text: #100f08;
+  --accent: #e8c828;
+  --muted: #6a5e30;
+  --green: #88aa30;
+}
+
+[data-theme="light"] {
+  --bg: #f2fafa;
+  --surface: #ffffff;
+  --surface-hover: #e4f4f4;
+  --border: #cce8e8;
+  --border-done: #a0d8c0;
+  --text: #1a3838;
+  --dim: #a8cccc;
+  --correct: #0e2a2a;
+  --error-bg: rgba(180, 60, 40, 0.1);
+  --error: #b04030;
+  --cursor-bg: #0d9488;
+  --cursor-text: #ffffff;
+  --accent: #0d9488;
+  --muted: #5a8585;
+  --green: #1a7a50;
+}
+
+@media (prefers-color-scheme: dark) {
+  [data-theme="auto"] {
+    --bg: #100f08;
+    --surface: #1c1a10;
+    --surface-hover: #252218;
+    --border: #302c18;
+    --border-done: #3a4820;
+    --text: #c8b84a;
+    --dim: #483e1a;
+    --correct: #e8d458;
+    --error-bg: rgba(210, 80, 40, 0.15);
+    --error: #d46040;
+    --cursor-bg: #e8c828;
+    --cursor-text: #100f08;
+    --accent: #e8c828;
+    --muted: #6a5e30;
+    --green: #88aa30;
+  }
+}
+
+@media (prefers-color-scheme: light) {
+  [data-theme="auto"] {
+    --bg: #f2fafa;
+    --surface: #ffffff;
+    --surface-hover: #e4f4f4;
+    --border: #cce8e8;
+    --border-done: #a0d8c0;
+    --text: #1a3838;
+    --dim: #a8cccc;
+    --correct: #0e2a2a;
+    --error-bg: rgba(180, 60, 40, 0.1);
+    --error: #b04030;
+    --cursor-bg: #0d9488;
+    --cursor-text: #ffffff;
+    --accent: #0d9488;
+    --muted: #5a8585;
+    --green: #1a7a50;
+  }
 }
 
 body {
@@ -49,6 +110,6 @@ button {
 }
 
 @keyframes blink {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+  0%, 100% { background: var(--cursor-bg); color: var(--cursor-text); }
+  50%       { background: transparent; color: var(--dim); }
 }

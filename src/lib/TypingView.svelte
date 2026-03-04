@@ -1,4 +1,6 @@
 <script>
+  import FingerIndicator from './FingerIndicator.svelte'
+
   let { lesson, onComplete, onBack } = $props()
 
   let lineIndex = $state(0)
@@ -50,6 +52,8 @@
     return () => window.removeEventListener('keydown', onKeydown)
   })
 
+  const currentChar = $derived(typed.length < line.length ? line[typed.length] : '\n')
+
   function charState(i) {
     if (i < typed.length) return typed[i] === line[i] ? 'correct' : 'error'
     if (i === typed.length) return 'cursor'
@@ -70,6 +74,7 @@
         {#each line.split('') as char, i}<span class="char {charState(i)}">{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="char" class:cursor={typed.length === line.length} style:visibility={typed.length === line.length ? 'visible' : 'hidden'}>↵</span>
       </div>
     </div>
+    <FingerIndicator char={currentChar} />
     <p class="hint">enter to advance · esc to go back</p>
   </main>
 </div>

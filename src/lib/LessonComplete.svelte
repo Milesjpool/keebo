@@ -78,7 +78,7 @@
   .btn-primary {
     padding: 0.75rem 1.5rem;
     background: var(--accent);
-    color: #fff;
+    color: var(--cursor-text);
     border-radius: 6px;
     font-size: 0.875rem;
     transition: opacity 0.15s;
