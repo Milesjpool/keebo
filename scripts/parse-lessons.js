@@ -22,6 +22,7 @@ function extractH1(html) {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'")
+    .replace(/^New keys?: /i, '')
 }
 
 function textToLines(text) {

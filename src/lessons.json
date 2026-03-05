@@ -1,12 +1,12 @@
 [
   {
-    "id": "8013684c-6cc3-4b2a-8d44-97e64c044a68",
-    "title": "New keys: Home row",
+    "id": "ada4a8ac-2dff-4711-a3e5-4aa06a80a700",
+    "title": "Home row",
     "keys": [],
     "lessons": [
       {
-        "id": "3c7617a9-cf87-4529-8b67-d75283fe8d08",
-        "subtitle": "New keys: Home row",
+        "id": "cb49e0a5-8740-467c-9a9e-476da753ac8d",
+        "subtitle": "Home row",
         "lines": [
           "aa ss dd ff jj kk ll ;;",
           "as as df df jk jk l; l;",
@@ -18,7 +18,7 @@
         ]
       },
       {
-        "id": "75436403-34ab-4130-a6d0-b68bac27c682",
+        "id": "052ef6cd-cd42-455c-b6bc-5fe6deceeaa4",
         "subtitle": "New key exercise 1",
         "lines": [
           "ad ad jk jk ad ad jk jk",
@@ -35,7 +35,7 @@
         ]
       },
       {
-        "id": "b6ace1fa-0ab3-4125-9c53-71309d579986",
+        "id": "a2f075b9-913d-4d5d-9516-5c485e715443",
         "subtitle": "New key exercise 2",
         "lines": [
           "afsd afsd j;kl j;kl",
@@ -51,7 +51,7 @@
         ]
       },
       {
-        "id": "22c5e640-2f92-4198-86cb-cbb5125a6f7e",
+        "id": "edd102ab-efc2-4117-85db-50094d6f7191",
         "subtitle": "New key exercise 3",
         "lines": [
           "dsak dsak jkfl jkfl",
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "id": "1203bf98-e2a2-45ef-b927-ccb83a1168ba",
+        "id": "4be4b6c8-2810-4a19-846d-3e2d6d8c5117",
         "subtitle": "Key exercise 1",
         "lines": [
           "ajsk dfl;\\njaks laks",
@@ -82,7 +82,7 @@
         ]
       },
       {
-        "id": "c07fcdc2-967c-4104-8cc7-7febd5421346",
+        "id": "b0237763-607b-4e71-bbe4-d30455109c58",
         "subtitle": "Key exercise 2",
         "lines": [
           "add add add add",
@@ -103,7 +103,7 @@
         ]
       },
       {
-        "id": "47698e20-af52-401a-a19d-1f4b0eb328c7",
+        "id": "9f1ea68f-c118-469c-bcb9-22b0c3ffa9cd",
         "subtitle": "Key exercise 3",
         "lines": [
           "lkka kdsf\\nksja sjff",
@@ -122,7 +122,7 @@
         ]
       },
       {
-        "id": "d56458b1-47d1-4323-9766-6a193b17285e",
+        "id": "469803f6-9d26-493f-859b-c089e90f32aa",
         "subtitle": "Word exercise",
         "lines": [
           "add ads adds all",
@@ -142,13 +142,13 @@
     ]
   },
   {
-    "id": "285d9480-0e22-4ad2-bf06-bdde1200fce6",
-    "title": "New keys: e and i",
+    "id": "8cb1d147-f404-436b-80d7-8e0532176e36",
+    "title": "e and i",
     "keys": [],
     "lessons": [
       {
-        "id": "553d8b2e-5f9e-4feb-a857-2393d4bfa24b",
-        "subtitle": "New keys: e and i",
+        "id": "2f2ed3fe-27a4-48b1-9b44-41339c3021d8",
+        "subtitle": "e and i",
         "lines": [
           "ee ii ee ii",
           "ei ei ie ie",
@@ -164,7 +164,7 @@
         ]
       },
       {
-        "id": "b3215cd4-f142-42e9-b3b8-7db8a2647877",
+        "id": "b2e5a3cd-27a6-499e-82f2-84bc3b37cf42",
         "subtitle": "New key exercise 1",
         "lines": [
           "aeil aeil siek siek",
@@ -181,7 +181,7 @@
         ]
       },
       {
-        "id": "2e2b8913-c04a-4ae1-a6ef-b9967a075d96",
+        "id": "d74d3889-1b84-4d77-b483-cadd083d2d60",
         "subtitle": "New key exercise 2",
         "lines": [
           "ejlk ejlk deji deji",
@@ -200,7 +200,7 @@
         ]
       },
       {
-        "id": "9700c786-e1d1-4030-a98d-c5a93c9deb44",
+        "id": "f08adce6-84e9-4b0f-95b3-b2ed5dbbb393",
         "subtitle": "Key exercise 1",
         "lines": [
           "file file flea flea",
@@ -225,7 +225,7 @@
         ]
       },
       {
-        "id": "8e7bc2a4-337a-4fd6-b924-9c2463b1c1c9",
+        "id": "f9519743-c222-4a5e-90f4-25632e271869",
         "subtitle": "Key exercise 2",
         "lines": [
           "isle isle side side",
@@ -246,7 +246,7 @@
         ]
       },
       {
-        "id": "25450255-cf5f-4d32-919c-447c22cb04e5",
+        "id": "aedf6996-31f1-4011-ab04-691597b8ad7d",
         "subtitle": "Word exercise 1",
         "lines": [
           "defied slide lake selfless liaises",
@@ -268,7 +268,7 @@
         ]
       },
       {
-        "id": "c747aa01-cacb-44b7-b1c8-b38b90fd97a9",
+        "id": "1a756f41-6517-4b08-a5b8-7a4cea864742",
         "subtitle": "Word exercise 2",
         "lines": [
           "jellies kiddies dislike likes daisies",
@@ -289,7 +289,7 @@
         ]
       },
       {
-        "id": "45f5d745-9b7a-41e8-aae0-9d14b5533964",
+        "id": "ba038601-db28-400a-bf28-0ee16237b844",
         "subtitle": "Blind exercise 1",
         "lines": [
           "silks fife skied fades alkalis keeled skid assailed",
@@ -304,7 +304,7 @@
         ]
       },
       {
-        "id": "63464ab3-5620-4e4d-8b32-d2ae20ed2265",
+        "id": "75119a99-81f3-4af2-868b-7455340bd1fb",
         "subtitle": "Blind exercise 2",
         "lines": [
           "seaside alidade ide failed kids allseed said",
@@ -320,7 +320,7 @@
         ]
       },
       {
-        "id": "a808a473-d872-4f85-b98f-ffcd1b92ec06",
+        "id": "68281862-b55e-4738-a1fc-a7e66d2e8e90",
         "subtitle": "Text exercise 1",
         "lines": [
           "filial ked feeds dieselise daisies dele isle deal added lifelike jellied ills alkalised",
@@ -332,7 +332,7 @@
         ]
       },
       {
-        "id": "d2166678-66bb-443c-b85e-a4422109c7df",
+        "id": "eea40771-1ad6-4237-adb0-578fc61b0472",
         "subtitle": "Text exercise 2",
         "lines": [
           "deeded sea idles eked fells idealised skill eddied leafed elf ladles eddies seeks",
@@ -346,13 +346,13 @@
     ]
   },
   {
-    "id": "37eee3d7-fd3b-4536-b7af-c1cbd8236926",
-    "title": "New keys: r and u",
+    "id": "1094078b-6e8c-404c-8d7a-acd180a3bcda",
+    "title": "r and u",
     "keys": [],
     "lessons": [
       {
-        "id": "9f9ffcd2-1ff3-485f-ac63-fc7b9098680e",
-        "subtitle": "New keys: r and u",
+        "id": "70066e98-3353-4813-9d2d-bdc8cce9f247",
+        "subtitle": "r and u",
         "lines": [
           "rr uu rr uu",
           "ru ru ur ur",
@@ -375,7 +375,7 @@
         ]
       },
       {
-        "id": "e1f23257-3c25-42b1-a16e-33bf2ae27e53",
+        "id": "103a3e29-cb43-4f3c-af1a-b37976f3a7c6",
         "subtitle": "New key exercise",
         "lines": [
           "jesr jesr jike jike",
@@ -398,7 +398,7 @@
         ]
       },
       {
-        "id": "859d25e4-6fca-4869-9dba-a2187023ae1b",
+        "id": "c3c98cd6-33ca-4742-97b8-9ef4ef6461a2",
         "subtitle": "Key exercise 1",
         "lines": [
           "urea urea rude rude",
@@ -419,7 +419,7 @@
         ]
       },
       {
-        "id": "b5604a05-68b8-4235-b521-411c8aa88d7a",
+        "id": "e0c30969-be13-4ffd-a9d7-fcf1a2bfc0ea",
         "subtitle": "Key exercise 2",
         "lines": [
           "rule rule sulfur sulfur",
@@ -438,7 +438,7 @@
         ]
       },
       {
-        "id": "4a0c00b3-018b-4f7c-ba62-b0689ab68f34",
+        "id": "ff533ea9-b07f-4181-b825-22bfef5bf4a4",
         "subtitle": "Word exercise 1",
         "lines": [
           "duress direful fussier ruff jarful",
@@ -452,7 +452,7 @@
         ]
       },
       {
-        "id": "7e829476-63f7-4bd4-bec9-2b43fa89c168",
+        "id": "ffe6abdc-e07c-4b38-bc73-d7aac1aa13ed",
         "subtitle": "Word exercise 2",
         "lines": [
           "residuals adjured residues fusser rules",
@@ -466,7 +466,7 @@
         ]
       },
       {
-        "id": "81f72cbc-ca11-4bb0-bf90-526ccab5a256",
+        "id": "7153e7ef-bab6-4cde-ae6b-4aca8969fd01",
         "subtitle": "Word exercise 3",
         "lines": [
           "laurel slurries surd diffusers dissuader",
@@ -481,7 +481,7 @@
         ]
       },
       {
-        "id": "4bd121c6-a7fe-4500-a8b2-53f0b211a325",
+        "id": "62087953-06b9-4150-8382-c78f8e10ea7e",
         "subtitle": "Blind exercise 1",
         "lines": [
           "fissures deferrers serf flukier irks dries afire friskier",
@@ -496,7 +496,7 @@
         ]
       },
       {
-        "id": "088736d1-c02d-43de-aeab-ddaa7799afd1",
+        "id": "2c0dcc85-1713-420d-bad2-22281e204d10",
         "subtitle": "Blind exercise 2",
         "lines": [
           "reread easer ride lesser rudders earful eludes dude full",
@@ -511,7 +511,7 @@
         ]
       },
       {
-        "id": "e8ae1278-1bd1-4a85-b0d2-edcc18e64e49",
+        "id": "172729ef-d19c-4d1c-bf07-4622335cfc03",
         "subtitle": "Text exercise 1",
         "lines": [
           "luau daffier slurries lieder fire lauder druid afeard eluded derider fares dulled alleluia duel slur seder",
@@ -522,7 +522,7 @@
         ]
       },
       {
-        "id": "4b7531c4-5187-4981-8827-d2a1806acb9c",
+        "id": "f74813db-ded1-4eda-baa3-e47f4ec6f022",
         "subtitle": "Text exercise 2",
         "lines": [
           "sellers relief laurels ferries dissuade darker rid readers assures ferried refilled refused ear fluff",
@@ -535,13 +535,13 @@
     ]
   },
   {
-    "id": "81705606-347e-45e5-b544-730db1e1efae",
-    "title": "New keys: w and o",
+    "id": "0b9f6f3b-8239-4dc4-9cf9-4f7bff977ee1",
+    "title": "w and o",
     "keys": [],
     "lessons": [
       {
-        "id": "4b8701a6-c5fa-4e2c-b0ad-ffa3e632863f",
-        "subtitle": "New keys: w and o",
+        "id": "29524ce1-f67a-43b4-811c-3a368c81bf5c",
+        "subtitle": "w and o",
         "lines": [
           "ww oo ww oo",
           "wo wo ow ow",
@@ -564,7 +564,7 @@
         ]
       },
       {
-        "id": "f247c065-e467-4e5e-95f4-bddb9d6ae453",
+        "id": "bc48b761-d421-4f3c-90d9-bf9b80669553",
         "subtitle": "New key exercise",
         "lines": [
           "fwdl fwdl edwl edwl",
@@ -587,7 +587,7 @@
         ]
       },
       {
-        "id": "bbb4ea34-4eaf-445a-93a0-2633b9f92a8a",
+        "id": "ab809dfd-a94a-42cf-9efc-0d7d6179e015",
         "subtitle": "Key exercise 1",
         "lines": [
           "sower sower jowl jowl",
@@ -608,7 +608,7 @@
         ]
       },
       {
-        "id": "40638985-9e07-4c14-98e2-b74898a070bb",
+        "id": "5d54ea4d-26c3-43cd-9121-a4570bc513fa",
         "subtitle": "Key exercise 2",
         "lines": [
           "woofer woofer lows lows",
@@ -627,7 +627,7 @@
         ]
       },
       {
-        "id": "5c1a8daa-c5d0-45d7-b336-820f5509ecff",
+        "id": "9e3bf486-6ce4-4d08-ac1a-f1268575e804",
         "subtitle": "Word exercise 1",
         "lines": [
           "allows foreword wooer dowries sasswood",
@@ -641,7 +641,7 @@
         ]
       },
       {
-        "id": "35e1255a-fa13-48bf-8e84-37686728b731",
+        "id": "cc2b2b82-3a9f-473a-a951-347c6f0e8348",
         "subtitle": "Word exercise 2",
         "lines": [
           "worries dowse widow jowl warriors",
@@ -655,7 +655,7 @@
         ]
       },
       {
-        "id": "71c974cc-558f-4f10-9dc5-a33a6097b74b",
+        "id": "8f836417-3eed-4470-ac60-0daea6390fdc",
         "subtitle": "Word exercise 3",
         "lines": [
           "awoke worried reworked sow willows",
@@ -669,7 +669,7 @@
         ]
       },
       {
-        "id": "98d0b3b1-d355-492f-be2e-ca1204da094c",
+        "id": "3918627e-0f68-4439-8b03-75b734340024",
         "subtitle": "Blind exercise 1",
         "lines": [
           "widowers firewood frowsier widowed lowlier wildfowl allow sorrow",
@@ -684,7 +684,7 @@
         ]
       },
       {
-        "id": "0416ef5f-6917-4133-8af3-066aebd984d6",
+        "id": "3ea6e560-ff50-49ba-b59f-5fc723097195",
         "subtitle": "Blind exercise 2",
         "lines": [
           "drowsed words willowware wooed woofed forwarded fieldwork world",
@@ -699,7 +699,7 @@
         ]
       },
       {
-        "id": "5b217d7f-17a0-434a-85db-0148efd6f03e",
+        "id": "d6c42283-cba3-4b59-a116-2a7918026ba0",
         "subtitle": "Text exercise 1",
         "lines": [
           "if i do i like words\\ni walked forward\\nwe do look alike\\nall is well",
@@ -710,7 +710,7 @@
         ]
       },
       {
-        "id": "6e7c5018-0e32-41d6-9a7e-1d4afa4abcdb",
+        "id": "81004990-fdf5-4bd9-a934-b052689a46ed",
         "subtitle": "Text exercise 2",
         "lines": [
           "i look; i saw red\\ni laid low; i did\\nfields of roses\\nwell said; wife\\nwe are all sailors",
@@ -723,13 +723,13 @@
     ]
   },
   {
-    "id": "06f05573-2cf3-428a-b3fe-17d161f2b1fe",
-    "title": "New keys: c and n",
+    "id": "3385d80b-9a94-4496-a497-34acc622914e",
+    "title": "c and n",
     "keys": [],
     "lessons": [
       {
-        "id": "d93ff2ed-e125-49c1-b844-097887aa927e",
-        "subtitle": "New keys: c and n",
+        "id": "816511a9-bef5-4acf-97da-595baca0b7a7",
+        "subtitle": "c and n",
         "lines": [
           "cc nn cc nn",
           "cn cn nc nc",
@@ -752,7 +752,7 @@
         ]
       },
       {
-        "id": "e3ccb176-7946-42ea-b329-4718506351f0",
+        "id": "14248029-ea53-46b4-a1d2-c356f98d0fcc",
         "subtitle": "New key exercise",
         "lines": [
           "acci acci winu winu",
@@ -775,7 +775,7 @@
         ]
       },
       {
-        "id": "ff9559d8-2396-4660-a3c7-a6b04b037708",
+        "id": "45e5edcf-0ab4-47de-8736-545028013b8b",
         "subtitle": "Key exercise 1",
         "lines": [
           "corneal corneal sonic sonic",
@@ -796,7 +796,7 @@
         ]
       },
       {
-        "id": "0346710f-bd96-438a-a817-02c0d75d3155",
+        "id": "901f2746-ba1c-40cc-af5c-a55b8e739fd9",
         "subtitle": "Key exercise 2",
         "lines": [
           "cancan cancan incur incur",
@@ -815,7 +815,7 @@
         ]
       },
       {
-        "id": "43e3c628-c9ce-4c22-ae73-7b8a5ab21fae",
+        "id": "c99e2e6e-b8f6-4196-a1ac-5d8b21d753bd",
         "subtitle": "Word exercise 1",
         "lines": [
           "scullion coincides necked landrace judiciousness",
@@ -831,7 +831,7 @@
         ]
       },
       {
-        "id": "0f3c46bb-8ccb-4ca0-b5b2-6b57e1ac3227",
+        "id": "216c5d0e-3417-4eab-b4f8-b1b9b365c1aa",
         "subtitle": "Word exercise 2",
         "lines": [
           "ascendance candour winces clowns needlecord",
@@ -847,7 +847,7 @@
         ]
       },
       {
-        "id": "c55e8562-698e-45b6-853e-178399999052",
+        "id": "cba1c0c7-533f-4dfc-9cca-dd9057936e31",
         "subtitle": "Blind exercise 1",
         "lines": [
           "cronies conciseness cane isocline crane erinaceous scarfskin cauldron",
@@ -858,7 +858,7 @@
         ]
       },
       {
-        "id": "49993074-b857-423f-9722-a76193bcc19c",
+        "id": "1dba9141-10da-4474-9364-d3359d64287c",
         "subtitle": "Blind exercise 2",
         "lines": [
           "cosines redundancies conkers coroner nucleoside referenced wackiness",
@@ -869,7 +869,7 @@
         ]
       },
       {
-        "id": "02564b9a-0677-4b38-8987-0fcca55cf262",
+        "id": "931e6a65-5846-4074-a995-f3847ec5989f",
         "subtitle": "Blind exercise 3",
         "lines": [
           "sickness carelessness defiance lacunae nonsensical lancewood encarnalised",
@@ -879,7 +879,7 @@
         ]
       },
       {
-        "id": "eecc2733-1952-4675-a646-1335881b5489",
+        "id": "1e03a673-4691-4f01-9c02-494fbb1a5438",
         "subtitle": "Text exercise 1",
         "lines": [
           "i know\\nso did i once\\nour consciences were clear now\\nnow all is safe and sound\\ni will and can do so",
@@ -890,7 +890,7 @@
         ]
       },
       {
-        "id": "6ecb1786-65c1-4daa-9f9b-f2ee26bf2ad0",
+        "id": "f34572ea-dd20-48a3-b2f7-e0b228d186eb",
         "subtitle": "Text exercise 2",
         "lines": [
           "know life\\nall is confusion and disorder\\nsure we can\\nno one can see us and we can see no one\\ndinner was now announced",
@@ -902,13 +902,13 @@
     ]
   },
   {
-    "id": "3cdd542a-cdcd-46d7-b594-244fe7bbe20f",
-    "title": "New keys: , and .",
+    "id": "671915ae-bafd-4890-8072-b3ae7691600a",
+    "title": ", and .",
     "keys": [],
     "lessons": [
       {
-        "id": "24daa96d-6d47-4396-a982-ca5bb3f08888",
-        "subtitle": "New keys: , and .",
+        "id": "b4639a45-ecbe-4ffe-bdfd-c10c79836e14",
+        "subtitle": ", and .",
         "lines": [
           ",, .. ,, ..",
           ",. ,. ., .,",
@@ -931,7 +931,7 @@
         ]
       },
       {
-        "id": "1d367f74-897e-480d-880c-92ad951e09e0",
+        "id": "ec6f80b3-c8cf-42ea-83e6-39c1746a3d5d",
         "subtitle": "New key exercise",
         "lines": [
           "lfn. lfn. u,ku u,ku",
@@ -954,7 +954,7 @@
         ]
       },
       {
-        "id": "219e1f47-72f4-4f37-9e9a-8946ad63f29e",
+        "id": "6780b33e-1215-4d87-a16f-3fb75f14c00a",
         "subtitle": "Key exercise 1",
         "lines": [
           "confine confine, cone cone.",
@@ -974,7 +974,7 @@
         ]
       },
       {
-        "id": "f478ed74-9e32-453a-9201-b81e319d1eda",
+        "id": "4a0f649d-3f88-4540-b81a-b1648e83ba5d",
         "subtitle": "Key exercise 2",
         "lines": [
           "recon recon, inced inced.",
@@ -994,7 +994,7 @@
         ]
       },
       {
-        "id": "9b954819-f407-4f73-9ac0-74f54d79fc30",
+        "id": "213b8423-632c-4137-a224-1d9c18df5b72",
         "subtitle": "Word exercise 1",
         "lines": [
           "loafs, recluses, asdic, ions, cowardliness.",
@@ -1008,7 +1008,7 @@
         ]
       },
       {
-        "id": "fbcf7353-7754-4271-b5f3-8c713197c43e",
+        "id": "fb0ab062-c4c2-4ac8-8ef9-8c4fd56366b0",
         "subtitle": "Word exercise 2",
         "lines": [
           "reconsider, ruefulness, curious, denied, druidical.",
@@ -1022,7 +1022,7 @@
         ]
       },
       {
-        "id": "cf96a6a9-05a8-476b-be9e-60d26665268e",
+        "id": "0f1e9ca8-3425-4506-80c8-09ad194732cb",
         "subtitle": "Blind exercise 1",
         "lines": [
           "lousier. dalasi. uncial. ecce. ads",
@@ -1036,7 +1036,7 @@
         ]
       },
       {
-        "id": "18c53a11-65e4-4d7c-8d98-04cfa3fa9927",
+        "id": "de1c6bec-c978-425b-83ac-6c07a349f7f2",
         "subtitle": "Blind exercise 2",
         "lines": [
           "cairn, alcidine, facia, isles, salaciousness, infers, furan.",
@@ -1049,7 +1049,7 @@
         ]
       },
       {
-        "id": "16b1bf74-3041-4848-89c5-4576baf26b97",
+        "id": "fd8ff354-9315-464f-9b27-9666e6a4d4ff",
         "subtitle": "Blind exercise 3",
         "lines": [
           "saddens. crania. screened. airline. ion. landfall. landau. unearned.",
@@ -1062,7 +1062,7 @@
         ]
       },
       {
-        "id": "69011565-73cd-4e21-9732-40af4e08e117",
+        "id": "82e91a98-4804-4004-8fb9-0b6fbc859dce",
         "subtitle": "Text exercise 1",
         "lines": [
           "coincidence, indeed. none knows, and none can know. of course we do, so far as sense awareness is concerned. an awkward silence followed.",
@@ -1071,7 +1071,7 @@
         ]
       },
       {
-        "id": "af7b077f-fd7f-46a4-8f04-163fa0f3640e",
+        "id": "b98953bc-4523-4448-ba30-2b6ef72aa4c6",
         "subtitle": "Text exercise 2",
         "lines": [
           "no offence, of course. indeed, indeed, i cared. all is confounded, all. of course i can, dear. no fence was seen, no inclosure. for a few seconds no one answered.",
@@ -1082,13 +1082,13 @@
     ]
   },
   {
-    "id": "9d3893ec-dadd-4495-93d9-329d8994f48b",
-    "title": "New keys: Capital letters",
+    "id": "702f6e6a-deca-4a0e-8987-28e8112e4b0b",
+    "title": "Capital letters",
     "keys": [],
     "lessons": [
       {
-        "id": "92118161-2f39-4af6-98f7-94f93c4b4558",
-        "subtitle": "New keys: Capital letters",
+        "id": "e2141141-c7d0-4566-ba7b-7e581d8cd94d",
+        "subtitle": "Capital letters",
         "lines": [
           "AA SS DD FF",
           "JJ KK LL EE",
@@ -1115,7 +1115,7 @@
         ]
       },
       {
-        "id": "d9a393fe-5a45-4559-ba96-81158ec4ce49",
+        "id": "3c597074-cf2e-44c8-9fa7-f9195fe8a316",
         "subtitle": "New key exercise 1",
         "lines": [
           "EEEc EEEc rUiC rUiC",
@@ -1144,7 +1144,7 @@
         ]
       },
       {
-        "id": "8745c677-16cf-426e-a8fd-b416300302ee",
+        "id": "d270d867-5e48-4704-b9c3-550a1927ad13",
         "subtitle": "New key exercise 2",
         "lines": [
           "wrRk UOfe CnwE aEoF",
@@ -1166,7 +1166,7 @@
         ]
       },
       {
-        "id": "3e601b1e-04ac-47ad-a5b1-a74fca6bd764",
+        "id": "d4826759-4178-4c80-b984-42a9e4d2dd02",
         "subtitle": "Key exercise 1",
         "lines": [
           "UNESCO UNESCO UNESCO UNESCO",
@@ -1186,7 +1186,7 @@
         ]
       },
       {
-        "id": "127e0313-5ac5-4f86-bf28-e79918ffc7a1",
+        "id": "c8db165f-3260-4211-b848-70d1f3e80997",
         "subtitle": "Key exercise 2",
         "lines": [
           "CEO CEO CEO CEO",
@@ -1206,7 +1206,7 @@
         ]
       },
       {
-        "id": "df474391-10af-4e3a-b518-5966a299dcf8",
+        "id": "8575a7f0-ee90-4a79-b822-f2c0dffe053e",
         "subtitle": "Word exercise 1",
         "lines": [
           "Kissin Caicos Nora Eldon Nilsen",
@@ -1225,7 +1225,7 @@
         ]
       },
       {
-        "id": "d6ce448e-fbfe-42a6-8328-4290e01aeec7",
+        "id": "21cb742d-0bdb-4932-bab4-c06755f6d24a",
         "subtitle": "Word exercise 2",
         "lines": [
           "Lucien Wilsonian Jodi WA Keenan",
@@ -1244,7 +1244,7 @@
         ]
       },
       {
-        "id": "05751c5b-d7f2-489b-be81-b24595e606c0",
+        "id": "fb5ca999-6a97-4fd5-bc2d-0af8018e8380",
         "subtitle": "Blind exercise 1",
         "lines": [
           "Frauenfeld Eli Londonise Californian Afrikaner Disraeli Odin Clarendon",
@@ -1257,7 +1257,7 @@
         ]
       },
       {
-        "id": "b48878b3-beec-4905-82b0-4dcd38406def",
+        "id": "03119d5d-eb7e-4e1b-bb0c-f9b354d71c77",
         "subtitle": "Blind exercise 2",
         "lines": [
           "Kuril Corriedale Louisiana Noel Conrad RNA Liriodendron Doreen Dan",
@@ -1270,7 +1270,7 @@
         ]
       },
       {
-        "id": "339ede64-7dd6-483f-9ba7-31c0d382f553",
+        "id": "7930ca8b-6622-4ce0-92e9-a9767635012d",
         "subtitle": "Text exercise 1",
         "lines": [
           "Like a wild Indian. Dear Friend. O Lord. London in UK. Oakland, CALIFORNIA. In Dawson. Carl and Joe. Carroll and Ken.",
@@ -1281,7 +1281,7 @@
         ]
       },
       {
-        "id": "e3e151eb-7880-411a-8919-900519265173",
+        "id": "f0f5bc5d-a27f-4aaa-bf80-6b79d99eeb63",
         "subtitle": "Text exercise 2",
         "lines": [
           "And no one else will know. Our decision was a sudden one. Florence was flaccid. Dinner was a success. Jake could confide.",
@@ -1293,13 +1293,13 @@
     ]
   },
   {
-    "id": "ac91dba7-629f-4ee3-af25-52f389b2fcb3",
-    "title": "New keys: v and m",
+    "id": "439d8923-8eee-4e84-901f-8a2edb944a35",
+    "title": "v and m",
     "keys": [],
     "lessons": [
       {
-        "id": "43ed2085-bb71-4228-b73e-ee682c8de288",
-        "subtitle": "New keys: v and m",
+        "id": "358a9c94-b9a1-4522-bc0f-c1246626077d",
+        "subtitle": "v and m",
         "lines": [
           "vv mm vv mm",
           "vm vm mv mv",
@@ -1322,7 +1322,7 @@
         ]
       },
       {
-        "id": "6614c335-0c50-41af-84fd-2f0cb905d2d7",
+        "id": "070de457-2c48-47fa-9bce-eaa5ae0a0317",
         "subtitle": "New key exercise",
         "lines": [
           "mjld mjld uumo uumo",
@@ -1345,7 +1345,7 @@
         ]
       },
       {
-        "id": "0f63d8c3-9372-4d60-a77c-254d2530be12",
+        "id": "5515db3b-4978-44ce-9521-47e4961a0bf6",
         "subtitle": "Key exercise 1",
         "lines": [
           "Mavis Mavis Melva Melva",
@@ -1365,7 +1365,7 @@
         ]
       },
       {
-        "id": "29b26433-0b86-4de0-b0fd-9bf2d30162cb",
+        "id": "72955fb1-a991-49d6-959a-772bc760b30c",
         "subtitle": "Key exercise 2",
         "lines": [
           "marvel marvel Marva Marva",
@@ -1385,7 +1385,7 @@
         ]
       },
       {
-        "id": "37598e89-2405-4cfd-ac64-c32b35cb9f7c",
+        "id": "3abfbcfa-eb0e-4ac5-a0ed-91b61c9f3a75",
         "subtitle": "Word exercise 1",
         "lines": [
           "animadversion vermeil midwives malevolence cavemen",
@@ -1398,7 +1398,7 @@
         ]
       },
       {
-        "id": "82fc0193-64d4-40aa-9ae4-dcf445adce8b",
+        "id": "7515cfbb-1aa5-4469-87e0-21fb0f22a8dd",
         "subtitle": "Word exercise 2",
         "lines": [
           "flavoursome mover dismissive moves remove",
@@ -1412,7 +1412,7 @@
         ]
       },
       {
-        "id": "03c9cc4f-ab44-48ec-9db1-b3ee6690e26f",
+        "id": "01bb455f-8d02-4a83-9fe6-2be0bb774294",
         "subtitle": "Blind exercise 1",
         "lines": [
           "diversiform serviceman velum venomousness commove",
@@ -1425,7 +1425,7 @@
         ]
       },
       {
-        "id": "edc24a1d-6680-4aed-9454-8d5940bacead",
+        "id": "5e6a4a31-7054-4354-b017-d746bea45956",
         "subtitle": "Blind exercise 2",
         "lines": [
           "moviemaker vermicelli vernacularism vacuumed mediaeval servicewoman vandalism nevermore verisimilar duumvir microwaves voluminous marvelled movers servicewomen overcome",
@@ -1434,7 +1434,7 @@
         ]
       },
       {
-        "id": "ea1f82ef-3501-4bde-bbca-3a871d8bffe1",
+        "id": "88ca99b6-0d7e-4cfe-b41a-c150b1878e2d",
         "subtitle": "Blind exercise 3",
         "lines": [
           "mendelevium missive commoves vanadium commoved Maldive volume servicemen medievalism envenom venom mover emissive overcame microwave misconceives Vlaminck Vulcanism Asimov",
@@ -1444,7 +1444,7 @@
         ]
       },
       {
-        "id": "23486325-5019-45e7-acb7-0746f06e8a34",
+        "id": "e9b04b7c-20c4-49f8-bd0b-72f1ec04eafe",
         "subtitle": "Text exercise 1",
         "lines": [
           "I never said so. Summer came on. Answer me. No jams nor jellies. I came, I saw, I overcame.",
@@ -1454,7 +1454,7 @@
         ]
       },
       {
-        "id": "cdf2abe0-39fb-479c-b989-0eaa06222b84",
+        "id": "1d27353c-150d-4651-9ded-182e7bb1c06d",
         "subtitle": "Text exercise 2",
         "lines": [
           "Never a sound came from mind more like a scream. No one ever recovered. None so slow like a worker of miracles. No man answered, no man moved.",
@@ -1465,13 +1465,13 @@
     ]
   },
   {
-    "id": "915024e7-816b-46b5-9a45-bd24de9ddd93",
-    "title": "New keys: t and y",
+    "id": "802ea441-678f-4620-8592-db12a92c665d",
+    "title": "t and y",
     "keys": [],
     "lessons": [
       {
-        "id": "5e485979-831d-4c11-b9e1-c965dfccda9f",
-        "subtitle": "New keys: t and y",
+        "id": "de668a37-45e2-4ebd-b843-5e162e80e8b0",
+        "subtitle": "t and y",
         "lines": [
           "tt yy tt yy",
           "ty ty yt yt",
@@ -1494,7 +1494,7 @@
         ]
       },
       {
-        "id": "936442da-90a3-43fb-9384-288ccff1e0c4",
+        "id": "6ad17b03-0bb7-41a4-8bda-15f297e4af6d",
         "subtitle": "New key exercise",
         "lines": [
           "utoc utoc wtiy wtiy",
@@ -1517,7 +1517,7 @@
         ]
       },
       {
-        "id": "2fb4f4fd-0581-4345-a36e-c0c68b87bed7",
+        "id": "a87d8ae2-e124-4875-a90e-afdf51b1e359",
         "subtitle": "Key exercise 1",
         "lines": [
           "Yalta Yalta Yucatan Yucatan",
@@ -1535,7 +1535,7 @@
         ]
       },
       {
-        "id": "050c4fe7-5c61-42dd-b408-5b9fdb7f50c0",
+        "id": "6d8e66e8-8464-4d36-bde0-dc1f94152e53",
         "subtitle": "Key exercise 2",
         "lines": [
           "Kenyatta Kenyatta Myst Myst",
@@ -1552,7 +1552,7 @@
         ]
       },
       {
-        "id": "597a849d-bc2c-4646-ab08-52103fb80daa",
+        "id": "788296fd-92b7-4f4f-b8f4-f901320492b9",
         "subtitle": "Word exercise 1",
         "lines": [
           "errantry tediously crafty discontinuity metonymically",
@@ -1566,7 +1566,7 @@
         ]
       },
       {
-        "id": "6ca18a7c-91b1-4e1c-95a9-6495dd2a37db",
+        "id": "620a0aa3-3ec2-4d0e-bb4e-e270d7cad744",
         "subtitle": "Word exercise 2",
         "lines": [
           "inordinately intransitively crystallite conjunctively carroty",
@@ -1580,7 +1580,7 @@
         ]
       },
       {
-        "id": "5ad298bc-9856-47c0-a1ec-f350e2f8c25d",
+        "id": "501c13f2-b4c0-403b-995c-6bf098599a36",
         "subtitle": "Word exercise 3",
         "lines": [
           "tiddlywinks factitiously definitely unconventionality flirtatiously",
@@ -1594,7 +1594,7 @@
         ]
       },
       {
-        "id": "8a50b9a1-651d-4446-9969-5c72694b033d",
+        "id": "aa3f08fa-9fe7-4f35-8fba-98869d8e7bc7",
         "subtitle": "Blind exercise 1",
         "lines": [
           "I tell you it was fair awesome. Jerry tried a new tack.",
@@ -1607,7 +1607,7 @@
         ]
       },
       {
-        "id": "3c23cdb9-dc8f-40f4-823c-6e3db2b2a6bd",
+        "id": "71f30955-6d0a-44fc-a3ea-ecc248af676d",
         "subtitle": "Blind exercise 2",
         "lines": [
           "It is your turn. Every creature comfort is mine. It will only cost five cents.",
@@ -1620,7 +1620,7 @@
         ]
       },
       {
-        "id": "1b351b4d-062b-492d-928d-3a99ac861e8e",
+        "id": "1828b2a2-655d-41ab-8bfb-6d45d4e329fc",
         "subtitle": "Text exercise 1",
         "lines": [
           "It was very easy. You start in immediately, today. I tell you true. It was manifestly most ancient.",
@@ -1630,7 +1630,7 @@
         ]
       },
       {
-        "id": "7e602643-d779-451f-97cb-96d504331ca7",
+        "id": "afa0f7f6-6505-48f6-8d80-05e1ed3f4181",
         "subtitle": "Text exercise 2",
         "lines": [
           "If you want to alter your decision it is not yet too late. I traveled very slow. It was very close. It was very natural. Your eye lost it. Just fancy, now.",
@@ -1642,13 +1642,13 @@
     ]
   },
   {
-    "id": "6840946e-357d-4057-99e2-c211176019a9",
-    "title": "New keys: g, h, ' and \"",
+    "id": "43cb114a-7570-4f3f-8c79-f9c1f331cdce",
+    "title": "g, h, ' and \"",
     "keys": [],
     "lessons": [
       {
-        "id": "e7d1575b-6e67-430c-9385-f93a7da2be81",
-        "subtitle": "New keys: g, h, ' and \"",
+        "id": "ab471a15-1b7f-42d8-9f86-80f44662ce10",
+        "subtitle": "g, h, ' and \"",
         "lines": [
           "gg hh '' \"\" gg hh '' \"\"",
           "gh'\" gh'\" \"'hg \"'hg",
@@ -1671,7 +1671,7 @@
         ]
       },
       {
-        "id": "98118a8d-5537-4f58-86d1-60d973acf574",
+        "id": "54021eff-c7b6-4a76-b2e1-2a455dedbd14",
         "subtitle": "New key exercise",
         "lines": [
           "ohho ohho n\"hg n\"hg",
@@ -1694,7 +1694,7 @@
         ]
       },
       {
-        "id": "4c9b620a-ba87-4aed-8cbe-9a4d843aef64",
+        "id": "ac183409-0a58-4c66-b499-17da6cbc3491",
         "subtitle": "Key exercise 1",
         "lines": [
           "light light grouchy grouchy",
@@ -1714,7 +1714,7 @@
         ]
       },
       {
-        "id": "0af405ba-f248-4d97-8a93-5e5cda8f1488",
+        "id": "fbf1486c-6d75-4b42-83a1-bb49af613993",
         "subtitle": "Key exercise 2",
         "lines": [
           "overhang overhang gosh gosh",
@@ -1734,7 +1734,7 @@
         ]
       },
       {
-        "id": "17ed29b4-92f1-4cd3-b670-a13d3c19ae30",
+        "id": "8d1c37b9-050c-4b44-b4da-50a825e1035d",
         "subtitle": "Word exercise 1",
         "lines": [
           "garnishes heathenising unhooking Goshen hackneying refreshingly Gandhiism",
@@ -1747,7 +1747,7 @@
         ]
       },
       {
-        "id": "be7e3c11-1700-4a95-8ee2-9ee68ea2b58c",
+        "id": "abd3e668-f0c9-48c5-886e-68f62a27da95",
         "subtitle": "Word exercise 2",
         "lines": [
           "hoagie whinnying fashioning shiningly gatherings gearshift \"lighters\"",
@@ -1761,7 +1761,7 @@
         ]
       },
       {
-        "id": "e130a60f-5d3a-4152-b213-d2f597c57766",
+        "id": "0ea61dad-b8b0-499d-82a4-c25e7e898a8f",
         "subtitle": "Blind exercise 1",
         "lines": [
           "He must go to her. He had never seen her anywhere else. Are you hungry. He delivered the goods. He was glad.",
@@ -1770,7 +1770,7 @@
         ]
       },
       {
-        "id": "70da52e6-3ab0-4aea-be60-5c26b7b2ad2c",
+        "id": "41941474-bfd1-4eb5-b1d8-67cca59f35f8",
         "subtitle": "Blind exercise 2",
         "lines": [
           "He sighed heavily. The high card won. Suggest something. Therefore they fought the light. He is a light for fighting men who fight with the sword.",
@@ -1779,7 +1779,7 @@
         ]
       },
       {
-        "id": "a446854f-3f4b-473f-8ed4-538463e7ef14",
+        "id": "9bbf54b9-2477-4c24-b8e6-191d3147e1c7",
         "subtitle": "Blind exercise 3",
         "lines": [
           "What are you going to do with it. I had a very delightful week there. Knowing how much he had given, she thought of him as having given all. \"You might go fishing,\" the Duchess suggested thoughtfully.",
@@ -1788,7 +1788,7 @@
         ]
       },
       {
-        "id": "06c19b1f-ad72-4de7-a640-b1d4f7ce6ff4",
+        "id": "06caef5f-359f-40b1-a263-827d13204a24",
         "subtitle": "Text exercise 1",
         "lines": [
           "Something had gone wrong with him. At last he had reached that, he thought. I hear dogs howling. He loves the dog. He had taught her those words himself. I wasn't rough with him.",
@@ -1796,7 +1796,7 @@
         ]
       },
       {
-        "id": "5e49f043-f9d6-4fe9-bd04-3b4e0dacec95",
+        "id": "a2209f5d-3663-4776-a265-f6645e68e8ad",
         "subtitle": "Text exercise 2",
         "lines": [
           "He had changed his clothes, and he had shaved. That has got my goat. There's nothing wrong with that. The whole thing was a nightmare. They had added their strength together.",
@@ -1806,13 +1806,13 @@
     ]
   },
   {
-    "id": "1a888efe-be1b-4292-b1a8-7d66e2ea3ceb",
-    "title": "New keys: q and p",
+    "id": "6e0d601c-136c-420c-9875-d0a00157a008",
+    "title": "q and p",
     "keys": [],
     "lessons": [
       {
-        "id": "02bd3c86-4c9f-4e23-a278-c026792e2585",
-        "subtitle": "New keys: q and p",
+        "id": "deec406e-fe43-4636-b442-f830d0a644cb",
+        "subtitle": "q and p",
         "lines": [
           "qq pp qq pp",
           "qp qp pq pq",
@@ -1835,7 +1835,7 @@
         ]
       },
       {
-        "id": "e576cc4f-65e1-4015-b05e-c34f6978a205",
+        "id": "558fdee9-f084-4253-bc67-a4e028fbf229",
         "subtitle": "New key exercise",
         "lines": [
           "lvqw lvqw pdpu pdpu",
@@ -1858,7 +1858,7 @@
         ]
       },
       {
-        "id": "b5fbfa65-464f-4e33-aef0-771ea21c4a65",
+        "id": "08769b0b-4be1-431b-8bfa-aab7e480eb13",
         "subtitle": "Key exercise 1",
         "lines": [
           "opaque opaque Pequot Pequot",
@@ -1876,7 +1876,7 @@
         ]
       },
       {
-        "id": "76b89dfe-9c22-4a32-bbd4-bc63d9085672",
+        "id": "e3f8c4ee-01d7-4b29-b217-3f330c761f68",
         "subtitle": "Key exercise 2",
         "lines": [
           "pique pique Compaq Compaq",
@@ -1894,7 +1894,7 @@
         ]
       },
       {
-        "id": "1a0e4f45-7ff7-418e-9f24-161e4bdd8e8f",
+        "id": "400d29af-c824-4e01-9437-a566ce13bdb5",
         "subtitle": "Word exercise 1",
         "lines": [
           "equipped picturesque Pequot quintuplets quintuple",
@@ -1906,7 +1906,7 @@
         ]
       },
       {
-        "id": "84d017eb-953d-46dc-82f0-ebc63b4c7c42",
+        "id": "9cc2b244-ed7d-4e8b-8fe9-56543cd43641",
         "subtitle": "Word exercise 2",
         "lines": [
           "piquancy equipments equipoise quadruple equipotent",
@@ -1918,7 +1918,7 @@
         ]
       },
       {
-        "id": "131e25b2-d9d0-4f1b-8d64-be2c11380adf",
+        "id": "f6b02d44-6dfa-4c02-9fd5-35e8bf89e21d",
         "subtitle": "Blind exercise 1",
         "lines": [
           "pipsqueak quadruplet equipment quadraphonic Palenque",
@@ -1929,7 +1929,7 @@
         ]
       },
       {
-        "id": "fd4805e0-8d6d-409b-9024-f87fce8ee024",
+        "id": "f185254b-2ccf-491a-a4d6-a78093d165a0",
         "subtitle": "Blind exercise 2",
         "lines": [
           "It is not equipped. Everything was happening quickly. Plenty mosquito, plenty spot. It's quite simple.",
@@ -1940,7 +1940,7 @@
         ]
       },
       {
-        "id": "f8adcdbb-4d60-4d58-930b-a8171e16c1f8",
+        "id": "e793d90e-8fbc-4930-a1e7-1c0ebce3a9a1",
         "subtitle": "Blind exercise 3",
         "lines": [
           "Quickly they pass. Per square inch. This put me in a quandary. Quotation from Paris. Quarterpage waved his long pipe.",
@@ -1951,7 +1951,7 @@
         ]
       },
       {
-        "id": "b770e358-0a91-4991-9f39-3905f3fbfdb5",
+        "id": "8e50f1bb-dbe5-4359-80db-326e75ba6d18",
         "subtitle": "Text exercise 1",
         "lines": [
           "The man of a thousand squalls respects a squall. He required no histrionic powers to act the part. Let's take the rifles and go potting squirrels.",
@@ -1961,7 +1961,7 @@
         ]
       },
       {
-        "id": "827cf236-2b69-4a74-af3f-d2a3b4488c54",
+        "id": "f226dfb1-6186-48f1-b398-4a457e8ef9c5",
         "subtitle": "Text exercise 2",
         "lines": [
           "The snapper slowly appears and disappears, leaving scarcely a ripple. They paid a fat dividend that quarter. When I am a hundred I shall not require sleep.",
@@ -1972,13 +1972,13 @@
     ]
   },
   {
-    "id": "c734347e-099d-447c-bbe0-a9ded931aa3e",
-    "title": "New keys: x and b",
+    "id": "e054ee61-9146-4b73-b1f6-6c2791929cd8",
+    "title": "x and b",
     "keys": [],
     "lessons": [
       {
-        "id": "fae8e1a7-e0b9-4069-877e-b9949bb19fd3",
-        "subtitle": "New keys: x and b",
+        "id": "5779c94c-62c4-4b82-b962-2f560ed2f144",
+        "subtitle": "x and b",
         "lines": [
           "xx bb xx bb",
           "xb xb bx bx",
@@ -2001,7 +2001,7 @@
         ]
       },
       {
-        "id": "af4d028b-550e-40f5-a1d6-51a8a30520c7",
+        "id": "8ef3b28c-0bd2-4609-bef7-d165e1e0f69e",
         "subtitle": "New key exercise",
         "lines": [
           "ixqm ixqm lixr lixr",
@@ -2024,7 +2024,7 @@
         ]
       },
       {
-        "id": "8834f597-6060-412c-b795-f589a4e7c86a",
+        "id": "7bc98528-4259-4fea-bcbc-1ad44fb68a37",
         "subtitle": "Key exercise 1",
         "lines": [
           "ibex ibex exacerbate exacerbate",
@@ -2042,7 +2042,7 @@
         ]
       },
       {
-        "id": "a72a7165-4b8e-4a86-8278-8042ff6c92eb",
+        "id": "a0445962-4d0d-4b23-971b-352d3aa70bb9",
         "subtitle": "Key exercise 2",
         "lines": [
           "saltbox saltbox boxing boxing",
@@ -2061,7 +2061,7 @@
         ]
       },
       {
-        "id": "675280d6-dc11-471d-badb-5fdd8bf5964b",
+        "id": "97dcad61-175f-43f9-a08a-8b9a0d41d066",
         "subtitle": "Word exercise 1",
         "lines": [
           "inexcusableness Roxburgh brainstorm obnoxiously exhibit",
@@ -2074,7 +2074,7 @@
         ]
       },
       {
-        "id": "8c309366-c101-4edb-9c0f-4564bc950f7e",
+        "id": "e42e8ca3-71fd-4647-81ba-410e531cf07c",
         "subtitle": "Word exercise 2",
         "lines": [
           "exuberate inexhaustibly carboxylic unexceptionable textbooks",
@@ -2086,7 +2086,7 @@
         ]
       },
       {
-        "id": "5e38709f-9df9-462d-9d41-af03b8eb6e48",
+        "id": "7a0882af-f5d9-45e3-bb51-454e1a7f9a78",
         "subtitle": "Word exercise 3",
         "lines": [
           "exobiological inextirpable excludable boxed boxcars",
@@ -2098,7 +2098,7 @@
         ]
       },
       {
-        "id": "031324ef-6e09-4f41-98b9-845671a367e8",
+        "id": "ae13a5b2-d56c-44d9-9633-4b74478f35d6",
         "subtitle": "Blind exercise 1",
         "lines": [
           "It is inexorable. Put them on the box. But we fixed them. The box is empty.",
@@ -2110,7 +2110,7 @@
         ]
       },
       {
-        "id": "84e40b07-4a12-4478-b1ee-6eb3bf12027a",
+        "id": "0fae9f7a-0d0c-45dc-8ffd-31abc9ce21ef",
         "subtitle": "Blind exercise 2",
         "lines": [
           "But their resources were not yet exhausted. One must expect barbarians to behave barbariously.",
@@ -2122,7 +2122,7 @@
         ]
       },
       {
-        "id": "eee5461c-69f9-48b1-afb2-42357f927535",
+        "id": "056cae04-15f1-4363-baf1-061108d1bd34",
         "subtitle": "Text exercise 1",
         "lines": [
           "The edge of excitement had become blunted. But they won't take excuses. A new paroxysm was beginning. The race between them was exciting.",
@@ -2132,7 +2132,7 @@
         ]
       },
       {
-        "id": "b47e4f06-e438-4936-86a1-388bd629c470",
+        "id": "6a20fb25-0907-4ebf-9f40-f812b9662f71",
         "subtitle": "Text exercise 2",
         "lines": [
           "Bright and early next morning. And what makes bubbles burst when you blow 'em too big. But there isn't time to explain. I found nothing but stupidity, except for business.",
@@ -2143,13 +2143,13 @@
     ]
   },
   {
-    "id": "ea0be7e5-7c32-40e5-9e65-5a913bb4490f",
-    "title": "New keys: z, ?, :, <, > and /",
+    "id": "55b7f371-91d8-44a6-8f78-b774f2792c51",
+    "title": "z, ?, :, <, > and /",
     "keys": [],
     "lessons": [
       {
-        "id": "58e9c3fe-db47-4bf1-a3d1-c38a4d7ff041",
-        "subtitle": "New keys: z, ?, :, <, > and /",
+        "id": "80e5c176-6d09-40a4-ba48-3ef2e9267f87",
+        "subtitle": "z, ?, :, <, > and /",
         "lines": [
           "zz ?? :: << // >>",
           "z? z< z/ >z :z",
@@ -2172,7 +2172,7 @@
         ]
       },
       {
-        "id": "739ba26e-15e9-4e8f-9382-8cc5c380f7a4",
+        "id": "0ee34e73-a9c9-4bfe-86b6-228a42b1ac9b",
         "subtitle": "New key exercise 1",
         "lines": [
           "r?rh r?rh biaz biaz",
@@ -2195,7 +2195,7 @@
         ]
       },
       {
-        "id": "51bed8be-144f-45cc-ae0f-de17ba21b615",
+        "id": "95801b7a-8244-4f63-b689-a64673f5fcd7",
         "subtitle": "New key exercise 2",
         "lines": [
           "WHpZ E/?P ,rgl :z>R",
@@ -2217,7 +2217,7 @@
         ]
       },
       {
-        "id": "4d6a90d9-dfb2-4d4b-ba17-f13b69b88c2f",
+        "id": "6e69ea15-6a4d-421a-9354-dae11df8c5e4",
         "subtitle": "Key exercise 1",
         "lines": [
           "zeal zeal pzazz pzazz",
@@ -2237,7 +2237,7 @@
         ]
       },
       {
-        "id": "d90f1a5e-8939-4e0f-a3bf-a56e01b97f82",
+        "id": "7e5f70c9-bd8f-497b-a192-a72c01799f9e",
         "subtitle": "Key exercise 2",
         "lines": [
           "cozy cozy blitz blitz",
@@ -2257,7 +2257,7 @@
         ]
       },
       {
-        "id": "c7f16afd-a99a-459d-8b05-e454c2035408",
+        "id": "36c68acb-bde3-4791-ae8b-4315c5607613",
         "subtitle": "Word exercise 1",
         "lines": [
           "lazing frazzles bizarreness azotising Zho",
@@ -2274,7 +2274,7 @@
         ]
       },
       {
-        "id": "b3c6fa86-ba24-4c6a-a246-99fefa377c2d",
+        "id": "37b19d71-c4c0-4f74-8283-fe494d3602a5",
         "subtitle": "Word exercise 2",
         "lines": [
           ":grizzled: :resize: :britzka: :zeitgeist: :epizootic:",
@@ -2291,7 +2291,7 @@
         ]
       },
       {
-        "id": "c735de22-fd6b-4c32-93e6-f4af0758d204",
+        "id": "01a2648d-1c8e-4e4d-8f23-c20555f1376e",
         "subtitle": "Blind exercise 1",
         "lines": [
           "What a maze of contradiction she was? The ballroom buzzed with her name.",
@@ -2303,7 +2303,7 @@
         ]
       },
       {
-        "id": "29689255-bbb1-479d-8c5b-d8df12a78af1",
+        "id": "07723341-5be8-4cb2-9b92-faaf152c7086",
         "subtitle": "Blind exercise 2",
         "lines": [
           "It was a district recognized by no parish. Ziethen's company did not assist the Saxons.",
@@ -2315,7 +2315,7 @@
         ]
       },
       {
-        "id": "bf81ca1a-f997-47f5-a7b8-9ba0116d10f2",
+        "id": "6459829e-8594-4332-9d01-9196803475bb",
         "subtitle": "Text exercise 1",
         "lines": [
           "What suffering will have to be endured before the workers realize that? It was from a man in Arizona.",
@@ -2325,7 +2325,7 @@
         ]
       },
       {
-        "id": "56d157c5-c732-4f03-9259-556cd5de8089",
+        "id": "0548f47a-0155-408e-a776-9525d6b6672e",
         "subtitle": "Text exercise 2",
         "lines": [
           "As night drew on, the city became a blaze of light. I'm sizzled. Is it lazy? Hi sat paralyzed. He had to squeeze to get into the room.",
@@ -2337,13 +2337,13 @@
     ]
   },
   {
-    "id": "d34e27b7-fb03-4b63-b485-d82e22b81f61",
-    "title": "New keys: Numbers",
+    "id": "8ecfeddb-55a9-446f-be1e-5362a0efd233",
+    "title": "Numbers",
     "keys": [],
     "lessons": [
       {
-        "id": "c167ef03-1168-4ec2-94b3-763ba7d995ae",
-        "subtitle": "New keys: Numbers",
+        "id": "7c92f60f-7bf4-4a0b-804e-c1296a43a966",
+        "subtitle": "Numbers",
         "lines": [
           "13579 13579 24680 24680",
           "28160 28160 73594 73594",
@@ -2371,7 +2371,7 @@
         ]
       },
       {
-        "id": "ef9f3b43-3b0d-4b63-9488-9c90055a8d8d",
+        "id": "d8aa45b6-723a-440f-9f0f-83a3ae081e19",
         "subtitle": "New key exercise 1",
         "lines": [
           "a7w9 a7w9 v46t v46t",
@@ -2399,7 +2399,7 @@
         ]
       },
       {
-        "id": "cedb5c28-2957-412b-be0c-d81bd9f99ea4",
+        "id": "a50e1591-0992-43e3-9a0d-b569df7c7d65",
         "subtitle": "New key exercise 2",
         "lines": [
           "btS8 BL.4 M597 4Ex<",
@@ -2421,7 +2421,7 @@
         ]
       },
       {
-        "id": "41762950-e287-4d5e-924f-a4a058a1d569",
+        "id": "2e515ba6-146c-4ec3-ba78-d82a1ad5e2aa",
         "subtitle": "Key exercise 1",
         "lines": [
           "98 Ninety Eight",
@@ -2441,7 +2441,7 @@
         ]
       },
       {
-        "id": "754d187b-a817-4751-9e05-ba31cb4609b4",
+        "id": "f34da733-eaa0-4a9e-9f10-7d16ebd4163f",
         "subtitle": "Key exercise 2",
         "lines": [
           "476 Four Hundred Seventy Six",
@@ -2462,7 +2462,7 @@
         ]
       },
       {
-        "id": "b5dd0b57-6fe0-436b-9e66-fad5759c9fc4",
+        "id": "a5418538-b6b5-4da0-9f65-16941e9976f1",
         "subtitle": "Word exercise 1",
         "lines": [
           "43 Forty Three. 85 Eighty Five. 42 Forty Two. 13 Thirteen. 41 Forty One. 73 Seventy Three. 57 Fifty Seven. 42 Forty Two. 3 Three. 39 Thirty Nine",
@@ -2472,7 +2472,7 @@
         ]
       },
       {
-        "id": "b5446242-afa6-4755-aee7-d6a47a1669da",
+        "id": "797ab035-b3ac-4b37-b7ac-3f000551a868",
         "subtitle": "Word exercise 2",
         "lines": [
           "46 Forty Six. 89 Eighty Nine. 10 Ten. 72 Seventy Two. 22 Twenty Two. 88 Eighty Eight. 41 Forty One. 0 Zero. 77 Seventy Seven. 83 Eighty Three",
@@ -2482,7 +2482,7 @@
         ]
       },
       {
-        "id": "9a7a8517-3d1b-4100-a812-9b1f657ecfba",
+        "id": "dbd5f91d-ac3b-4b0b-94a3-cb0bf07c866e",
         "subtitle": "Blind exercise 1",
         "lines": [
           "Writing in the month of January 1903, to the New York. January 11, 1905. June 6, 1916.",
@@ -2492,7 +2492,7 @@
         ]
       },
       {
-        "id": "f53218ee-23f4-4118-8e10-58e4d90b7d89",
+        "id": "b1368190-fdf3-409f-852f-2cb11a10d306",
         "subtitle": "Blind exercise 2",
         "lines": [
           "Here are 7,000,000 comrades in an organized, international, world wide, revolutionary movement.",
@@ -2503,7 +2503,7 @@
         ]
       },
       {
-        "id": "72e3fd85-5fa3-49d5-bb17-2b9a8f113947",
+        "id": "6291ccf5-6c68-46e2-8a41-f1c84c030e70",
         "subtitle": "Text exercise 1",
         "lines": [
           "The man had gone into Alaska with him in 1888. At 5,000,000 a year increase, her total increase in the intervening 70 years must be 350,000,000.",
@@ -2512,7 +2512,7 @@
         ]
       },
       {
-        "id": "a4a47064-d611-457c-92f1-75bff8b75a95",
+        "id": "d575b85f-983e-4a59-aa3d-1656fec5a1da",
         "subtitle": "Text exercise 2",
         "lines": [
           "I like him 6 tin biscuit, 4 bag rice, 24 tin bullamacow. It was somewhere between 1550 and 1650. The British limit per man was 400 bricks per day.",
@@ -2523,13 +2523,13 @@
     ]
   },
   {
-    "id": "184ef749-5ae0-4eca-a983-d978a5a0a99e",
-    "title": "New keys: All keys",
+    "id": "d63d6e23-09bb-4dea-9dd4-3e7c0e42c53d",
+    "title": "All keys",
     "keys": [],
     "lessons": [
       {
-        "id": "4b002134-eb21-46ae-9eac-b6ae084b6db6",
-        "subtitle": "New keys: All keys",
+        "id": "bf9c7acc-e291-4965-8fdd-76bf3d7d6f7a",
+        "subtitle": "All keys",
         "lines": [
           "+}+} +}+} $h%f $h%f",
           "#3#^ #3#^ `\\=< `\\=<",
@@ -2557,7 +2557,7 @@
         ]
       },
       {
-        "id": "9df98f8b-c475-477c-b921-50b9815f86f7",
+        "id": "2d338994-1f97-44eb-a096-e4a076729a7b",
         "subtitle": "New key exercise",
         "lines": [
           "6\\8\\ 6\\8\\ ~#$# ~#$#",
@@ -2585,7 +2585,7 @@
         ]
       },
       {
-        "id": "84c8c011-df46-4edd-b870-3609ad1c5fb8",
+        "id": "77e5524c-0970-4cb3-ad1f-377cca9548af",
         "subtitle": "Key exercise 1",
         "lines": [
           "(word) (word) (word) (word)",
@@ -2602,7 +2602,7 @@
         ]
       },
       {
-        "id": "6569e0e1-bf98-4750-b284-fd2871de798d",
+        "id": "afc10435-63bf-421e-b87d-242b72e54376",
         "subtitle": "Key exercise 2",
         "lines": [
           "|1 mile| ~ |1.6 km| |1 mile| ~ |1.6 km| |1 mile| ~ |1.6 km| |1 mile| ~ |1.6 km|",
@@ -2619,7 +2619,7 @@
         ]
       },
       {
-        "id": "1568f348-0701-4e16-9c11-367aedb4dd3b",
+        "id": "cabbf1c0-53d7-4138-8d21-fb7331c51e90",
         "subtitle": "Word exercise",
         "lines": [
           "Round Brackets: (); Square Brackets: []; Curly Brackets: {}; Inequality Signs: <>; Ampersand: &; Vertical Bar: |",
@@ -2628,7 +2628,7 @@
         ]
       },
       {
-        "id": "4d17d697-7908-4997-bcf6-e41c8899c71a",
+        "id": "68bce501-2906-4a3f-9758-e9786bd3809c",
         "subtitle": "Blind exercise",
         "lines": [
           "One [1], Two {2}, Three [3], Four {4}, Five [5], Six {6}, Seven [7], Eight {8}, Nine [9]",
@@ -2638,7 +2638,7 @@
         ]
       },
       {
-        "id": "ea9db2b7-6507-4e16-884e-99235ebfd1d5",
+        "id": "1a071b49-d714-4486-9a58-0363fda00d9e",
         "subtitle": "Text exercise 1",
         "lines": [
           "Certain shorthand date formats use / as a delimiter, for example \"6/21/1788\" June 21, 1788.",
@@ -2646,7 +2646,7 @@
         ]
       },
       {
-        "id": "e13feb74-71ef-4810-a2ca-8e848032c961",
+        "id": "30df11ad-7def-4703-9659-7d85d99767a1",
         "subtitle": "Text exercise 2",
         "lines": [
           "Certain prefixes (co-, pre-, mid-, de-, non-, anti-, etc.) may or may not be hyphenated. Hyphens are occasionally used to denote syllabification, as in syl-la-bi-fi-ca-tion.",
