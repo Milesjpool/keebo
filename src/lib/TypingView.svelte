@@ -1,15 +1,24 @@
 <script>
   import FingerIndicator from './FingerIndicator.svelte'
 
-  let { lesson, onComplete, onBack } = $props()
+  let { lesson, onComplete, onBack, strictMode = false } = $props()
 
   let lineIndex = $state(0)
   let typed = $state('')
   let shaking = $state(false)
   let startTime = $state(null)
   let elapsed = $state(0)
+  let lineResults = $state([])
   const line = $derived(lesson.lines[lineIndex])
   const total = $derived(lesson.lines.length)
+
+  const accuracy = $derived(() => {
+    const cc = lineResults.reduce((n, r) => n + r.correct, 0)
+    const ct = lineResults.reduce((n, r) => n + r.total, 0)
+    const cur = [...typed].filter((c, i) => c === line[i]).length
+    const tot = ct + typed.length
+    return tot === 0 ? 1 : (cc + cur) / tot
+  })
 
   $effect(() => {
     if (!startTime) return
@@ -30,20 +39,23 @@
 
       if (e.key === 'Enter') {
         e.preventDefault()
-        if (typed === line) {
-          if (lineIndex < total - 1) {
-            lineIndex++
-            typed = ''
-          } else {
-            const secs = startTime ? (Date.now() - startTime) / 1000 : 1
-            const chars = lesson.lines.reduce((n, l) => n + l.length, 0)
-            onComplete({ wpm: Math.round((chars / 5) / (secs / 60)), elapsed: Math.round(secs) })
-          }
-        } else {
+        if (typed.length < line.length) return
+        const match = typed === line
+        if (!match) {
           if (!shaking) {
             shaking = true
             setTimeout(() => { shaking = false }, 400)
           }
+          if (strictMode) return
+        }
+        lineResults.push({ correct: [...typed].filter((c, i) => c === line[i]).length, total: line.length })
+        if (lineIndex < total - 1) {
+          lineIndex++
+          typed = ''
+        } else {
+          const secs = startTime ? (Date.now() - startTime) / 1000 : 1
+          const chars = lesson.lines.reduce((n, l) => n + l.length, 0)
+          onComplete({ wpm: Math.round((chars / 5) / (secs / 60)), elapsed: Math.round(secs), accuracy: accuracy() })
         }
         return
       }
@@ -77,7 +89,7 @@
   <nav>
     <button class="back-btn" onclick={onBack}>← back</button>
     <span class="timer">{startTime ? formatTime(elapsed) : ''}</span>
-    <span class="accuracy"></span>
+    <span class="accuracy">{startTime ? Math.round(accuracy() * 100) + '%' : ''}</span>
   </nav>
 
   <div class="progress-bar">

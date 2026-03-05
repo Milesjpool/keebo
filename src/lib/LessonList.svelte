@@ -77,7 +77,7 @@
           <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
           <span class="lesson-subtitle">{lesson.subtitle}</span>
           <span class="lesson-status">
-            {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm` : 'done'}{:else if locked}locked{:else}start{/if}
+            {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}
           </span>
         </button>
       </li>

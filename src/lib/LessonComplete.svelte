@@ -24,6 +24,7 @@
       <div class="stats">
         <div class="stat"><span class="stat-value">{stats.wpm}</span><span class="stat-label">wpm</span></div>
         <div class="stat"><span class="stat-value">{formatTime(stats.elapsed)}</span><span class="stat-label">time</span></div>
+        <div class="stat"><span class="stat-value">{Math.round((stats.accuracy ?? 1) * 100)}%</span><span class="stat-label">accuracy</span></div>
       </div>
     {/if}
     <div class="actions">

@@ -1,6 +1,23 @@
 <script>
   let { groups, progress, onSelect, focused = $bindable(0) } = $props()
 
+  let listEl = $state(null)
+  let topHeight = $state(0)
+  let bottomHeight = $state(0)
+
+  function updateFades() {
+    if (!listEl) return
+    const threshold = 32
+    const maxH = 40
+    topHeight = Math.min(listEl.scrollTop / threshold, 1) * maxH
+    const remaining = listEl.scrollHeight - listEl.clientHeight - listEl.scrollTop
+    bottomHeight = Math.min(remaining / threshold, 1) * maxH
+  }
+
+  $effect(() => {
+    if (listEl) updateFades()
+  })
+
   function groupState(i) {
     const g = groups[i]
     const done = g.lessons.filter(l => l.id in progress).length
@@ -43,7 +60,8 @@
     <p class="subtitle">touch typing, step by step</p>
   </header>
 
-  <ul>
+  <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
+  <ul bind:this={listEl} onscroll={updateFades}>
     {#each groups as group, i}
       {@const state = groupState(i)}
       <li>
@@ -74,6 +92,7 @@
       </li>
     {/each}
   </ul>
+  </div>
 </div>
 
 <style>
@@ -81,10 +100,42 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 4rem 2rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .list-wrap {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+  }
+
+  .list-wrap::before,
+  .list-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .list-wrap::before {
+    top: 0;
+    height: var(--top-height, 0px);
+    background: linear-gradient(to bottom, var(--bg), transparent);
+  }
+
+  .list-wrap::after {
+    bottom: 0;
+    height: var(--bottom-height, 0px);
+    background: linear-gradient(to top, var(--bg), transparent);
   }
 
   header {
     margin-bottom: 3rem;
+    flex-shrink: 0;
   }
 
   h1 {
@@ -105,6 +156,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    height: 100%;
+    overflow-y: auto;
   }
 
   .group-btn {

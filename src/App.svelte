@@ -85,9 +85,9 @@
   function completeLesson(stats) {
     const id = flatLessons[currentFlatIdx].id
     const prev = progress[id]
-    progress[id] = (!prev || stats.wpm > (prev.wpm ?? 0))
-      ? { wpm: stats.wpm, elapsed: stats.elapsed }
-      : prev
+    const score = stats.wpm * (stats.accuracy ?? 1)
+    const newRecord = { wpm: stats.wpm, elapsed: stats.elapsed, accuracy: stats.accuracy ?? 1, score }
+    progress[id] = (!prev || score > (prev.score ?? 0)) ? newRecord : prev
     lastStats = stats
     screen = 'complete'
   }
@@ -148,7 +148,7 @@
 {:else if screen === 'lessons'}
   <LessonList group={groups[currentGroupIdx]} groupIdx={currentGroupIdx} {progress} onSelect={startLesson} onBack={goToGroups} bind:focused={lessonFocused[currentGroupIdx]} />
 {:else if screen === 'typing'}
-  <TypingView lesson={flatLessons[currentFlatIdx]} onComplete={completeLesson} onBack={goToLessons} />
+  <TypingView lesson={flatLessons[currentFlatIdx]} onComplete={completeLesson} onBack={goToLessons} strictMode={false} />
 {:else if screen === 'complete'}
   <LessonComplete
     lesson={flatLessons[currentFlatIdx]}
