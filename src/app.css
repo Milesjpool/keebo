@@ -20,6 +20,7 @@
   --cursor-text: #100f08;
   --accent: #e8c828;
   --muted: #6a5e30;
+  --finger: #c8b84a;
   --green: #88aa30;
 }
 
@@ -38,6 +39,7 @@
   --cursor-text: #ffffff;
   --accent: #0d9488;
   --muted: #5a8585;
+  --finger: #0d9488;
   --green: #1a7a50;
 }
 
@@ -57,6 +59,7 @@
     --cursor-text: #100f08;
     --accent: #e8c828;
     --muted: #6a5e30;
+    --finger: #c8b84a;
     --green: #88aa30;
   }
 }
@@ -77,6 +80,7 @@
     --cursor-text: #ffffff;
     --accent: #0d9488;
     --muted: #5a8585;
+    --finger: #0d9488;
     --green: #1a7a50;
   }
 }
