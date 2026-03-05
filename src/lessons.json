@@ -1,11 +1,16 @@
 [
   {
-    "id": "group-1",
+    "id": "910001e5-ed4d-4ddc-a0c8-dd0502e42993",
     "title": "Home Row: Left Hand",
-    "keys": ["a", "s", "d", "f"],
+    "keys": [
+      "a",
+      "s",
+      "d",
+      "f"
+    ],
     "lessons": [
       {
-        "id": "1-1",
+        "id": "52f9bd3a-5963-49a1-8e6c-2d445171df4e",
         "subtitle": "drill",
         "lines": [
           "aaa sss ddd fff",
@@ -14,7 +19,7 @@
         ]
       },
       {
-        "id": "1-2",
+        "id": "096ccb69-4527-4a1e-9822-7d2fee688d90",
         "subtitle": "words",
         "lines": [
           "dad fad sad add",
@@ -25,12 +30,17 @@
     ]
   },
   {
-    "id": "group-2",
+    "id": "694c04b3-b9d1-4c3b-80d5-321f2b863cf4",
     "title": "Home Row: Right Hand",
-    "keys": ["j", "k", "l", ";"],
+    "keys": [
+      "j",
+      "k",
+      "l",
+      ";"
+    ],
     "lessons": [
       {
-        "id": "2-1",
+        "id": "fade1111-a5e4-444b-a5ac-ba41f9af7472",
         "subtitle": "drill",
         "lines": [
           "jjj kkk lll ;;;",
@@ -39,7 +49,7 @@
         ]
       },
       {
-        "id": "2-2",
+        "id": "027ce631-69a0-499e-a86c-94bb342e85f1",
         "subtitle": "patterns",
         "lines": [
           "jkl; jkl; jkl;",
@@ -50,12 +60,21 @@
     ]
   },
   {
-    "id": "group-3",
+    "id": "2c391827-840f-4e7f-9aef-f99b349412a9",
     "title": "Home Row: Both Hands",
-    "keys": ["a", "s", "d", "f", "j", "k", "l", ";"],
+    "keys": [
+      "a",
+      "s",
+      "d",
+      "f",
+      "j",
+      "k",
+      "l",
+      ";"
+    ],
     "lessons": [
       {
-        "id": "3-1",
+        "id": "00a1013e-edf5-464b-8772-9ee9f0f9b5f0",
         "subtitle": "drill",
         "lines": [
           "asdf jkl; asdf jkl;",
@@ -64,7 +83,7 @@
         ]
       },
       {
-        "id": "3-2",
+        "id": "5ab28906-64db-4938-bafd-f6e63b9c74a7",
         "subtitle": "words",
         "lines": [
           "add all ask fall flask",
@@ -75,12 +94,23 @@
     ]
   },
   {
-    "id": "group-4",
+    "id": "106021ca-59c3-4b26-8027-706cd1db8460",
     "title": "Extend: G and H",
-    "keys": ["a", "s", "d", "f", "g", "h", "j", "k", "l", ";"],
+    "keys": [
+      "a",
+      "s",
+      "d",
+      "f",
+      "g",
+      "h",
+      "j",
+      "k",
+      "l",
+      ";"
+    ],
     "lessons": [
       {
-        "id": "4-1",
+        "id": "54cedcfe-dfbd-45b2-ad27-93529c19a809",
         "subtitle": "drill",
         "lines": [
           "ggg hhh ggg hhh",
@@ -89,7 +119,7 @@
         ]
       },
       {
-        "id": "4-2",
+        "id": "f64b759c-bab6-4c8f-8a0f-8cbb01dd9302",
         "subtitle": "words",
         "lines": [
           "ash hash gash had has",

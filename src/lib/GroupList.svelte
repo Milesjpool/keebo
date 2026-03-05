@@ -3,8 +3,8 @@
 
   function groupState(i) {
     const g = groups[i]
-    const done = progress.slice(g.flatStart, g.flatStart + g.lessons.length).filter(Boolean).length
-    const locked = i > 0 && !progress[groups[i - 1].flatStart + groups[i - 1].lessons.length - 1]
+    const done = g.lessons.filter(l => l.id in progress).length
+    const locked = i > 0 && !(groups[i - 1].lessons[groups[i - 1].lessons.length - 1].id in progress)
     return { done, total: g.lessons.length, locked, complete: done === g.lessons.length }
   }
 

@@ -26,13 +26,10 @@
 
   function loadProgress() {
     try {
-      const saved = JSON.parse(localStorage.getItem('keebo-progress') ?? '[]')
-      const base = new Array(flatLessons.length).fill(false)
-      saved.forEach((v, i) => { if (i < base.length) base[i] = v })
-      return base
-    } catch {
-      return new Array(flatLessons.length).fill(false)
-    }
+      const saved = JSON.parse(localStorage.getItem('keebo-progress') ?? '{}')
+      if (typeof saved === 'object' && saved !== null && !Array.isArray(saved)) return saved
+    } catch {}
+    return {}
   }
 
   let progress = $state(loadProgress())
@@ -41,10 +38,15 @@
     localStorage.setItem('keebo-progress', JSON.stringify(progress))
   })
 
+  function isDone(lesson) {
+    return lesson.id in progress
+  }
+
   function lastUnlockedGroup() {
     let last = 0
     for (let i = 0; i < groups.length; i++) {
-      const locked = i > 0 && !progress[groups[i - 1].flatStart + groups[i - 1].lessons.length - 1]
+      const g = groups[i]
+      const locked = i > 0 && !isDone(groups[i - 1].lessons[groups[i - 1].lessons.length - 1])
       if (!locked) last = i
       else break
     }
@@ -55,7 +57,7 @@
     const g = groups[groupIdx]
     for (let i = 0; i < g.lessons.length; i++) {
       const fi = g.lessons[i].flatIdx
-      if (fi > 0 && !progress[fi - 1]) return Math.max(0, i - 1)
+      if (fi > 0 && !isDone(flatLessons[fi - 1])) return Math.max(0, i - 1)
     }
     return g.lessons.length - 1
   }
@@ -81,7 +83,11 @@
   let lastStats = $state(null)
 
   function completeLesson(stats) {
-    progress[currentFlatIdx] = true
+    const id = flatLessons[currentFlatIdx].id
+    const prev = progress[id]
+    progress[id] = (!prev || stats.wpm > (prev.wpm ?? 0))
+      ? { wpm: stats.wpm, elapsed: stats.elapsed }
+      : prev
     lastStats = stats
     screen = 'complete'
   }

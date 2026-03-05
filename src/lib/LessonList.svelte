@@ -2,8 +2,8 @@
   let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0) } = $props()
 
   function isLocked(i) {
-    const flatIdx = group.lessons[i].flatIdx
-    return flatIdx > 0 && !progress[flatIdx - 1]
+    if (i === 0) return false
+    return !(group.lessons[i - 1].id in progress)
   }
 
   const lastUnlocked = $derived(() => {
@@ -14,7 +14,7 @@
   })
 
   const doneCount = $derived(
-    group.lessons.filter(l => progress[l.flatIdx]).length
+    group.lessons.filter(l => l.id in progress).length
   )
 
   $effect(() => {
@@ -61,7 +61,8 @@
 
     <!-- Lesson cards, tabbed in -->
     {#each group.lessons as lesson, i}
-      {@const done = progress[lesson.flatIdx]}
+      {@const done = lesson.id in progress}
+      {@const lessonStats = progress[lesson.id]}
       {@const locked = isLocked(i)}
       <li class="lesson-item">
         <button
@@ -76,7 +77,7 @@
           <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
           <span class="lesson-subtitle">{lesson.subtitle}</span>
           <span class="lesson-status">
-            {#if done}done{:else if locked}locked{:else}start{/if}
+            {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm` : 'done'}{:else if locked}locked{:else}start{/if}
           </span>
         </button>
       </li>
