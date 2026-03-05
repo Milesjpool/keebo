@@ -11,6 +11,7 @@ function extractText(html) {
     .replace(/&gt;/g, '>')
     .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'")
+    .replace(/\\n/g, ' ')
 }
 
 function extractH1(html) {

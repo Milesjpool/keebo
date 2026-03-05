@@ -49,6 +49,7 @@
   }
 </script>
 
+{#if info}
 <div class="indicator">
   <Fingers
     outline="var(--muted)"
@@ -65,6 +66,7 @@
     rightPinky={hi("right", "pinky")}
   />
 </div>
+{/if}
 
 <style>
   .indicator {
