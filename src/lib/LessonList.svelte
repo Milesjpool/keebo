@@ -1,6 +1,22 @@
 <script>
   let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0) } = $props()
 
+  let listEl = $state(null)
+  let topHeight = $state(0)
+  let bottomHeight = $state(0)
+
+  function updateFades() {
+    if (!listEl) return
+    const threshold = 32
+    topHeight = Math.min(listEl.scrollTop / threshold, 1) * 16
+    const remaining = listEl.scrollHeight - listEl.clientHeight - listEl.scrollTop
+    bottomHeight = Math.min(remaining / threshold, 1) * 40
+  }
+
+  $effect(() => {
+    if (listEl) updateFades()
+  })
+
   function isLocked(i) {
     if (i === 0) return false
     return !(group.lessons[i - 1].id in progress)
@@ -44,45 +60,46 @@
     <p class="subtitle">touch typing, step by step</p>
   </header>
 
-  <ul>
-    <!-- Group header card — acts as back button -->
-    <li>
-      <button class="group-card" class:complete={doneCount === group.lessons.length} onclick={onBack}>
-        <span class="group-num">{String(groupIdx + 1).padStart(2, '0')}</span>
-        <div class="group-info">
-          <span class="group-title">{group.title}</span>
-          <span class="group-keys">{group.keys.join('  ')}</span>
-        </div>
-        <span class="group-status">
-          {doneCount}/{group.lessons.length}
-        </span>
-      </button>
-    </li>
+  <!-- Group header card — pinned, acts as back button -->
+  <div class="group-header">
+    <button class="group-card" class:complete={doneCount === group.lessons.length} onclick={onBack}>
+      <span class="group-num">{String(groupIdx + 1).padStart(2, '0')}</span>
+      <div class="group-info">
+        <span class="group-title">{group.title}</span>
+        <span class="group-keys">{group.keys.join('  ')}</span>
+      </div>
+      <span class="group-status">
+        {doneCount}/{group.lessons.length}
+      </span>
+    </button>
+  </div>
 
-    <!-- Lesson cards, tabbed in -->
-    {#each group.lessons as lesson, i}
-      {@const done = lesson.id in progress}
-      {@const lessonStats = progress[lesson.id]}
-      {@const locked = isLocked(i)}
-      <li class="lesson-item">
-        <button
-          class="lesson-btn"
-          class:done
-          class:locked
-          class:focused={focused === i}
-          onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
-          onmouseenter={() => { if (!locked) focused = i }}
-          disabled={locked}
-        >
-          <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
-          <span class="lesson-subtitle">{lesson.subtitle}</span>
-          <span class="lesson-status">
-            {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}
-          </span>
-        </button>
-      </li>
-    {/each}
-  </ul>
+  <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
+    <ul bind:this={listEl} onscroll={updateFades}>
+      {#each group.lessons as lesson, i}
+        {@const done = lesson.id in progress}
+        {@const lessonStats = progress[lesson.id]}
+        {@const locked = isLocked(i)}
+        <li class="lesson-item">
+          <button
+            class="lesson-btn"
+            class:done
+            class:locked
+            class:focused={focused === i}
+            onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
+            onmouseenter={() => { if (!locked) focused = i }}
+            disabled={locked}
+          >
+            <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
+            <span class="lesson-subtitle">{lesson.subtitle}</span>
+            <span class="lesson-status">
+              {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}
+            </span>
+          </button>
+        </li>
+      {/each}
+    </ul>
+  </div>
 </div>
 
 <style>
@@ -90,10 +107,47 @@
     max-width: 600px;
     margin: 0 auto;
     padding: 4rem 2rem;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
   }
 
   header {
     margin-bottom: 3rem;
+    flex-shrink: 0;
+  }
+
+  .group-header {
+    flex-shrink: 0;
+    margin-bottom: 0.5rem;
+  }
+
+  .list-wrap {
+    flex: 1;
+    min-height: 0;
+    position: relative;
+  }
+
+  .list-wrap::before,
+  .list-wrap::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  .list-wrap::before {
+    top: 0;
+    height: var(--top-height, 0px);
+    background: linear-gradient(to bottom, var(--bg), transparent);
+  }
+
+  .list-wrap::after {
+    bottom: 0;
+    height: var(--bottom-height, 0px);
+    background: linear-gradient(to top, var(--bg), transparent);
   }
 
   h1 {
@@ -114,6 +168,8 @@
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
+    height: 100%;
+    overflow-y: auto;
   }
 
   /* Group header card */
