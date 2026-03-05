@@ -1,45 +1,11 @@
 <script>
   import Fingers from "./Fingers.svelte";
-
-  const FINGER_MAP = {
-    q: { hand: "left", finger: "pinky" },
-    a: { hand: "left", finger: "pinky" },
-    z: { hand: "left", finger: "pinky" },
-    w: { hand: "left", finger: "ring" },
-    s: { hand: "left", finger: "ring" },
-    x: { hand: "left", finger: "ring" },
-    e: { hand: "left", finger: "middle" },
-    d: { hand: "left", finger: "middle" },
-    c: { hand: "left", finger: "middle" },
-    r: { hand: "left", finger: "index" },
-    f: { hand: "left", finger: "index" },
-    v: { hand: "left", finger: "index" },
-    t: { hand: "left", finger: "index" },
-    g: { hand: "left", finger: "index" },
-    b: { hand: "left", finger: "index" },
-    " ": { hand: "thumb", finger: "thumb" },
-    y: { hand: "right", finger: "index" },
-    h: { hand: "right", finger: "index" },
-    n: { hand: "right", finger: "index" },
-    u: { hand: "right", finger: "index" },
-    j: { hand: "right", finger: "index" },
-    m: { hand: "right", finger: "index" },
-    i: { hand: "right", finger: "middle" },
-    k: { hand: "right", finger: "middle" },
-    ",": { hand: "right", finger: "middle" },
-    o: { hand: "right", finger: "ring" },
-    l: { hand: "right", finger: "ring" },
-    ".": { hand: "right", finger: "ring" },
-    p: { hand: "right", finger: "pinky" },
-    ";": { hand: "right", finger: "pinky" },
-    "'": { hand: "right", finger: "pinky" },
-    "\n": { hand: "right", finger: "pinky" },
-  };
+  import keymap from "../keymap.json";
 
   let { char } = $props();
 
   const info = $derived(
-    char != null ? (FINGER_MAP[char.toLowerCase()] ?? null) : null,
+    char != null ? (keymap.fingerMap[char.toLowerCase()] ?? null) : null,
   );
 
   function hi(hand, finger) {

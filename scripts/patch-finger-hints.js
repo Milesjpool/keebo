@@ -43,7 +43,7 @@ for (const L of Object.keys(byLesson).map(Number).sort((a, b) => a - b)) {
 }
 
 const json = JSON.parse(readFileSync('src/lessons.json', 'utf8'))
-const flat = json.flatMap(g => g.lessons)
+const flat = json.groups.flatMap(g => g.lessons)
 
 if (flat.length !== order.length) {
   console.error(`Mismatch: ${flat.length} lessons in JSON vs ${order.length} raw entries`)
@@ -55,6 +55,7 @@ for (let i = 0; i < flat.length; i++) {
 }
 
 writeFileSync('src/lessons.json', JSON.stringify(json, null, 2))
+
 console.log(`Patched ${flat.length} lessons`)
 console.log(`  With hints: ${order.filter(x => x.hints).length}`)
 console.log(`  Without:    ${order.filter(x => !x.hints).length}`)

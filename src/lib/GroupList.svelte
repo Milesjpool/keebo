@@ -77,7 +77,7 @@
           <span class="group-num">{String(i + 1).padStart(2, '0')}</span>
           <div class="group-info">
             <span class="group-title">{group.title}</span>
-            <span class="group-keys">{group.keys.join('  ')}</span>
+  
           </div>
           <span class="group-status">
             {#if state.locked}
@@ -209,11 +209,6 @@
     color: var(--text);
   }
 
-  .group-keys {
-    font-size: 0.75rem;
-    color: var(--muted);
-    letter-spacing: 0.15em;
-  }
 
   .group-status {
     font-size: 0.75rem;

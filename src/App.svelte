@@ -1,5 +1,6 @@
 <script>
-  import rawGroups from './lessons.json'
+  import lessonsData from './lessons.json'
+  const rawGroups = lessonsData.groups
   import GroupList from './lib/GroupList.svelte'
   import LessonList from './lib/LessonList.svelte'
   import TypingView from './lib/TypingView.svelte'
@@ -14,7 +15,7 @@
       ...l,
       flatIdx: flatIdx++,
       title: `${g.title} · ${l.subtitle}`,
-      keys: g.keys,
+
     }))
   }))
 

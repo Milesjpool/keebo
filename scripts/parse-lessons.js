@@ -83,9 +83,9 @@ for (const L of Object.keys(byLesson).map(Number).sort((a, b) => a - b)) {
   }
 
   if (lessons.length > 0) {
-    groups.push({ id: crypto.randomUUID(), title: groupTitle, keys: [], lessons })
+    groups.push({ id: crypto.randomUUID(), title: groupTitle, lessons })
   }
 }
 
-writeFileSync('src/lessons.json', JSON.stringify(groups, null, 2))
+writeFileSync('src/lessons.json', JSON.stringify({ keymap: 'qwerty', groups }, null, 2))
 console.log(`\nDone. ${groups.length} groups, ${groups.reduce((n, g) => n + g.lessons.length, 0)} lessons written to src/lessons.json`)
