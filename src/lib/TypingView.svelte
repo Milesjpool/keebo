@@ -23,7 +23,7 @@
 
   $effect(() => {
     function onKeydown(e) {
-      if (e.key === 'Escape' || e.key === 'ArrowLeft') {
+      if (e.key === 'Escape') {
         onBack()
         return
       }
@@ -95,7 +95,7 @@
   <main>
     <div class="line-wrap" class:shaking>
       <div class="line-display">
-        {#each line.split('') as char, i}<span class="char {charState(i)}">{char === ' ' ? '\u00a0' : char}</span>{/each}<span class="char" class:cursor={typed.length === line.length} style:visibility={typed.length === line.length ? 'visible' : 'hidden'}>↵</span>
+        {#each line.split('') as char, i}{@const state = charState(i)}<span class="char {state}">{char === ' ' ? (state === 'correct' || state === 'error' ? '·' : '\u00a0') : char}</span>{/each}<span class="char" class:cursor={typed.length === line.length} style:visibility={typed.length === line.length ? 'visible' : 'hidden'}>↵</span>
       </div>
     </div>
     <FingerIndicator char={currentChar} />
