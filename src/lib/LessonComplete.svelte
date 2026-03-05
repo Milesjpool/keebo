@@ -1,5 +1,9 @@
 <script>
+  import { getMedal, EMOJI } from './medals.js'
+
   let { lesson, hasNext, stats, onNext, onBack } = $props()
+
+  const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1)) : null)
 
   function formatTime(s) {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
@@ -17,9 +21,15 @@
 
 <div class="complete-view">
   <div class="card">
-    <div class="check">[ done ]</div>
     <h2>lesson complete</h2>
     <p class="lesson-name">{lesson.title}</p>
+    {#if medal}
+      <div class="podium">
+        <span class="podium-emoji bronze">{EMOJI.bronze}</span>
+        <span class="podium-emoji gold" class:unearned={medal !== 'gold'}>{EMOJI.gold}</span>
+        <span class="podium-emoji silver" class:unearned={medal === 'bronze'}>{EMOJI.silver}</span>
+      </div>
+    {/if}
     {#if stats}
       <div class="stats">
         <div class="stat"><span class="stat-value">{stats.wpm}</span><span class="stat-label">wpm</span></div>
@@ -59,18 +69,24 @@
     gap: 1rem;
   }
 
-  .check {
-    font-size: 0.875rem;
-    color: var(--green);
-    letter-spacing: 0.1em;
-    margin-bottom: 0.5rem;
-  }
-
   h2 {
     font-size: 1.25rem;
     font-weight: 500;
     color: var(--correct);
   }
+
+  .podium {
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    margin: 0.25rem 0;
+  }
+
+  .podium-emoji { line-height: 1; }
+  .podium-emoji.gold   { font-size: 3rem; }
+  .podium-emoji.silver { font-size: 2.25rem; }
+  .podium-emoji.bronze { font-size: 1.75rem; }
+  .podium-emoji.unearned { opacity: 0.15; filter: grayscale(1); }
 
   .stats {
     display: flex;

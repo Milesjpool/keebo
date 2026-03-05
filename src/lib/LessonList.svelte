@@ -1,4 +1,6 @@
 <script>
+  import { getMedal, getGroupMedal, EMOJI } from './medals.js'
+
   let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0) } = $props()
 
   let listEl = $state(null)
@@ -29,9 +31,10 @@
     return group.lessons.length - 1
   })
 
-  const doneCount = $derived(
-    group.lessons.filter(l => l.id in progress).length
-  )
+  const doneCount = $derived(group.lessons.filter(l => l.id in progress).length)
+  const allDone = $derived(doneCount === group.lessons.length)
+  const groupMedal = $derived(allDone ? getGroupMedal(group, progress) : null)
+  const groupAllGold = $derived(allDone && group.lessons.every(l => getMedal(progress[l.id]?.score) === 'gold'))
 
   $effect(() => {
     function onKeydown(e) {
@@ -68,7 +71,7 @@
         <span class="group-title">{group.title}</span>
       </div>
       <span class="group-status">
-        {doneCount}/{group.lessons.length}
+        {doneCount}/{group.lessons.length}{#if groupAllGold}<span class="group-medal">🏆</span>{:else if groupMedal}<span class="group-medal">{EMOJI[groupMedal]}</span>{/if}
       </span>
     </button>
   </div>
@@ -92,7 +95,7 @@
             <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
             <span class="lesson-subtitle">{lesson.subtitle}</span>
             <span class="lesson-status">
-              {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}
+              {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}{#if done}{@const m = getMedal(lessonStats?.score)}{#if m}<span class="lesson-medal">{EMOJI[m]}</span>{/if}{/if}
             </span>
           </button>
         </li>
@@ -220,6 +223,11 @@
     color: var(--green);
   }
 
+  .group-medal {
+    margin-left: 0.3rem;
+    font-size: 1rem;
+  }
+
   /* Lesson cards */
   .lesson-item {
     padding-left: 1.5rem;
@@ -275,5 +283,10 @@
 
   .lesson-btn.done .lesson-status {
     color: var(--green);
+  }
+
+  .lesson-medal {
+    margin-left: 0.3rem;
+    font-size: 1rem;
   }
 </style>

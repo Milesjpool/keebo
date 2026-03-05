@@ -1,4 +1,6 @@
 <script>
+  import { getGroupMedal, getMedal, EMOJI } from './medals.js'
+
   let { groups, progress, onSelect, focused = $bindable(0) } = $props()
 
   let listEl = $state(null)
@@ -82,10 +84,10 @@
           <span class="group-status">
             {#if state.locked}
               locked
-            {:else if state.complete}
-              {state.done}/{state.total}
             {:else}
-              {state.done}/{state.total}
+              {@const gm = state.complete ? getGroupMedal(groups[i], progress) : null}
+              {@const allGold = state.complete && groups[i].lessons.every(l => getMedal(progress[l.id]?.score) === 'gold')}
+              {state.done}/{state.total}{#if allGold}<span class="group-medal">🏆</span>{:else if gm}<span class="group-medal">{EMOJI[gm]}</span>{/if}
             {/if}
           </span>
         </button>
@@ -217,5 +219,10 @@
 
   .group-btn.complete .group-status {
     color: var(--green);
+  }
+
+  .group-medal {
+    margin-left: 0.3rem;
+    font-size: 1rem;
   }
 </style>
