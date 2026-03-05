@@ -47,16 +47,14 @@
   <ul>
     <!-- Group header card — acts as back button -->
     <li>
-      <button class="group-card" onclick={onBack}>
+      <button class="group-card" class:complete={doneCount === group.lessons.length} onclick={onBack}>
         <span class="group-num">{String(groupIdx + 1).padStart(2, '0')}</span>
         <div class="group-info">
           <span class="group-title">{group.title}</span>
           <span class="group-keys">{group.keys.join('  ')}</span>
         </div>
         <span class="group-status">
-          {#if doneCount === group.lessons.length}done
-          {:else if doneCount > 0}{doneCount}/{group.lessons.length}
-          {:else}←{/if}
+          {doneCount}/{group.lessons.length}
         </span>
       </button>
     </li>
@@ -164,6 +162,10 @@
   .group-status {
     font-size: 0.75rem;
     color: var(--muted);
+  }
+
+  .group-card.complete .group-status {
+    color: var(--green);
   }
 
   /* Lesson cards */

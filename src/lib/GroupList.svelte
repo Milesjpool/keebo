@@ -65,7 +65,7 @@
             {#if state.locked}
               locked
             {:else if state.complete}
-              done
+              {state.done}/{state.total}
             {:else}
               {state.done}/{state.total}
             {/if}
