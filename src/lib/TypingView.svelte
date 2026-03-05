@@ -110,7 +110,7 @@
         {#each line.split('') as char, i}{@const state = charState(i)}<span class="char {state}">{char === ' ' ? (state === 'correct' || state === 'error' ? '·' : '\u00a0') : char}</span>{/each}<span class="char" class:cursor={typed.length === line.length} style:visibility={typed.length === line.length ? 'visible' : 'hidden'}>↵</span>
       </div>
     </div>
-    <FingerIndicator char={currentChar} />
+    {#if lesson.fingerHints !== false}<FingerIndicator char={currentChar} />{/if}
   </main>
 </div>
 

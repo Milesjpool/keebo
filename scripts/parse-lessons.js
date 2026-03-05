@@ -26,6 +26,10 @@ function extractH1(html) {
     .replace(/^New keys?: /i, '')
 }
 
+function hasFingerHints(html) {
+  return html.includes('id="hand_left"')
+}
+
 function textToLines(text) {
   return text.split(/[¶\n]/).map(l => l.trim()).filter(Boolean)
 }
@@ -72,9 +76,10 @@ for (const L of Object.keys(byLesson).map(Number).sort((a, b) => a - b)) {
     const subtitle = h1 ?? `Part ${P}`
 
     const lines = textToLines(rawText)
+    const fingerHints = hasFingerHints(html)
 
     console.log(`Lesson ${L} Part ${P} (${subtitle}): ${lines.length} lines`)
-    lessons.push({ id: crypto.randomUUID(), subtitle, lines })
+    lessons.push({ id: crypto.randomUUID(), subtitle, lines, fingerHints })
   }
 
   if (lessons.length > 0) {
