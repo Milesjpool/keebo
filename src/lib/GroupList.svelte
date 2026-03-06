@@ -214,6 +214,7 @@
   .group-title {
     font-size: 0.9rem;
     color: var(--text);
+    text-transform: lowercase;
   }
 
 

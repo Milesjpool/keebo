@@ -215,6 +215,7 @@
   .group-title {
     font-size: 0.9rem;
     color: var(--text);
+    text-transform: lowercase;
   }
 
 
@@ -279,6 +280,7 @@
     flex: 1;
     font-size: 0.9rem;
     color: var(--text);
+    text-transform: lowercase;
   }
 
   .lesson-status {

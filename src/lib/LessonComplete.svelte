@@ -116,6 +116,7 @@
     font-size: 0.875rem;
     color: var(--muted);
     margin-bottom: 0.5rem;
+    text-transform: lowercase;
   }
 
   .actions {
