@@ -21,9 +21,49 @@
 
   const flatLessons = groups.flatMap(g => g.lessons)
 
-  let screen = $state('groups')
-  let currentGroupIdx = $state(0)
-  let currentFlatIdx = $state(0)
+  // URL routing
+  const BASE = import.meta.env.BASE_URL.replace(/\/$/, '') // '/keebo'
+
+  function getUrl(scr, gi, fi) {
+    if (scr === 'groups') return BASE + '/'
+    if (scr === 'lessons') return `${BASE}/group/${gi + 1}`
+    if (scr === 'typing') {
+      const li = fi - groups[gi].flatStart
+      return `${BASE}/group/${gi + 1}/lesson/${li + 1}`
+    }
+    return BASE + '/'
+  }
+
+  function parseUrl(pathname) {
+    const p = pathname.slice(BASE.length) || '/'
+    let m = p.match(/^\/group\/(\d+)\/lesson\/(\d+)/)
+    if (m) {
+      const gi = +m[1] - 1, li = +m[2] - 1
+      if (gi >= 0 && gi < groups.length) {
+        const fi = groups[gi].flatStart + li
+        if (fi >= 0 && fi < flatLessons.length)
+          return { screen: 'typing', groupIdx: gi, flatIdx: fi }
+      }
+    }
+    m = p.match(/^\/lesson\/([0-9a-f-]{36})/)
+    if (m) {
+      const fi = flatLessons.findIndex(l => l.id === m[1])
+      if (fi >= 0) return { screen: 'typing', groupIdx: findGroupIdx(fi), flatIdx: fi }
+    }
+    m = p.match(/^\/group\/(\d+)$/)
+    if (m) {
+      const gi = +m[1] - 1
+      if (gi >= 0 && gi < groups.length)
+        return { screen: 'lessons', groupIdx: gi, flatIdx: 0 }
+    }
+    return { screen: 'groups', groupIdx: 0, flatIdx: 0 }
+  }
+
+  const init = parseUrl(window.location.pathname)
+
+  let screen = $state(init.screen)
+  let currentGroupIdx = $state(init.groupIdx)
+  let currentFlatIdx = $state(init.flatIdx)
 
   function loadProgress() {
     try {
@@ -63,22 +103,28 @@
     return g.lessons.length - 1
   }
 
-  let groupFocused  = $state(lastUnlockedGroup())
-  let lessonFocused = $state(groups.map((_, i) => lastUnlockedLesson(i)))
+  let groupFocused  = $state(init.screen === 'groups' ? lastUnlockedGroup() : init.groupIdx)
+  let lessonFocused = $state(groups.map((_, i) => {
+    if (init.screen === 'typing' && i === init.groupIdx)
+      return init.flatIdx - groups[i].flatStart
+    return lastUnlockedLesson(i)
+  }))
 
   function findGroupIdx(fi) {
     return groups.findIndex(g => fi >= g.flatStart && fi < g.flatStart + g.lessons.length)
   }
 
+  function navigate(scr, gi, fi) {
+    screen = scr; currentGroupIdx = gi; currentFlatIdx = fi
+    history.pushState(null, '', getUrl(scr, gi, fi))
+  }
+
   function openGroup(groupIdx) {
-    currentGroupIdx = groupIdx
-    screen = 'lessons'
+    navigate('lessons', groupIdx, currentFlatIdx)
   }
 
   function startLesson(fi) {
-    currentFlatIdx = fi
-    currentGroupIdx = findGroupIdx(fi)
-    screen = 'typing'
+    navigate('typing', findGroupIdx(fi), fi)
   }
 
   let lastStats = $state(null)
@@ -91,26 +137,34 @@
     progress[id] = (!prev || score > (prev.score ?? 0)) ? newRecord : prev
     lastStats = stats
     screen = 'complete'
+    // URL stays at the lesson URL (no pushState)
   }
 
   function nextLesson() {
     const next = currentFlatIdx + 1
     if (next < flatLessons.length) {
-      currentFlatIdx = next
-      currentGroupIdx = findGroupIdx(next)
-      screen = 'typing'
+      navigate('typing', findGroupIdx(next), next)
     } else {
-      screen = 'groups'
+      navigate('groups', 0, 0)
     }
   }
 
   function goToLessons() {
-    screen = 'lessons'
+    navigate('lessons', currentGroupIdx, currentFlatIdx)
   }
 
   function goToGroups() {
-    screen = 'groups'
+    navigate('groups', 0, 0)
   }
+
+  $effect(() => {
+    function onPopstate() {
+      const s = parseUrl(window.location.pathname)
+      screen = s.screen; currentGroupIdx = s.groupIdx; currentFlatIdx = s.flatIdx
+    }
+    window.addEventListener('popstate', onPopstate)
+    return () => window.removeEventListener('popstate', onPopstate)
+  })
 
   // Theme
   const THEMES = ['dark', 'light', 'auto']
