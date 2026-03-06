@@ -20,6 +20,11 @@
     if (listEl) updateFades()
   })
 
+  $effect(() => {
+    if (!listEl) return
+    listEl.querySelectorAll('li')[focused]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  })
+
   function groupState(i) {
     const g = groups[i]
     const done = g.lessons.filter(l => l.id in progress).length

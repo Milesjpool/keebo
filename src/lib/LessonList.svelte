@@ -19,6 +19,11 @@
     if (listEl) updateFades()
   })
 
+  $effect(() => {
+    if (!listEl) return
+    listEl.querySelectorAll('li')[focused]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  })
+
   function isLocked(i) {
     if (i === 0) return false
     return !(group.lessons[i - 1].id in progress)
@@ -66,7 +71,7 @@
   <!-- Group header card — pinned, acts as back button -->
   <div class="group-header">
     <button class="group-card" class:complete={doneCount === group.lessons.length} onclick={onBack}>
-      <span class="group-num">{String(groupIdx + 1).padStart(2, '0')}</span>
+      <span class="group-num">←</span>
       <div class="group-info">
         <span class="group-title">{group.title}</span>
       </div>
