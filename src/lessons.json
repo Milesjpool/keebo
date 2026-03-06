@@ -7,7 +7,7 @@
       "lessons": [
         {
           "id": "cb49e0a5-8740-467c-9a9e-476da753ac8d",
-          "subtitle": "Home row",
+          "subtitle": "Introduction",
           "lines": [
             "aa ss dd ff jj kk ll ;;",
             "as as df df jk jk l; l;",
@@ -156,7 +156,7 @@
       "lessons": [
         {
           "id": "2f2ed3fe-27a4-48b1-9b44-41339c3021d8",
-          "subtitle": "e and i",
+          "subtitle": "Introduction",
           "lines": [
             "ee ii ee ii",
             "ei ei ie ie",
@@ -370,7 +370,7 @@
       "lessons": [
         {
           "id": "70066e98-3353-4813-9d2d-bdc8cce9f247",
-          "subtitle": "r and u",
+          "subtitle": "Introduction",
           "lines": [
             "rr uu rr uu",
             "ru ru ur ur",
@@ -569,7 +569,7 @@
       "lessons": [
         {
           "id": "29524ce1-f67a-43b4-811c-3a368c81bf5c",
-          "subtitle": "w and o",
+          "subtitle": "Introduction",
           "lines": [
             "ww oo ww oo",
             "wo wo ow ow",
@@ -767,7 +767,7 @@
       "lessons": [
         {
           "id": "816511a9-bef5-4acf-97da-595baca0b7a7",
-          "subtitle": "c and n",
+          "subtitle": "Introduction",
           "lines": [
             "cc nn cc nn",
             "cn cn nc nc",
@@ -956,7 +956,7 @@
       "lessons": [
         {
           "id": "b4639a45-ecbe-4ffe-bdfd-c10c79836e14",
-          "subtitle": ", and .",
+          "subtitle": "Introduction",
           "lines": [
             ",, .. ,, ..",
             ",. ,. ., .,",
@@ -1146,7 +1146,7 @@
       "lessons": [
         {
           "id": "e2141141-c7d0-4566-ba7b-7e581d8cd94d",
-          "subtitle": "Capital letters",
+          "subtitle": "Introduction",
           "lines": [
             "AA SS DD FF",
             "JJ KK LL EE",
@@ -1367,7 +1367,7 @@
       "lessons": [
         {
           "id": "358a9c94-b9a1-4522-bc0f-c1246626077d",
-          "subtitle": "v and m",
+          "subtitle": "Introduction",
           "lines": [
             "vv mm vv mm",
             "vm vm mv mv",
@@ -1549,7 +1549,7 @@
       "lessons": [
         {
           "id": "de668a37-45e2-4ebd-b843-5e162e80e8b0",
-          "subtitle": "t and y",
+          "subtitle": "Introduction",
           "lines": [
             "tt yy tt yy",
             "ty ty yt yt",
@@ -1736,7 +1736,7 @@
       "lessons": [
         {
           "id": "ab471a15-1b7f-42d8-9f86-80f44662ce10",
-          "subtitle": "g, h, ' and \"",
+          "subtitle": "Introduction",
           "lines": [
             "gg hh '' \"\" gg hh '' \"\"",
             "gh'\" gh'\" \"'hg \"'hg",
@@ -1910,7 +1910,7 @@
       "lessons": [
         {
           "id": "deec406e-fe43-4636-b442-f830d0a644cb",
-          "subtitle": "q and p",
+          "subtitle": "Introduction",
           "lines": [
             "qq pp qq pp",
             "qp qp pq pq",
@@ -2086,7 +2086,7 @@
       "lessons": [
         {
           "id": "5779c94c-62c4-4b82-b962-2f560ed2f144",
-          "subtitle": "x and b",
+          "subtitle": "Introduction",
           "lines": [
             "xx bb xx bb",
             "xb xb bx bx",
@@ -2267,7 +2267,7 @@
       "lessons": [
         {
           "id": "80e5c176-6d09-40a4-ba48-3ef2e9267f87",
-          "subtitle": "z, ?, :, <, > and /",
+          "subtitle": "Introduction",
           "lines": [
             "zz ?? :: << // >>",
             "z? z< z/ >z :z",
@@ -2471,7 +2471,7 @@
       "lessons": [
         {
           "id": "7c92f60f-7bf4-4a0b-804e-c1296a43a966",
-          "subtitle": "Numbers",
+          "subtitle": "Introduction",
           "lines": [
             "13579 13579 24680 24680",
             "28160 28160 73594 73594",
@@ -2667,7 +2667,7 @@
       "lessons": [
         {
           "id": "bf9c7acc-e291-4965-8fdd-76bf3d7d6f7a",
-          "subtitle": "All keys",
+          "subtitle": "Introduction",
           "lines": [
             "+}+} +}+} $h%f $h%f",
             "#3#^ #3#^ `\\=< `\\=<",
