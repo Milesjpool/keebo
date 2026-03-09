@@ -1,7 +1,8 @@
 <script>
   import { getMedal, getGroupMedal, EMOJI } from './medals.js'
+  import AuthButton from './AuthButton.svelte'
 
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0) } = $props()
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), user, authReady, onSignIn, onSignOut } = $props()
 
   let listEl = $state(null)
   let topHeight = $state(0)
@@ -64,8 +65,11 @@
 
 <div class="lesson-list">
   <header>
-    <h1>keebo</h1>
-    <p class="subtitle">touch typing, step by step</p>
+    <div class="header-left">
+      <h1>keebo</h1>
+      <p class="subtitle">touch typing, step by step</p>
+    </div>
+    <AuthButton {user} {authReady} {onSignIn} {onSignOut} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->
@@ -122,6 +126,14 @@
   header {
     margin-bottom: 3rem;
     flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
   }
 
   .group-header {

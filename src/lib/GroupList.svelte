@@ -1,7 +1,8 @@
 <script>
   import { getGroupMedal, getMedal, EMOJI } from './medals.js'
+  import AuthButton from './AuthButton.svelte'
 
-  let { groups, progress, onSelect, focused = $bindable(0) } = $props()
+  let { groups, progress, onSelect, focused = $bindable(0), user, authReady, onSignIn, onSignOut } = $props()
 
   let listEl = $state(null)
   let topHeight = $state(0)
@@ -63,8 +64,11 @@
 
 <div class="group-list">
   <header>
-    <h1>keebo</h1>
-    <p class="subtitle">touch typing, step by step</p>
+    <div class="header-left">
+      <h1>keebo</h1>
+      <p class="subtitle">touch typing, step by step</p>
+    </div>
+    <AuthButton {user} {authReady} {onSignIn} {onSignOut} />
   </header>
 
   <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
@@ -143,6 +147,14 @@
   header {
     margin-bottom: 3rem;
     flex-shrink: 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .header-left {
+    display: flex;
+    flex-direction: column;
   }
 
   h1 {

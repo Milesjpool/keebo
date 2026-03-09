@@ -5,6 +5,9 @@
   import LessonList from './lib/LessonList.svelte'
   import TypingView from './lib/TypingView.svelte'
   import LessonComplete from './lib/LessonComplete.svelte'
+  import { auth, db, googleProvider, githubProvider } from './lib/firebase.js'
+  import { onAuthStateChanged, signInWithPopup, signOut } from 'firebase/auth'
+  import { doc, getDoc, setDoc } from 'firebase/firestore'
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0
@@ -74,10 +77,48 @@
   }
 
   let progress = $state(loadProgress())
+  let user = $state(null)
+  let authReady = $state(false)
 
   $effect(() => {
     localStorage.setItem('keebo-progress', JSON.stringify(progress))
   })
+
+  function mergeProgress(local, remote) {
+    const merged = { ...remote }
+    for (const [id, rec] of Object.entries(local)) {
+      if (!merged[id] || rec.score > (merged[id].score ?? 0)) merged[id] = rec
+    }
+    return merged
+  }
+
+  async function syncOnSignIn(u) {
+    const ref = doc(db, 'users', u.uid)
+    const snap = await getDoc(ref)
+    const remote = snap.exists() ? (snap.data().progress ?? {}) : {}
+    const merged = mergeProgress(progress, remote)
+    progress = merged
+    await setDoc(ref, { progress: merged }, { merge: true })
+  }
+
+  $effect(() => {
+    const unsub = onAuthStateChanged(auth, async (u) => {
+      user = u
+      authReady = true
+      if (u) await syncOnSignIn(u)
+    })
+    return unsub
+  })
+
+  async function signIn(provider) {
+    const p = provider === 'google' ? googleProvider : githubProvider
+    await signInWithPopup(auth, p)
+  }
+
+  async function handleSignOut() {
+    await signOut(auth)
+    user = null
+  }
 
   function isDone(lesson) {
     return lesson.id in progress
@@ -135,6 +176,10 @@
     const score = stats.wpm * (stats.accuracy ?? 1)
     const newRecord = { wpm: stats.wpm, elapsed: stats.elapsed, accuracy: stats.accuracy ?? 1, score }
     progress[id] = (!prev || score > (prev.score ?? 0)) ? newRecord : prev
+    if (user) {
+      const ref = doc(db, 'users', user.uid)
+      setDoc(ref, { progress }, { merge: true })
+    }
     lastStats = stats
     screen = 'complete'
     // URL stays at the lesson URL (no pushState)
@@ -199,9 +244,11 @@
 </script>
 
 {#if screen === 'groups'}
-  <GroupList {groups} {progress} onSelect={openGroup} bind:focused={groupFocused} />
+  <GroupList {groups} {progress} onSelect={openGroup} bind:focused={groupFocused}
+    {user} {authReady} onSignIn={signIn} onSignOut={handleSignOut} />
 {:else if screen === 'lessons'}
-  <LessonList group={groups[currentGroupIdx]} groupIdx={currentGroupIdx} {progress} onSelect={startLesson} onBack={goToGroups} bind:focused={lessonFocused[currentGroupIdx]} />
+  <LessonList group={groups[currentGroupIdx]} groupIdx={currentGroupIdx} {progress} onSelect={startLesson} onBack={goToGroups} bind:focused={lessonFocused[currentGroupIdx]}
+    {user} {authReady} onSignIn={signIn} onSignOut={handleSignOut} />
 {:else if screen === 'typing'}
   <TypingView lesson={flatLessons[currentFlatIdx]} onComplete={completeLesson} onBack={goToLessons} strictMode={false} />
 {:else if screen === 'complete'}
