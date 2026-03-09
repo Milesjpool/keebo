@@ -323,16 +323,17 @@
   class="author"
   href="https://www.milesjpool.com"
   target="_blank"
-  rel="noreferrer"><span class="emoji">👾</span> Miles</a
->
+  rel="noreferrer"
+  onclick={e => e.currentTarget.blur()}
+><span class="emoji">👾</span> Miles</a>
 
 <a
   class="footer"
   href="https://github.com/Milesjpool/keebo"
   target="_blank"
   rel="noreferrer"
-  ><span class="emoji">🤖</span> <strong>AI</strong> Coded, Human Approved</a
->
+  onclick={e => e.currentTarget.blur()}
+><span class="emoji">🤖</span> <strong>AI</strong> Coded, Human Approved</a>
 
 <button
   class="theme-toggle"
