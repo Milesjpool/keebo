@@ -50,9 +50,11 @@
         focused = Math.min(focused + 1, lastUnlocked())
       } else if (e.key === 'ArrowUp' || e.key === 'w') {
         e.preventDefault()
-        focused = Math.max(focused - 1, 0)
+        if (focused > 0) focused--
+        else focused = -1
       } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
-        if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
+        if (focused === -1) onBack()
+        else if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
       } else if (/^[1-9]$/.test(e.key)) {
         const idx = parseInt(e.key) - 1
         if (idx < group.lessons.length) focused = idx
@@ -74,7 +76,7 @@
 
   <!-- Group header card — pinned, acts as back button -->
   <div class="group-header">
-    <button class="group-card" class:complete={doneCount === group.lessons.length} onclick={onBack}>
+    <button class="group-card" class:complete={doneCount === group.lessons.length} class:focused={focused === -1} onclick={onBack} onmouseenter={() => focused = -1}>
       <span class="group-num">←</span>
       <div class="group-info">
         <span class="group-title">{group.title}</span>
@@ -206,7 +208,7 @@
     transition: opacity 0.15s, border-color 0.15s;
   }
 
-  .group-card:hover {
+  .group-card.focused {
     opacity: 1;
     border-color: var(--accent);
   }
