@@ -6,7 +6,7 @@ A clean, keyboard-first touch typing trainer — step by step.
 
 🤖 **AI** Coded, Human Approved
 
-**Live:** https://milesjpool.github.io/keebo/
+**Live:** https://www.milesjpool.com/keebo/
 
 ## Dev
 
