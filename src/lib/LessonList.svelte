@@ -1,10 +1,18 @@
-<script>
-  import { getMedal, getGroupMedal, EMOJI } from './medals.js'
+<script lang="ts">
+  import type { Group, Progress } from './types'
+  import type { User } from 'firebase/auth'
+  import { getMedal, getGroupMedal, EMOJI } from './medals'
   import AuthButton from './AuthButton.svelte'
 
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), user, authReady, onSignIn, onSignOut } = $props()
+  interface Props {
+    group: Group; groupIdx: number; progress: Progress
+    onSelect: (fi: number) => void; onBack: () => void; focused: number
+    user: User | null; authReady: boolean
+    onSignIn: (p: string) => Promise<void>; onSignOut: () => Promise<void>
+  }
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), user, authReady, onSignIn, onSignOut }: Props = $props()
 
-  let listEl = $state(null)
+  let listEl = $state<HTMLUListElement | null>(null)
   let topHeight = $state(0)
   let bottomHeight = $state(0)
 
@@ -25,7 +33,7 @@
     listEl.querySelectorAll('li')[focused]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
   })
 
-  function isLocked(i) {
+  function isLocked(i: number) {
     if (i === 0) return false
     return !(group.lessons[i - 1].id in progress)
   }
@@ -43,7 +51,7 @@
   const groupAllGold = $derived(allDone && group.lessons.every(l => getMedal(progress[l.id]?.score) === 'gold'))
 
   $effect(() => {
-    function onKeydown(e) {
+    function onKeydown(e: KeyboardEvent) {
       if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'a') { onBack(); return }
       if (e.key === 'ArrowDown' || e.key === 's') {
         e.preventDefault()

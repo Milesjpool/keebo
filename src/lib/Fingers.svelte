@@ -1,4 +1,11 @@
-<script>
+<script lang="ts">
+  interface Props {
+    outline?: string; highlight?: string
+    leftPinky?: boolean; leftRing?: boolean; leftMiddle?: boolean
+    leftIndex?: boolean; leftThumb?: boolean
+    rightThumb?: boolean; rightIndex?: boolean; rightMiddle?: boolean
+    rightRing?: boolean; rightPinky?: boolean
+  }
   let {
     outline   = 'currentColor',
     highlight = 'currentColor',
@@ -12,7 +19,7 @@
     rightMiddle = false,
     rightRing   = false,
     rightPinky  = false,
-  } = $props()
+  }: Props = $props()
 </script>
 
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"

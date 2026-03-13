@@ -1,14 +1,16 @@
-<script>
+<script lang="ts">
   import Fingers from "./Fingers.svelte";
   import keymap from "../keymap.json";
 
-  let { char } = $props();
+  interface Props { char: string | null }
+  let { char }: Props = $props();
 
+  const fingerMap = keymap.fingerMap as Record<string, { hand: string; finger: string } | undefined>
   const info = $derived(
-    char != null ? (keymap.fingerMap[char.toLowerCase()] ?? null) : null,
+    char != null ? (fingerMap[char.toLowerCase()] ?? null) : null,
   );
 
-  function hi(hand, finger) {
+  function hi(hand: string, finger: string) {
     if (!info) return false;
     if (info.hand === "thumb") return finger === "thumb";
     return info.hand === hand && info.finger === finger;

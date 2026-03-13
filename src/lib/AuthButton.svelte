@@ -1,5 +1,11 @@
-<script>
-  let { user, authReady, onSignIn, onSignOut } = $props()
+<script lang="ts">
+  import type { User } from 'firebase/auth'
+
+  interface Props {
+    user: User | null; authReady: boolean
+    onSignIn: (p: string) => Promise<void>; onSignOut: () => Promise<void>
+  }
+  let { user, authReady, onSignIn, onSignOut }: Props = $props()
 
   let open = $state(false)
 
@@ -7,13 +13,13 @@
     open = !open
   }
 
-  function signInWith(provider) {
+  function signInWith(provider: string) {
     open = false
     onSignIn(provider)
   }
 
-  function onDocClick(e) {
-    if (!e.target.closest('.auth-wrap')) open = false
+  function onDocClick(e: MouseEvent) {
+    if (!(e.target as Element).closest('.auth-wrap')) open = false
   }
 
   $effect(() => {

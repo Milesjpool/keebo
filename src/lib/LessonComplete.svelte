@@ -1,16 +1,18 @@
-<script>
-  import { getMedal, EMOJI } from './medals.js'
+<script lang="ts">
+  import type { Lesson, Stats } from './types'
+  import { getMedal, EMOJI } from './medals'
 
-  let { lesson, hasNext, stats, onNext, onBack } = $props()
+  interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; onNext: () => void; onBack: () => void }
+  let { lesson, hasNext, stats, onNext, onBack }: Props = $props()
 
   const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1)) : null)
 
-  function formatTime(s) {
+  function formatTime(s: number) {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
   }
 
   $effect(() => {
-    function onKeydown(e) {
+    function onKeydown(e: KeyboardEvent) {
       if (e.key === 'Enter') hasNext ? onNext() : onBack()
       if (e.key === 'Escape') onBack()
     }

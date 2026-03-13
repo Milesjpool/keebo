@@ -1,6 +1,8 @@
+import type { Group, Lesson, Screen, ParsedUrl } from './types'
+
 export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
 
-export function getUrl(groups, scr, gi, fi) {
+export function getUrl(groups: Group[], scr: Screen, gi: number, fi: number): string {
   if (scr === 'groups') return BASE + '/'
   if (scr === 'lessons') return `${BASE}/group/${gi + 1}`
   if (scr === 'typing') {
@@ -10,13 +12,13 @@ export function getUrl(groups, scr, gi, fi) {
   return BASE + '/'
 }
 
-export function findGroupIdx(groups, fi) {
+export function findGroupIdx(groups: Group[], fi: number): number {
   return groups.findIndex(
     (g) => fi >= g.flatStart && fi < g.flatStart + g.lessons.length,
   )
 }
 
-export function parseUrl(groups, flatLessons, pathname) {
+export function parseUrl(groups: Group[], flatLessons: Lesson[], pathname: string): ParsedUrl {
   const p = pathname.slice(BASE.length) || '/'
   let m = p.match(/^\/group\/(\d+)\/lesson\/(\d+)/)
   if (m) {
@@ -29,7 +31,7 @@ export function parseUrl(groups, flatLessons, pathname) {
   }
   m = p.match(/^\/lesson\/([0-9a-f-]{36})/)
   if (m) {
-    const fi = flatLessons.findIndex((l) => l.id === m[1])
+    const fi = flatLessons.findIndex((l) => l.id === m![1])
     if (fi >= 0)
       return { screen: 'typing', groupIdx: findGroupIdx(groups, fi), flatIdx: fi }
   }

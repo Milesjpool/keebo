@@ -1,14 +1,16 @@
-<script>
+<script lang="ts">
+  import type { Lesson, Stats } from './types'
   import FingerIndicator from './FingerIndicator.svelte'
 
-  let { lesson, onComplete, onBack, strictMode = false } = $props()
+  interface Props { lesson: Lesson; onComplete: (s: Stats) => void; onBack: () => void; strictMode?: boolean }
+  let { lesson, onComplete, onBack, strictMode = false }: Props = $props()
 
   let lineIndex = $state(0)
   let typed = $state('')
   let shaking = $state(false)
-  let startTime = $state(null)
+  let startTime = $state<number | null>(null)
   let elapsed = $state(0)
-  let lineResults = $state([])
+  let lineResults = $state<{ correct: number; total: number }[]>([])
   const line = $derived(lesson.lines[lineIndex])
   const total = $derived(lesson.lines.length)
 
@@ -22,16 +24,16 @@
 
   $effect(() => {
     if (!startTime) return
-    const id = setInterval(() => { elapsed = Math.floor((Date.now() - startTime) / 1000) }, 500)
+    const id = setInterval(() => { elapsed = Math.floor((Date.now() - startTime!) / 1000) }, 500)
     return () => clearInterval(id)
   })
 
-  function formatTime(s) {
+  function formatTime(s: number) {
     return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
   }
 
   $effect(() => {
-    function onKeydown(e) {
+    function onKeydown(e: KeyboardEvent) {
       if (e.key === 'Escape') {
         onBack()
         return
@@ -78,7 +80,7 @@
 
   const currentChar = $derived(typed.length < line.length ? line[typed.length] : '\n')
 
-  function charState(i) {
+  function charState(i: number) {
     if (i < typed.length) return typed[i] === line[i] ? 'correct' : 'error'
     if (i === typed.length) return 'cursor'
     return 'untyped'

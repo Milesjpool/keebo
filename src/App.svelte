@@ -1,19 +1,20 @@
-<script>
+<script lang="ts">
+  import type { Stats, Screen, Group } from "./lib/types";
   import lessonsData from "./lessons.json";
   const rawGroups = lessonsData.groups;
   import GroupList from "./lib/GroupList.svelte";
   import LessonList from "./lib/LessonList.svelte";
   import TypingView from "./lib/TypingView.svelte";
   import LessonComplete from "./lib/LessonComplete.svelte";
-  import { auth, googleProvider, githubProvider } from "./lib/firebase.js";
-  import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-  import { getUrl, parseUrl, findGroupIdx } from "./lib/router.js";
-  import { loadProgress, saveProgress } from "./lib/progress.js";
-  import { fetchAndMerge, writeProgress } from "./lib/sync.js";
+  import { auth, googleProvider, githubProvider } from "./lib/firebase";
+  import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
+  import { getUrl, parseUrl, findGroupIdx } from "./lib/router";
+  import { loadProgress, saveProgress } from "./lib/progress";
+  import { fetchAndMerge, writeProgress } from "./lib/sync";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;
-  const groups = rawGroups.map((g) => ({
+  const groups: Group[] = rawGroups.map((g) => ({
     ...g,
     flatStart: flatIdx,
     lessons: g.lessons.map((l) => ({
@@ -32,7 +33,7 @@
   let currentFlatIdx = $state(init.flatIdx);
 
   let progress = $state(loadProgress());
-  let user = $state(null);
+  let user = $state<User | null>(null);
   let authReady = $state(false);
 
   $effect(() => {
@@ -48,7 +49,7 @@
     return unsub;
   });
 
-  async function signIn(provider) {
+  async function signIn(provider: string) {
     const p = provider === "google" ? googleProvider : githubProvider;
     await signInWithPopup(auth, p);
   }
@@ -58,7 +59,7 @@
     user = null;
   }
 
-  function isDone(lesson) {
+  function isDone(lesson: { id: string }) {
     return lesson.id in progress;
   }
 
@@ -75,7 +76,7 @@
     return last;
   }
 
-  function lastUnlockedLesson(groupIdx) {
+  function lastUnlockedLesson(groupIdx: number) {
     const g = groups[groupIdx];
     for (let i = 0; i < g.lessons.length; i++) {
       const fi = g.lessons[i].flatIdx;
@@ -95,24 +96,24 @@
     }),
   );
 
-  function navigate(scr, gi, fi) {
+  function navigate(scr: Screen, gi: number, fi: number) {
     screen = scr;
     currentGroupIdx = gi;
     currentFlatIdx = fi;
     history.pushState(null, "", getUrl(groups, scr, gi, fi));
   }
 
-  function openGroup(groupIdx) {
+  function openGroup(groupIdx: number) {
     navigate("lessons", groupIdx, currentFlatIdx);
   }
 
-  function startLesson(fi) {
+  function startLesson(fi: number) {
     navigate("typing", findGroupIdx(groups, fi), fi);
   }
 
-  let lastStats = $state(null);
+  let lastStats = $state<Stats | null>(null);
 
-  function completeLesson(stats) {
+  function completeLesson(stats: Stats) {
     const id = flatLessons[currentFlatIdx].id;
     const prev = progress[id];
     const score = stats.wpm * (stats.accuracy ?? 1);
@@ -159,18 +160,18 @@
 
   // Theme
   const THEMES = ["dark", "light", "auto"];
-  const ICONS = { dark: "🌛", light: "🌞", auto: "🌍" };
+  const ICONS: Record<string, string> = { dark: "🌛", light: "🌞", auto: "🌍" };
 
   let theme = $state(localStorage.getItem("theme") ?? "auto");
   let label = $state("");
-  let timers = [];
+  let timers: ReturnType<typeof setTimeout>[] = [];
 
   $effect(() => {
     document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("theme", theme);
   });
 
-  function animateLabel(text) {
+  function animateLabel(text: string) {
     timers.forEach(clearTimeout);
     timers = [];
     label = "";
@@ -235,7 +236,7 @@
   <LessonComplete
     lesson={flatLessons[currentFlatIdx]}
     hasNext={currentFlatIdx < flatLessons.length - 1}
-    stats={lastStats}
+    stats={lastStats!}
     onNext={nextLesson}
     onBack={goToLessons}
   />
