@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(~/.bun/bin/bun run:*)",
+      "WebFetch(domain:www.typingstudy.com)",
+      "Bash(~/.bun/bin/bun:*)",
+      "WebFetch(domain:svelte.dev)",
+      "WebSearch"
+    ]
+  }
+}

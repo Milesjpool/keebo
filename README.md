@@ -8,6 +8,10 @@ A clean, keyboard-first touch typing trainer — step by step.
 
 **Live:** https://www.milesjpool.com/keebo/
 
+## Attribution
+
+Lesson content sourced from [typingstudy.com](https://www.typingstudy.com).
+
 ## Dev
 
 ```bash
