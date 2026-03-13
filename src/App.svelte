@@ -5,9 +5,11 @@
   import LessonList from "./lib/LessonList.svelte";
   import TypingView from "./lib/TypingView.svelte";
   import LessonComplete from "./lib/LessonComplete.svelte";
-  import { auth, db, googleProvider, githubProvider } from "./lib/firebase.js";
+  import { auth, googleProvider, githubProvider } from "./lib/firebase.js";
   import { onAuthStateChanged, signInWithPopup, signOut } from "firebase/auth";
-  import { doc, getDoc, setDoc } from "firebase/firestore";
+  import { getUrl, parseUrl, findGroupIdx } from "./lib/router.js";
+  import { loadProgress, saveProgress } from "./lib/progress.js";
+  import { fetchAndMerge, writeProgress } from "./lib/sync.js";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;
@@ -23,91 +25,25 @@
 
   const flatLessons = groups.flatMap((g) => g.lessons);
 
-  // URL routing
-  const BASE = import.meta.env.BASE_URL.replace(/\/$/, ""); // '/keebo'
-
-  function getUrl(scr, gi, fi) {
-    if (scr === "groups") return BASE + "/";
-    if (scr === "lessons") return `${BASE}/group/${gi + 1}`;
-    if (scr === "typing") {
-      const li = fi - groups[gi].flatStart;
-      return `${BASE}/group/${gi + 1}/lesson/${li + 1}`;
-    }
-    return BASE + "/";
-  }
-
-  function parseUrl(pathname) {
-    const p = pathname.slice(BASE.length) || "/";
-    let m = p.match(/^\/group\/(\d+)\/lesson\/(\d+)/);
-    if (m) {
-      const gi = +m[1] - 1,
-        li = +m[2] - 1;
-      if (gi >= 0 && gi < groups.length) {
-        const fi = groups[gi].flatStart + li;
-        if (fi >= 0 && fi < flatLessons.length)
-          return { screen: "typing", groupIdx: gi, flatIdx: fi };
-      }
-    }
-    m = p.match(/^\/lesson\/([0-9a-f-]{36})/);
-    if (m) {
-      const fi = flatLessons.findIndex((l) => l.id === m[1]);
-      if (fi >= 0)
-        return { screen: "typing", groupIdx: findGroupIdx(fi), flatIdx: fi };
-    }
-    m = p.match(/^\/group\/(\d+)$/);
-    if (m) {
-      const gi = +m[1] - 1;
-      if (gi >= 0 && gi < groups.length)
-        return { screen: "lessons", groupIdx: gi, flatIdx: 0 };
-    }
-    return { screen: "groups", groupIdx: 0, flatIdx: 0 };
-  }
-
-  const init = parseUrl(window.location.pathname);
+  const init = parseUrl(groups, flatLessons, window.location.pathname);
 
   let screen = $state(init.screen);
   let currentGroupIdx = $state(init.groupIdx);
   let currentFlatIdx = $state(init.flatIdx);
-
-  function loadProgress() {
-    try {
-      const saved = JSON.parse(localStorage.getItem("keebo-progress") ?? "{}");
-      if (typeof saved === "object" && saved !== null && !Array.isArray(saved))
-        return saved;
-    } catch {}
-    return {};
-  }
 
   let progress = $state(loadProgress());
   let user = $state(null);
   let authReady = $state(false);
 
   $effect(() => {
-    localStorage.setItem("keebo-progress", JSON.stringify(progress));
+    saveProgress(progress);
   });
-
-  function mergeProgress(local, remote) {
-    const merged = { ...remote };
-    for (const [id, rec] of Object.entries(local)) {
-      if (!merged[id] || rec.score > (merged[id].score ?? 0)) merged[id] = rec;
-    }
-    return merged;
-  }
-
-  async function syncOnSignIn(u) {
-    const ref = doc(db, "users", u.uid);
-    const snap = await getDoc(ref);
-    const remote = snap.exists() ? (snap.data().progress ?? {}) : {};
-    const merged = mergeProgress(progress, remote);
-    progress = merged;
-    await setDoc(ref, { progress: merged }, { merge: true });
-  }
 
   $effect(() => {
     const unsub = onAuthStateChanged(auth, async (u) => {
       user = u;
       authReady = true;
-      if (u) await syncOnSignIn(u);
+      if (u) progress = await fetchAndMerge(u.uid, progress);
     });
     return unsub;
   });
@@ -159,17 +95,11 @@
     }),
   );
 
-  function findGroupIdx(fi) {
-    return groups.findIndex(
-      (g) => fi >= g.flatStart && fi < g.flatStart + g.lessons.length,
-    );
-  }
-
   function navigate(scr, gi, fi) {
     screen = scr;
     currentGroupIdx = gi;
     currentFlatIdx = fi;
-    history.pushState(null, "", getUrl(scr, gi, fi));
+    history.pushState(null, "", getUrl(groups, scr, gi, fi));
   }
 
   function openGroup(groupIdx) {
@@ -177,7 +107,7 @@
   }
 
   function startLesson(fi) {
-    navigate("typing", findGroupIdx(fi), fi);
+    navigate("typing", findGroupIdx(groups, fi), fi);
   }
 
   let lastStats = $state(null);
@@ -193,10 +123,7 @@
       score,
     };
     progress[id] = !prev || score > (prev.score ?? 0) ? newRecord : prev;
-    if (user) {
-      const ref = doc(db, "users", user.uid);
-      setDoc(ref, { progress }, { merge: true });
-    }
+    if (user) writeProgress(user.uid, progress);
     lastStats = stats;
     screen = "complete";
     // URL stays at the lesson URL (no pushState)
@@ -205,7 +132,7 @@
   function nextLesson() {
     const next = currentFlatIdx + 1;
     if (next < flatLessons.length) {
-      navigate("typing", findGroupIdx(next), next);
+      navigate("typing", findGroupIdx(groups, next), next);
     } else {
       navigate("groups", 0, 0);
     }
@@ -221,7 +148,7 @@
 
   $effect(() => {
     function onPopstate() {
-      const s = parseUrl(window.location.pathname);
+      const s = parseUrl(groups, flatLessons, window.location.pathname);
       screen = s.screen;
       currentGroupIdx = s.groupIdx;
       currentFlatIdx = s.flatIdx;

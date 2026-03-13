@@ -2,7 +2,7 @@ export const THRESHOLDS = { silver: 30, gold: 50 }
 export const EMOJI = { bronze: '🥉', silver: '🥈', gold: '🏅' }
 
 export function getMedal(score) {
-  if (score == null) return null
+  if (score === null || score === undefined) return null
   if (score >= THRESHOLDS.gold) return 'gold'
   if (score >= THRESHOLDS.silver) return 'silver'
   return 'bronze'
