@@ -11,6 +11,7 @@
   import { getUrl, parseUrl, findGroupIdx } from "./lib/router";
   import { loadProgress, saveProgress } from "./lib/progress";
   import { fetchAndMerge, writeProgress } from "./lib/sync";
+  import Footer from "./lib/Footer.svelte";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;
@@ -158,47 +159,6 @@
     return () => window.removeEventListener("popstate", onPopstate);
   });
 
-  // Theme
-  const THEMES = ["dark", "light", "auto"];
-  const ICONS: Record<string, string> = { dark: "🌛", light: "🌞", auto: "🌍" };
-
-  let theme = $state(localStorage.getItem("theme") ?? "auto");
-  let label = $state("");
-  let timers: ReturnType<typeof setTimeout>[] = [];
-
-  $effect(() => {
-    document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("theme", theme);
-  });
-
-  function animateLabel(text: string) {
-    timers.forEach(clearTimeout);
-    timers = [];
-    label = "";
-    for (let i = 1; i <= text.length; i++) {
-      timers.push(
-        setTimeout(() => {
-          label = text.slice(0, i);
-        }, i * 30),
-      );
-    }
-    const deleteStart = text.length * 30 + 800;
-    for (let i = text.length - 1; i >= 0; i--) {
-      timers.push(
-        setTimeout(
-          () => {
-            label = text.slice(0, i);
-          },
-          deleteStart + (text.length - i) * 22,
-        ),
-      );
-    }
-  }
-
-  function toggleTheme() {
-    theme = THEMES[(THEMES.indexOf(theme) + 1) % THEMES.length];
-    animateLabel(theme);
-  }
 </script>
 
 {#if screen === "groups"}
@@ -247,87 +207,9 @@
   <p>come back on a laptop or desktop</p>
 </div>
 
-<a
-  class="author"
-  href="https://www.milesjpool.com"
-  target="_blank"
-  rel="noreferrer"
-  onclick={e => e.currentTarget.blur()}
-><span class="emoji">👾</span> Miles</a>
-
-<a
-  class="footer"
-  href="https://github.com/Milesjpool/keebo"
-  target="_blank"
-  rel="noreferrer"
-  onclick={e => e.currentTarget.blur()}
-><span class="emoji">🤖</span> <strong>AI</strong> Coded, Human Approved</a>
-
-<button
-  class="theme-toggle"
-  onclick={(e) => {
-    toggleTheme();
-    e.currentTarget.blur();
-  }}
->
-  <span class="label">{label}</span><span class="emoji">{ICONS[theme]}</span>
-</button>
+<Footer />
 
 <style>
-  .author {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 1.75rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-    text-decoration: none;
-  }
-
-  .author:hover {
-    color: var(--text);
-  }
-
-  .footer {
-    position: fixed;
-    bottom: 1.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    font-size: 0.75rem;
-    color: var(--muted);
-    white-space: nowrap;
-    text-decoration: none;
-  }
-
-  .footer:hover {
-    color: var(--text);
-  }
-
-  .theme-toggle {
-    position: fixed;
-    bottom: 1.5rem;
-    right: 1.75rem;
-    font-size: 0.75rem;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    transition: color 0.15s;
-  }
-
-  .theme-toggle:hover {
-    color: var(--text);
-  }
-
-  .label {
-    color: var(--muted);
-    min-width: 0;
-  }
-
-  .emoji {
-    font-size: 1rem;
-    vertical-align: -1px;
-  }
-
   .mobile-message {
     display: none;
   }
