@@ -11,7 +11,7 @@
   import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
   import { getUrl, parseUrl, findGroupIdx } from "./lib/router";
   import { loadProgress, saveProgress } from "./lib/progress";
-  import { fetchAndMerge, writeProgress } from "./lib/sync";
+  import { subscribeToProgress, writeProgress } from "./lib/sync";
   import Footer from "./lib/Footer.svelte";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
@@ -43,12 +43,19 @@
   });
 
   $effect(() => {
-    const unsub = onAuthStateChanged(auth, async (u) => {
+    let unsubProgress: (() => void) | undefined;
+    const unsubAuth = onAuthStateChanged(auth, (u) => {
       user = u;
       authReady = true;
-      if (u) progress = await fetchAndMerge(u.uid, progress);
+      unsubProgress?.();
+      if (u) {
+        unsubProgress = subscribeToProgress(u.uid, () => progress, (m) => progress = m);
+      }
     });
-    return unsub;
+    return () => {
+      unsubAuth();
+      unsubProgress?.();
+    };
   });
 
   async function signIn(provider: string) {
