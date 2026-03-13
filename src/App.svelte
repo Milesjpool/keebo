@@ -2,6 +2,7 @@
   import type { Stats, Screen, Group } from "./lib/types";
   import lessonsData from "./lessons.json";
   const rawGroups = lessonsData.groups;
+  const source = lessonsData.source ?? undefined;
   import GroupList from "./lib/GroupList.svelte";
   import LessonList from "./lib/LessonList.svelte";
   import TypingView from "./lib/TypingView.svelte";
@@ -171,6 +172,7 @@
     {authReady}
     onSignIn={signIn}
     onSignOut={handleSignOut}
+    {source}
   />
 {:else if screen === "lessons"}
   <LessonList

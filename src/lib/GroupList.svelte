@@ -3,13 +3,15 @@
   import type { User } from 'firebase/auth'
   import { getGroupMedal, getMedal, EMOJI } from './medals'
   import AuthButton from './AuthButton.svelte'
+  import Attribution from './Attribution.svelte'
 
   interface Props {
     groups: Group[]; progress: Progress; onSelect: (i: number) => void
     focused: number; user: User | null; authReady: boolean
     onSignIn: (p: string) => Promise<void>; onSignOut: () => Promise<void>
+    source?: string
   }
-  let { groups, progress, onSelect, focused = $bindable(0), user, authReady, onSignIn, onSignOut }: Props = $props()
+  let { groups, progress, onSelect, focused = $bindable(0), user, authReady, onSignIn, onSignOut, source }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let topHeight = $state(0)
@@ -109,11 +111,19 @@
         </button>
       </li>
     {/each}
+    {#if source}
+      <li class="attribution"><Attribution text={source} /></li>
+    {/if}
   </ul>
   </div>
 </div>
 
 <style>
+  .attribution {
+    text-align: center;
+    padding: 0.75rem 0 0.25rem;
+  }
+
   .group-list {
     max-width: 600px;
     margin: 0 auto;
