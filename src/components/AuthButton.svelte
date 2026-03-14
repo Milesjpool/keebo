@@ -76,6 +76,36 @@
     open = !open;
   }
 
+  function handleBtnKeydown(e: KeyboardEvent) {
+    e.stopPropagation();
+    if (e.key === "Escape" || (e.key === "Enter" && open)) {
+      e.preventDefault();
+      open = false;
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      if (open) (user ? dropdownButtons()[0] : nameInputEl)?.focus();
+      else { authBtnEl?.blur(); onDescend?.(); }
+    }
+  }
+
+  function handleNameKeydown(e: KeyboardEvent) {
+    e.stopPropagation();
+    if (e.key === "Escape" || e.key === "Enter") {
+      e.preventDefault();
+      if (!nameInputEl?.value.trim()) {
+        anonName = rollNewName();
+      }
+      open = false;
+      setTimeout(() => authBtnEl?.focus(), 0);
+    } else if (e.key === "ArrowDown") {
+      e.preventDefault();
+      dropdownButtons()[0]?.focus();
+    } else if (e.key === "ArrowUp") {
+      e.preventDefault();
+      authBtnEl?.focus();
+    }
+  }
+
   function handleNameInput(e: Event) {
     const val = (e.target as HTMLInputElement).value;
     setAnonName(val);
@@ -120,108 +150,49 @@
 </script>
 
 <div class="auth-wrap">
-  {#if authReady && !user}
-    <button
-      class="auth-btn"
-      class:active={nameFocused}
-      bind:this={authBtnEl}
-      onclick={toggle}
-      onkeydown={(e) => {
-        e.stopPropagation();
-        if (e.key === "Escape" || (e.key === "Enter" && open)) {
-          e.preventDefault();
-          open = false;
-        } else if (e.key === "ArrowDown") {
-          e.preventDefault();
-          if (open) nameInputEl?.focus();
-          else {
-            authBtnEl?.blur();
-            onDescend?.();
-          }
-        }
-      }}
-      aria-label="account menu"
-    >
-      <div class="avatar">
-        <AnonAvatar />
-      </div>
-      {#if !open}
-        <span class="auth-label">{anonName}</span>
-      {/if}
-    </button>
-    {#if open}
-      <input
-        class="anon-name-input"
-        type="text"
-        value={anonName}
-        size={Math.max(10, anonName.length + 1)}
-        bind:this={nameInputEl}
-        onfocus={(e) => {
-          nameFocused = true;
-          (e.target as HTMLInputElement).select();
-        }}
-        onkeydown={(e) => {
-          e.stopPropagation();
-          if (e.key === "Escape" || e.key === "Enter") {
-            e.preventDefault();
-            if (!nameInputEl?.value.trim()) {
-              anonName = rollNewName();
-            }
-            open = false;
-            setTimeout(() => authBtnEl?.focus(), 0);
-          } else if (e.key === "ArrowDown") {
-            e.preventDefault();
-            dropdownButtons()[0]?.focus();
-          } else if (e.key === "ArrowUp") {
-            e.preventDefault();
-            authBtnEl?.focus();
-          }
-        }}
-        oninput={handleNameInput}
-        onblur={(e) => {
-          nameFocused = false;
-          handleNameBlur(e);
-        }}
-        aria-label="your name"
-      />
-    {/if}
-  {:else}
-    <button
-      class="auth-btn"
-      bind:this={authBtnEl}
-      onclick={toggle}
-      onkeydown={(e) => {
-        e.stopPropagation();
-        if (e.key === "Escape" || (e.key === "Enter" && open)) {
-          e.preventDefault();
-          open = false;
-        } else if (e.key === "ArrowDown") {
-          e.preventDefault();
-          if (open) dropdownButtons()[0]?.focus();
-          else {
-            authBtnEl?.blur();
-            onDescend?.();
-          }
-        }
-      }}
-      aria-label="account menu"
-      disabled={!authReady}
-    >
-      <div class="avatar">
-        {#if authReady && user?.photoURL}
-          <img src={user.photoURL} alt="" referrerpolicy="no-referrer" />
-        {:else if authReady}
-          <AnonAvatar />
-        {/if}
-      </div>
-      {#if !authReady}
-        <span class="auth-label">█████ ████</span>
+  <button
+    class="auth-btn"
+    class:active={nameFocused}
+    bind:this={authBtnEl}
+    onclick={toggle}
+    disabled={!authReady}
+    onkeydown={handleBtnKeydown}
+    aria-label="account menu"
+  >
+    <div class="avatar">
+      {#if user?.photoURL}
+        <img src={user.photoURL} alt="" referrerpolicy="no-referrer" />
       {:else}
-        <span class="auth-label"
-          >{user?.displayName?.toLowerCase() ?? user?.email}</span
-        >
+        <AnonAvatar />
       {/if}
-    </button>
+    </div>
+    {#if !authReady}
+      <span class="auth-label">█████ ████</span>
+    {:else if user}
+      <span class="auth-label">{user.displayName?.toLowerCase() ?? user.email}</span>
+    {:else if !open}
+      <span class="auth-label">{anonName}</span>
+    {/if}
+  </button>
+  {#if open && !user}
+    <input
+      class="anon-name-input"
+      type="text"
+      value={anonName}
+      size={Math.max(10, anonName.length + 1)}
+      bind:this={nameInputEl}
+      onfocus={(e) => {
+        nameFocused = true;
+        (e.target as HTMLInputElement).select();
+      }}
+      onkeydown={handleNameKeydown}
+      oninput={handleNameInput}
+      onblur={(e) => {
+        nameFocused = false;
+        handleNameBlur(e);
+      }}
+      aria-label="your name"
+    />
   {/if}
 
   {#if open}
