@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
-  import { getAnonName } from "./anonNames";
+  import { getAnonName, rollNewName, setAnonName } from "./anonNames";
   import FeedbackModal from "./FeedbackModal.svelte";
 
   interface FeedbackContext {
@@ -22,9 +22,27 @@
   let open = $state(false);
   let feedbackOpen = $state(false);
   let anonName = $state(getAnonName());
+  let nameInputEl = $state<HTMLInputElement | null>(null);
 
   function toggle() {
     open = !open;
+  }
+
+  function handleNameInput(e: Event) {
+    const val = (e.target as HTMLInputElement).value;
+    setAnonName(val);
+    anonName = val || anonName;
+  }
+
+  function handleNameBlur(e: FocusEvent) {
+    const val = (e.target as HTMLInputElement).value.trim();
+    if (!val) {
+      const newName = rollNewName();
+      anonName = newName;
+      (e.target as HTMLInputElement).value = newName;
+    } else {
+      anonName = val;
+    }
   }
 
   function signInWith(provider: string) {
@@ -51,17 +69,51 @@
 </script>
 
 <div class="auth-wrap">
-  <button
-    class="auth-btn"
-    onclick={toggle}
-    aria-label={"account menu"}
-    disabled={!authReady}
-  >
-    <div class="avatar">
-      {#if authReady}
-        {#if user?.photoURL}
+  {#if authReady && !user}
+    <button
+      class="auth-btn"
+      onclick={() => nameInputEl?.focus()}
+      aria-label="account menu"
+    >
+      <div class="avatar">
+        <svg
+          class="anon-avatar"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="1.5"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          aria-hidden="true"
+        >
+          <circle cx="12" cy="8" r="3.5" />
+          <path d="M5 21a7 7 0 0 1 14 0" />
+        </svg>
+      </div>
+    </button>
+    <input
+      class="anon-name-input"
+      type="text"
+      value={anonName}
+      size={Math.max(10, anonName.length + 1)}
+      bind:this={nameInputEl}
+      onfocus={(e) => { open = true; (e.target as HTMLInputElement).select() }}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; nameInputEl?.blur() } }}
+      oninput={handleNameInput}
+      onblur={handleNameBlur}
+      aria-label="your name"
+    />
+  {:else}
+    <button
+      class="auth-btn"
+      onclick={toggle}
+      aria-label="account menu"
+      disabled={!authReady}
+    >
+      <div class="avatar">
+        {#if authReady && user?.photoURL}
           <img src={user.photoURL} alt="" referrerpolicy="no-referrer" />
-        {:else}
+        {:else if authReady}
           <svg
             class="anon-avatar"
             viewBox="0 0 24 24"
@@ -76,19 +128,16 @@
             <path d="M5 21a7 7 0 0 1 14 0" />
           </svg>
         {/if}
+      </div>
+      {#if !authReady}
+        <span class="auth-label">█████ ████</span>
+      {:else}
+        <span class="auth-label"
+          >{user.displayName?.toLowerCase() ?? user.email}</span
+        >
       {/if}
-    </div>
-
-    {#if !authReady}
-      <span class="auth-label">█████ ████</span>
-    {:else if user}
-      <span class="auth-label"
-        >{user.displayName?.toLowerCase() ?? user.email}</span
-      >
-    {:else}
-      <span class="auth-label">{anonName}</span>
-    {/if}
-  </button>
+    </button>
+  {/if}
 
   {#if open}
     <div class="dropdown">
@@ -213,5 +262,30 @@
     border-top: 1px solid var(--border);
     margin-top: 0.25rem;
     padding-top: 0.5rem !important;
+  }
+
+  .anon-name-input {
+    font-family: inherit;
+    font-size: 0.875rem;
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid transparent;
+    color: var(--muted);
+    text-align: right;
+    outline: none;
+    padding: 0.1rem 0;
+    margin-top: 0.25rem;
+    min-width: 7rem;
+    cursor: text;
+    transition: color 0.15s, border-bottom-color 0.15s;
+  }
+
+  .anon-name-input:hover {
+    color: var(--text);
+  }
+
+  .anon-name-input:focus {
+    color: var(--text);
+    border-bottom-color: var(--accent);
   }
 </style>
