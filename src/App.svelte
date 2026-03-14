@@ -39,6 +39,7 @@
   let user = $state<User | null>(null);
   let authReady = $state(false);
   let linkPrompt = $state<{ pendingCred: OAuthCredential; existingProvider: string } | null>(null);
+  let linkError = $state<{ provider: string } | null>(null);
 
   $effect(() => {
     saveProgress(progress);
@@ -105,7 +106,9 @@
       user = null; // force Svelte to see a reference change (Firebase mutates User in-place)
       user = auth.currentUser;
     } catch (err: any) {
-      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+      if (err.code === 'auth/credential-already-in-use') {
+        linkError = { provider };
+      } else if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
         throw err;
       }
     }
@@ -275,6 +278,14 @@
   existingProvider={linkPrompt?.existingProvider ?? ''}
   onConfirm={confirmLink}
   onCancel={() => (linkPrompt = null)}
+/>
+
+<LinkAccountModal
+  open={!!linkError}
+  existingProvider={linkError?.provider ?? ''}
+  errorMode={true}
+  onConfirm={() => (linkError = null)}
+  onCancel={() => (linkError = null)}
 />
 
 <div class="mobile-message">

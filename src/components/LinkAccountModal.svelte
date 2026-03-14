@@ -4,10 +4,13 @@
   interface Props {
     open: boolean;
     existingProvider: string; // "google" | "github"
+    errorMode?: boolean;
     onConfirm: () => void;
     onCancel: () => void;
   }
-  let { open, existingProvider, onConfirm, onCancel }: Props = $props()
+  let { open, existingProvider, errorMode = false, onConfirm, onCancel }: Props = $props()
+
+  const label = $derived(existingProvider === 'google' ? 'Google' : 'GitHub')
 
   $effect(() => {
     if (!open) return
@@ -25,12 +28,20 @@
       aria-modal="true"
       tabindex="-1"
     >
-      <h2>link accounts</h2>
-      <p>An account with this email already exists. Sign in with {existingProvider === 'google' ? 'Google' : 'GitHub'} to link your accounts.</p>
-      <div class="actions">
-        <button class="btn-primary" onclick={onConfirm}>sign in with {existingProvider === 'google' ? 'Google' : 'GitHub'}</button>
-        <button class="btn-secondary" onclick={onCancel}>cancel</button>
-      </div>
+      {#if errorMode}
+        <h2>already linked</h2>
+        <p>This {label} account is already linked to another keebo account.</p>
+        <div class="actions">
+          <button class="btn-secondary" onclick={onCancel}>dismiss</button>
+        </div>
+      {:else}
+        <h2>link accounts</h2>
+        <p>An account with this email already exists. Sign in with {label} to link your accounts.</p>
+        <div class="actions">
+          <button class="btn-primary" onclick={onConfirm}>sign in with {label}</button>
+          <button class="btn-secondary" onclick={onCancel}>cancel</button>
+        </div>
+      {/if}
     </div>
   </div>
 {/if}
@@ -75,6 +86,7 @@
 
   .actions {
     display: flex;
+    justify-content: flex-end;
     gap: 0.75rem;
   }
 
