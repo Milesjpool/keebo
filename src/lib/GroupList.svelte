@@ -59,17 +59,23 @@
   })
 
   $effect(() => {
+    function moveDown(e: KeyboardEvent) { e.preventDefault(); focused = Math.min(focused + 1, lastUnlocked()) }
+    function moveUp(e: KeyboardEvent) {
+      e.preventDefault()
+      if (focused === 0) { authFocusEl?.focus(); focused = -1 }
+      else focused = Math.max(focused - 1, 0)
+    }
+    function select() { if (!groupState(focused).locked) onSelect(focused) }
+
+    const keymap: Record<string, (e: KeyboardEvent) => void> = {
+      ArrowDown: moveDown, s: moveDown,
+      ArrowUp: moveUp,    w: moveUp,
+      Enter: select,      ArrowRight: select, d: select,
+    }
+
     function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'ArrowDown' || e.key === 's') {
-        e.preventDefault()
-        focused = Math.min(focused + 1, lastUnlocked())
-      } else if (e.key === 'ArrowUp' || e.key === 'w') {
-        e.preventDefault()
-        if (focused === 0) { authFocusEl?.focus(); focused = -1 }
-        else focused = Math.max(focused - 1, 0)
-      } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
-        if (!groupState(focused).locked) onSelect(focused)
-      } else if (/^[1-9]$/.test(e.key)) {
+      if (e.key in keymap) keymap[e.key](e)
+      else if (/^[1-9]$/.test(e.key)) {
         const idx = parseInt(e.key) - 1
         if (idx < groups.length) focused = idx
       }

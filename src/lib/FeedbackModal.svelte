@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { User } from 'firebase/auth'
   import { submitFeedback } from './feedback'
+  import { useKeydown } from './utils.svelte'
 
   interface Props {
     open: boolean
@@ -59,16 +60,10 @@
     if (!loading) onClose()
   }
 
-  $effect(() => {
-    if (!open) return
-    function onKeydown(e: KeyboardEvent) {
-      e.stopImmediatePropagation()
-      if (e.key === 'Escape') handleClose()
-      if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) handleSubmit(e)
-    }
-    window.addEventListener('keydown', onKeydown, true)
-    return () => window.removeEventListener('keydown', onKeydown, true)
-  })
+  useKeydown({
+    Escape: () => handleClose(),
+    Enter: (e) => { if (e.metaKey || e.ctrlKey) handleSubmit(e) },
+  }, { capture: true, stopAll: true, when: () => open })
 </script>
 
 {#if open}

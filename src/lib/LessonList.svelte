@@ -59,20 +59,31 @@
   const groupAllGold = $derived(allDone && group.lessons.every(l => getMedal(progress[l.id]?.score) === 'gold'))
 
   $effect(() => {
+    function moveDown(e: KeyboardEvent) {
+      e.preventDefault()
+      focused = Math.min(focused + 1, lastUnlocked())
+    }
+    function moveUp(e: KeyboardEvent) {
+      e.preventDefault()
+      if (focused > 0) focused--
+      else if (focused === 0) focused = -1
+      else { authFocusEl?.focus(); focused = -2 }
+    }
+    function select() {
+      if (focused === -1) onBack()
+      else if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
+    }
+
+    const keymap: Record<string, (e: KeyboardEvent) => void> = {
+      Escape: onBack,    ArrowLeft: onBack, a: onBack,
+      ArrowDown: moveDown, s: moveDown,
+      ArrowUp: moveUp,     w: moveUp,
+      Enter: select,       ArrowRight: select, d: select,
+    }
+
     function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'Escape' || e.key === 'ArrowLeft' || e.key === 'a') { onBack(); return }
-      if (e.key === 'ArrowDown' || e.key === 's') {
-        e.preventDefault()
-        focused = Math.min(focused + 1, lastUnlocked())
-      } else if (e.key === 'ArrowUp' || e.key === 'w') {
-        e.preventDefault()
-        if (focused > 0) focused--
-        else if (focused === 0) focused = -1
-        else { authFocusEl?.focus(); focused = -2 }
-      } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
-        if (focused === -1) onBack()
-        else if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
-      } else if (/^[1-9]$/.test(e.key)) {
+      if (e.key in keymap) keymap[e.key](e)
+      else if (/^[1-9]$/.test(e.key)) {
         const idx = parseInt(e.key) - 1
         if (idx < group.lessons.length) focused = idx
       }

@@ -1,20 +1,16 @@
 <script lang="ts">
   import type { Lesson, Stats } from './types'
   import { getMedal, EMOJI } from './medals'
-  import { formatTime } from './utils'
+  import { formatTime, useKeydown } from './utils.svelte'
 
   interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; onNext: () => void; onBack: () => void }
   let { lesson, hasNext, stats, onNext, onBack }: Props = $props()
 
   const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1)) : null)
 
-  $effect(() => {
-    function onKeydown(e: KeyboardEvent) {
-      if (e.key === 'Enter') hasNext ? onNext() : onBack()
-      if (e.key === 'Escape') onBack()
-    }
-    window.addEventListener('keydown', onKeydown)
-    return () => window.removeEventListener('keydown', onKeydown)
+  useKeydown({
+    Enter: () => hasNext ? onNext() : onBack(),
+    Escape: () => onBack(),
   })
 </script>
 
