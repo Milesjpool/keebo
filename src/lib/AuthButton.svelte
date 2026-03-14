@@ -30,7 +30,7 @@
   let dropdownEl = $state<HTMLDivElement | null>(null);
 
   $effect(() => {
-    focusEl = (authReady && !user) ? nameInputEl : authBtnEl;
+    focusEl = authBtnEl;
   });
 
   function dropdownButtons() {
@@ -41,7 +41,7 @@
     e.stopPropagation();
     if (e.key === 'Escape') {
       open = false;
-      if (user) authBtnEl?.focus(); else nameInputEl?.blur();
+      setTimeout(() => authBtnEl?.focus(), 0);
       return;
     }
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
@@ -52,7 +52,7 @@
       btns[idx + 1]?.focus();
     } else {
       if (idx > 0) btns[idx - 1]?.focus();
-      else { if (user) authBtnEl?.focus(); else nameInputEl?.focus(); }
+      else { if (user) authBtnEl?.focus(); else { nameInputEl?.focus(); } }
     }
   }
 
@@ -99,6 +99,10 @@
     }
   });
 
+  $effect(() => {
+    if (open && !user) nameInputEl?.focus();
+  });
+
 </script>
 
 <div class="auth-wrap">
@@ -106,7 +110,9 @@
     <button
       class="auth-btn"
       class:active={nameFocused}
-      onclick={() => nameInputEl?.focus()}
+      bind:this={authBtnEl}
+      onclick={toggle}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || (e.key === 'Enter' && open)) { e.preventDefault(); open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) nameInputEl?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
       aria-label="account menu"
     >
       <div class="avatar">
@@ -124,25 +130,30 @@
           <path d="M5 21a7 7 0 0 1 14 0" />
         </svg>
       </div>
+      {#if !open}
+        <span class="auth-label">{anonName}</span>
+      {/if}
     </button>
-    <input
-      class="anon-name-input"
-      type="text"
-      value={anonName}
-      size={Math.max(10, anonName.length + 1)}
-      bind:this={nameInputEl}
-      onfocus={(e) => { open = true; nameFocused = true; (e.target as HTMLInputElement).select() }}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { open = false; nameInputEl?.blur() } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { nameInputEl?.blur(); onDescend?.(); } } }}
-      oninput={handleNameInput}
-      onblur={(e) => { nameFocused = false; handleNameBlur(e) }}
-      aria-label="your name"
-    />
+    {#if open}
+      <input
+        class="anon-name-input"
+        type="text"
+        value={anonName}
+        size={Math.max(10, anonName.length + 1)}
+        bind:this={nameInputEl}
+        onfocus={(e) => { nameFocused = true; (e.target as HTMLInputElement).select() }}
+        onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); if (!nameInputEl?.value.trim()) { anonName = rollNewName() } open = false; setTimeout(() => authBtnEl?.focus(), 0) } else if (e.key === 'ArrowDown') { e.preventDefault(); dropdownButtons()[0]?.focus() } else if (e.key === 'ArrowUp') { e.preventDefault(); authBtnEl?.focus() } }}
+        oninput={handleNameInput}
+        onblur={(e) => { nameFocused = false; handleNameBlur(e) }}
+        aria-label="your name"
+      />
+    {/if}
   {:else}
     <button
       class="auth-btn"
       bind:this={authBtnEl}
       onclick={toggle}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || (e.key === 'Enter' && open)) { e.preventDefault(); open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
       aria-label="account menu"
       disabled={!authReady}
     >
