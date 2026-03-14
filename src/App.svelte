@@ -43,6 +43,17 @@
   });
 
   $effect(() => {
+    const hide = () => document.body.classList.add('keyboard-nav')
+    const show = () => document.body.classList.remove('keyboard-nav')
+    window.addEventListener('keydown', hide)
+    window.addEventListener('mousemove', show)
+    return () => {
+      window.removeEventListener('keydown', hide)
+      window.removeEventListener('mousemove', show)
+    }
+  });
+
+  $effect(() => {
     let unsubProgress: (() => void) | undefined;
     const unsubAuth = onAuthStateChanged(auth, (u) => {
       user = u;

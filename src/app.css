@@ -97,6 +97,11 @@ body {
   min-height: 100vh;
 }
 
+body.keyboard-nav,
+body.keyboard-nav * {
+  cursor: none !important;
+}
+
 button {
   font-family: inherit;
   cursor: pointer;
