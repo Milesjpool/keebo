@@ -23,6 +23,7 @@
   let feedbackOpen = $state(false);
   let anonName = $state(getAnonName());
   let nameInputEl = $state<HTMLInputElement | null>(null);
+  let authBtnEl = $state<HTMLButtonElement | null>(null);
   let dropdownEl = $state<HTMLDivElement | null>(null);
 
   function dropdownButtons() {
@@ -31,7 +32,11 @@
 
   function handleDropdownKeydown(e: KeyboardEvent) {
     e.stopPropagation();
-    if (e.key === 'Escape') { open = false; nameInputEl?.blur(); return; }
+    if (e.key === 'Escape') {
+      open = false;
+      if (user) authBtnEl?.focus(); else nameInputEl?.blur();
+      return;
+    }
     if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
     e.preventDefault();
     const btns = dropdownButtons();
@@ -39,8 +44,7 @@
     if (e.key === 'ArrowDown') {
       btns[idx + 1]?.focus();
     } else {
-      if (idx === 0) nameInputEl?.focus();
-      else btns[idx - 1]?.focus();
+      if (idx > 0) btns[idx - 1]?.focus();
     }
   }
 
@@ -86,6 +90,7 @@
       return () => document.removeEventListener("click", onDocClick);
     }
   });
+
 </script>
 
 <div class="auth-wrap">
@@ -126,7 +131,9 @@
   {:else}
     <button
       class="auth-btn"
+      bind:this={authBtnEl}
       onclick={toggle}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (!open) open = true; else dropdownButtons()[0]?.focus(); } }}
       aria-label="account menu"
       disabled={!authReady}
     >
@@ -208,6 +215,10 @@
     color: var(--text);
   }
 
+  .auth-btn:focus {
+    outline: none;
+  }
+
   .auth-label {
     font-size: 0.875rem;
     margin-top: 0.25rem;
@@ -270,12 +281,15 @@
     padding: 0.4rem 1rem 0.6rem;
     text-align: left;
     font-size: 0.875rem;
-    color: var(--text);
-    transition: background 0.1s;
+    color: var(--muted);
+    outline: none;
+    transition: background 0.1s, color 0.1s;
   }
 
-  .dropdown button:hover {
+  .dropdown button:hover,
+  .dropdown button:focus {
     background: var(--surface-hover);
+    color: var(--text);
   }
 
   .dropdown-feedback {
@@ -300,8 +314,14 @@
     transition: color 0.15s, border-bottom-color 0.15s;
   }
 
+  .anon-name-input::selection {
+    background: var(--accent);
+    color: var(--cursor-text);
+  }
+
   .anon-name-input:hover {
     color: var(--text);
+    border-bottom-color: var(--border);
   }
 
   .anon-name-input:focus {
