@@ -23,6 +23,26 @@
   let feedbackOpen = $state(false);
   let anonName = $state(getAnonName());
   let nameInputEl = $state<HTMLInputElement | null>(null);
+  let dropdownEl = $state<HTMLDivElement | null>(null);
+
+  function dropdownButtons() {
+    return Array.from(dropdownEl?.querySelectorAll<HTMLButtonElement>('button') ?? []);
+  }
+
+  function handleDropdownKeydown(e: KeyboardEvent) {
+    e.stopPropagation();
+    if (e.key === 'Escape') { open = false; nameInputEl?.blur(); return; }
+    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    e.preventDefault();
+    const btns = dropdownButtons();
+    const idx = btns.indexOf(e.target as HTMLButtonElement);
+    if (e.key === 'ArrowDown') {
+      btns[idx + 1]?.focus();
+    } else {
+      if (idx === 0) nameInputEl?.focus();
+      else btns[idx - 1]?.focus();
+    }
+  }
 
   function toggle() {
     open = !open;
@@ -98,7 +118,7 @@
       size={Math.max(10, anonName.length + 1)}
       bind:this={nameInputEl}
       onfocus={(e) => { open = true; (e.target as HTMLInputElement).select() }}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; nameInputEl?.blur() } }}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { open = false; nameInputEl?.blur() } else if (e.key === 'ArrowDown') { e.preventDefault(); dropdownButtons()[0]?.focus() } }}
       oninput={handleNameInput}
       onblur={handleNameBlur}
       aria-label="your name"
@@ -140,7 +160,7 @@
   {/if}
 
   {#if open}
-    <div class="dropdown">
+    <div class="dropdown" bind:this={dropdownEl} onkeydown={handleDropdownKeydown}>
       {#if user}
         <span class="dropdown-label">my account</span>
         <button
