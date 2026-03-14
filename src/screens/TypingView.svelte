@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Lesson, Stats } from './types'
-  import FingerIndicator from './FingerIndicator.svelte'
-  import { formatTime } from './utils'
+  import type { Lesson, Stats } from '../services/types'
+  import FingerIndicator from '../components/FingerIndicator.svelte'
+  import { formatTime } from '../services/utils'
 
   interface Props { lesson: Lesson; onComplete: (s: Stats) => void; onBack: () => void; strictMode?: boolean }
   let { lesson, onComplete, onBack, strictMode = false }: Props = $props()

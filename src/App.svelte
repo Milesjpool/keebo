@@ -1,18 +1,18 @@
 <script lang="ts">
-  import type { Stats, Screen, Group } from "./lib/types";
-  import lessonsData from "./lessons.json";
+  import type { Stats, Screen, Group } from "./services/types";
+  import lessonsData from "./data/lessons.json";
   const rawGroups = lessonsData.groups;
   const source = lessonsData.source ?? undefined;
-  import GroupList from "./lib/GroupList.svelte";
-  import LessonList from "./lib/LessonList.svelte";
-  import TypingView from "./lib/TypingView.svelte";
-  import LessonComplete from "./lib/LessonComplete.svelte";
-  import { auth, googleProvider, githubProvider } from "./lib/firebase";
+  import GroupList from "./screens/GroupList.svelte";
+  import LessonList from "./screens/LessonList.svelte";
+  import TypingView from "./screens/TypingView.svelte";
+  import LessonComplete from "./screens/LessonComplete.svelte";
+  import { auth, googleProvider, githubProvider } from "./services/firebase";
   import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
-  import { getUrl, parseUrl, findGroupIdx } from "./lib/router";
-  import { loadProgress, saveProgress } from "./lib/progress";
-  import { subscribeToProgress, writeProgress } from "./lib/sync";
-  import Footer from "./lib/Footer.svelte";
+  import { getUrl, parseUrl, findGroupIdx } from "./services/router";
+  import { loadProgress, saveProgress } from "./services/progress";
+  import { subscribeToProgress, writeProgress } from "./services/sync";
+  import Footer from "./components/Footer.svelte";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;

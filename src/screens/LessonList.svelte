@@ -1,8 +1,8 @@
 <script lang="ts">
-  import type { Group, Progress } from './types'
+  import type { Group, Progress } from '../services/types'
   import type { User } from 'firebase/auth'
-  import { getMedal, getGroupMedal, EMOJI } from './medals'
-  import AuthButton from './AuthButton.svelte'
+  import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
+  import AuthButton from '../components/AuthButton.svelte'
 
   interface Props {
     group: Group

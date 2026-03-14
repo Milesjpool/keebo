@@ -1,7 +1,7 @@
 <script lang="ts">
   import type { User } from 'firebase/auth'
-  import { submitFeedback } from './feedback'
-  import { useKeydown } from './utils'
+  import { submitFeedback } from '../services/feedback'
+  import { useKeydown } from '../services/utils'
 
   interface Props {
     open: boolean

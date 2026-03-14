@@ -1,7 +1,7 @@
 <script lang="ts">
-  import type { Lesson, Stats } from './types'
-  import { getMedal, EMOJI } from './medals'
-  import { formatTime, useKeydown } from './utils'
+  import type { Lesson, Stats } from '../services/types'
+  import { getMedal, EMOJI } from '../services/medals'
+  import { formatTime, useKeydown } from '../services/utils'
 
   interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; onNext: () => void; onBack: () => void }
   let { lesson, hasNext, stats, onNext, onBack }: Props = $props()

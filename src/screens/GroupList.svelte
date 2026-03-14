@@ -1,9 +1,9 @@
 <script lang="ts">
-  import type { Group, Progress } from './types'
+  import type { Group, Progress } from '../services/types'
   import type { User } from 'firebase/auth'
-  import { getGroupMedal, getMedal, EMOJI } from './medals'
-  import AuthButton from './AuthButton.svelte'
-  import Attribution from './Attribution.svelte'
+  import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
+  import AuthButton from '../components/AuthButton.svelte'
+  import Attribution from '../components/Attribution.svelte'
 
   interface Props {
     groups: Group[]

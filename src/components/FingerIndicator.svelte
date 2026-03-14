@@ -1,6 +1,6 @@
 <script lang="ts">
   import Fingers from "./Fingers.svelte";
-  import keymap from "../keymap.json";
+  import keymap from "../data/keymap.json";
 
   interface Props { char: string | null }
   let { char }: Props = $props();

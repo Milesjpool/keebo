@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
-  import { getAnonName, rollNewName, setAnonName } from "./anonNames";
+  import { getAnonName, rollNewName, setAnonName } from "../services/anonNames";
   import FeedbackModal from "./FeedbackModal.svelte";
   import AnonAvatar from "./AnonAvatar.svelte";
 
