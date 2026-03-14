@@ -8,7 +8,8 @@
   import TypingView from "./screens/TypingView.svelte";
   import LessonComplete from "./screens/LessonComplete.svelte";
   import { auth, googleProvider, githubProvider } from "./services/firebase";
-  import { onAuthStateChanged, signInWithPopup, signOut, type User } from "firebase/auth";
+  import { onAuthStateChanged, signInWithPopup, signOut, linkWithPopup, linkWithCredential, OAuthCredential, GoogleAuthProvider, GithubAuthProvider, type User } from "firebase/auth";
+  import LinkAccountModal from "./components/LinkAccountModal.svelte";
   import { getUrl, parseUrl, findGroupIdx } from "./services/router";
   import { loadProgress, saveProgress } from "./services/progress";
   import { subscribeToProgress, writeProgress } from "./services/sync";
@@ -37,6 +38,7 @@
   let progress = $state(loadProgress());
   let user = $state<User | null>(null);
   let authReady = $state(false);
+  let linkPrompt = $state<{ pendingCred: OAuthCredential; existingProvider: string } | null>(null);
 
   $effect(() => {
     saveProgress(progress);
@@ -71,7 +73,42 @@
 
   async function signIn(provider: string) {
     const p = provider === "google" ? googleProvider : githubProvider;
-    await signInWithPopup(auth, p);
+    try {
+      await signInWithPopup(auth, p);
+    } catch (err: any) {
+      if (err.code !== "auth/account-exists-with-different-credential") throw err;
+      const pendingCred = provider === "github"
+        ? GithubAuthProvider.credentialFromError(err)
+        : GoogleAuthProvider.credentialFromError(err);
+      if (pendingCred) {
+        linkPrompt = {
+          pendingCred,
+          existingProvider: provider === "github" ? "google" : "github",
+        };
+      }
+    }
+  }
+
+  async function confirmLink() {
+    if (!linkPrompt) return;
+    const { pendingCred, existingProvider } = linkPrompt;
+    linkPrompt = null;
+    const p = existingProvider === "google" ? googleProvider : githubProvider;
+    const result = await signInWithPopup(auth, p);
+    await linkWithCredential(result.user, pendingCred);
+  }
+
+  async function linkProvider(provider: string) {
+    const p = provider === "google" ? googleProvider : githubProvider;
+    try {
+      await linkWithPopup(auth.currentUser!, p);
+      user = null; // force Svelte to see a reference change (Firebase mutates User in-place)
+      user = auth.currentUser;
+    } catch (err: any) {
+      if (err.code !== 'auth/popup-closed-by-user' && err.code !== 'auth/cancelled-popup-request') {
+        throw err;
+      }
+    }
   }
 
   async function handleSignOut() {
@@ -191,6 +228,7 @@
     {authReady}
     onSignIn={signIn}
     onSignOut={handleSignOut}
+    onLinkProvider={linkProvider}
     {source}
   />
 {:else if screen === "lessons"}
@@ -213,6 +251,7 @@
     {authReady}
     onSignIn={signIn}
     onSignOut={handleSignOut}
+    onLinkProvider={linkProvider}
   />
 {:else if screen === "typing"}
   <TypingView
@@ -230,6 +269,13 @@
     onBack={goToLessons}
   />
 {/if}
+
+<LinkAccountModal
+  open={!!linkPrompt}
+  existingProvider={linkPrompt?.existingProvider ?? ''}
+  onConfirm={confirmLink}
+  onCancel={() => (linkPrompt = null)}
+/>
 
 <div class="mobile-message">
   <p>keebo needs a real keyboard ⌨️</p>

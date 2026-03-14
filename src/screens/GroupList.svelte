@@ -15,9 +15,10 @@
     authReady: boolean
     onSignIn: (p: string) => Promise<void>
     onSignOut: () => Promise<void>
+    onLinkProvider: (p: string) => Promise<void>
     source?: string
   }
-  let { groups, progress, onSelect, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, source }: Props = $props()
+  let { groups, progress, onSelect, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, source }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
@@ -91,7 +92,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} />
   </header>
 
   <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">

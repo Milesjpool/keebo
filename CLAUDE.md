@@ -4,8 +4,8 @@ Touch-typing SPA. Svelte 5 + Vite + TypeScript + Firebase. Run with bun.
 
 ## Commands
 ```
-bun dev      # dev server
-bun build    # production build (also copies dist/index.html → dist/404.html)
+bun run dev      # dev server
+bun run build    # production build (also copies dist/index.html → dist/404.html)
 ```
 If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 

@@ -1,8 +1,13 @@
 - fix long-lines (dynamic vs static)
 - submit line score (floating, temporary)
-- difficulty (gutters, normal, strict [no corrections])
-- show incorrect letter
+- difficulty (gutters [no mistakes], normal, strict [no corrections])
+- show incorrectly typed letter
 - next-line preview.
 - Avatar during lesson
 - more lessons.
 - (hover +) 'KEEBO' easter egg.
+- Clean up SVGs - style instead of inline?
+- Add tests at all levels (+ storybook?).
+- Delete data when deleting accounts.
+- give delete account option
+- Warn when linked account already exists. (can we resolve this?)
