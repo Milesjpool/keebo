@@ -1,0 +1,8 @@
+- fix long-lines (dynamic vs static)
+- submit line score (floating, temporary)
+- difficulty (gutters, normal, strict [no corrections])
+- show incorrect letter
+- next-line preview.
+- Avatar during lesson
+- more lessons.
+- (hover +) 'KEEBO' easter egg.
