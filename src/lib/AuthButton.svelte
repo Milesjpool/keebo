@@ -19,7 +19,15 @@
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
   }
-  let { user, authReady, context, onSignIn, onSignOut, focusEl = $bindable<HTMLElement | null>(null), onDescend }: Props = $props();
+  let {
+    user,
+    authReady,
+    context,
+    onSignIn,
+    onSignOut,
+    focusEl = $bindable<HTMLElement | null>(null),
+    onDescend,
+  }: Props = $props();
 
   let open = $state(false);
   let feedbackOpen = $state(false);
@@ -34,25 +42,32 @@
   });
 
   function dropdownButtons() {
-    return Array.from(dropdownEl?.querySelectorAll<HTMLButtonElement>('button') ?? []);
+    return Array.from(
+      dropdownEl?.querySelectorAll<HTMLButtonElement>("button") ?? [],
+    );
   }
 
   function handleDropdownKeydown(e: KeyboardEvent) {
     e.stopPropagation();
-    if (e.key === 'Escape') {
+    if (e.key === "Escape") {
       open = false;
       setTimeout(() => authBtnEl?.focus(), 0);
       return;
     }
-    if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
     e.preventDefault();
     const btns = dropdownButtons();
     const idx = btns.indexOf(e.target as HTMLButtonElement);
-    if (e.key === 'ArrowDown') {
+    if (e.key === "ArrowDown") {
       btns[idx + 1]?.focus();
     } else {
       if (idx > 0) btns[idx - 1]?.focus();
-      else { if (user) authBtnEl?.focus(); else { nameInputEl?.focus(); } }
+      else {
+        if (user) authBtnEl?.focus();
+        else {
+          nameInputEl?.focus();
+        }
+      }
     }
   }
 
@@ -87,7 +102,6 @@
     feedbackOpen = true;
   }
 
-
   function onDocClick(e: MouseEvent) {
     if (!(e.target as Element).closest(".auth-wrap")) open = false;
   }
@@ -102,7 +116,6 @@
   $effect(() => {
     if (open && !user) nameInputEl?.focus();
   });
-
 </script>
 
 <div class="auth-wrap">
@@ -112,7 +125,20 @@
       class:active={nameFocused}
       bind:this={authBtnEl}
       onclick={toggle}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || (e.key === 'Enter' && open)) { e.preventDefault(); open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) nameInputEl?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
+      onkeydown={(e) => {
+        e.stopPropagation();
+        if (e.key === "Escape" || (e.key === "Enter" && open)) {
+          e.preventDefault();
+          open = false;
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (open) nameInputEl?.focus();
+          else {
+            authBtnEl?.blur();
+            onDescend?.();
+          }
+        }
+      }}
       aria-label="account menu"
     >
       <div class="avatar">
@@ -141,10 +167,32 @@
         value={anonName}
         size={Math.max(10, anonName.length + 1)}
         bind:this={nameInputEl}
-        onfocus={(e) => { nameFocused = true; (e.target as HTMLInputElement).select() }}
-        onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { e.preventDefault(); if (!nameInputEl?.value.trim()) { anonName = rollNewName() } open = false; setTimeout(() => authBtnEl?.focus(), 0) } else if (e.key === 'ArrowDown') { e.preventDefault(); dropdownButtons()[0]?.focus() } else if (e.key === 'ArrowUp') { e.preventDefault(); authBtnEl?.focus() } }}
+        onfocus={(e) => {
+          nameFocused = true;
+          (e.target as HTMLInputElement).select();
+        }}
+        onkeydown={(e) => {
+          e.stopPropagation();
+          if (e.key === "Escape" || e.key === "Enter") {
+            e.preventDefault();
+            if (!nameInputEl?.value.trim()) {
+              anonName = rollNewName();
+            }
+            open = false;
+            setTimeout(() => authBtnEl?.focus(), 0);
+          } else if (e.key === "ArrowDown") {
+            e.preventDefault();
+            dropdownButtons()[0]?.focus();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            authBtnEl?.focus();
+          }
+        }}
         oninput={handleNameInput}
-        onblur={(e) => { nameFocused = false; handleNameBlur(e) }}
+        onblur={(e) => {
+          nameFocused = false;
+          handleNameBlur(e);
+        }}
         aria-label="your name"
       />
     {/if}
@@ -153,7 +201,20 @@
       class="auth-btn"
       bind:this={authBtnEl}
       onclick={toggle}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || (e.key === 'Enter' && open)) { e.preventDefault(); open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
+      onkeydown={(e) => {
+        e.stopPropagation();
+        if (e.key === "Escape" || (e.key === "Enter" && open)) {
+          e.preventDefault();
+          open = false;
+        } else if (e.key === "ArrowDown") {
+          e.preventDefault();
+          if (open) dropdownButtons()[0]?.focus();
+          else {
+            authBtnEl?.blur();
+            onDescend?.();
+          }
+        }
+      }}
       aria-label="account menu"
       disabled={!authReady}
     >
@@ -180,14 +241,22 @@
         <span class="auth-label">█████ ████</span>
       {:else}
         <span class="auth-label"
-          >{user.displayName?.toLowerCase() ?? user.email}</span
+          >{user?.displayName?.toLowerCase() ?? user?.email}</span
         >
       {/if}
     </button>
   {/if}
 
   {#if open}
-    <div class="dropdown" bind:this={dropdownEl} onkeydown={handleDropdownKeydown} onmouseover={(e) => (e.target as Element).closest('button')?.focus()}>
+    <div
+      class="dropdown"
+      role="menu"
+      tabindex="-1"
+      bind:this={dropdownEl}
+      onkeydown={handleDropdownKeydown}
+      onmouseover={(e) => (e.target as Element).closest("button")?.focus()}
+      onfocus={(e) => (e.target as Element).closest("button")?.focus()}
+    >
       {#if user}
         <span class="dropdown-label">my account</span>
         <button
@@ -296,7 +365,6 @@
     overflow: hidden;
   }
 
-
   .dropdown-label {
     display: block;
     padding: 0.6rem 1rem 0.3rem;
@@ -311,7 +379,9 @@
     font-size: 0.875rem;
     color: var(--muted);
     outline: none;
-    transition: background 0.1s, color 0.1s;
+    transition:
+      background 0.1s,
+      color 0.1s;
   }
 
   .dropdown button:hover,
@@ -339,7 +409,9 @@
     margin-top: 0.25rem;
     min-width: 7rem;
     cursor: text;
-    transition: color 0.15s, border-bottom-color 0.15s;
+    transition:
+      color 0.15s,
+      border-bottom-color 0.15s;
   }
 
   .anon-name-input::selection {
