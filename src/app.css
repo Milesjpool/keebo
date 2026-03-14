@@ -105,6 +105,39 @@ button {
   color: inherit;
 }
 
+.btn-primary {
+  padding: 0.75rem 1.5rem;
+  background: var(--accent);
+  color: var(--cursor-text);
+  border-radius: 6px;
+  font-size: 0.875rem;
+  transition: opacity 0.15s;
+}
+
+.btn-primary:hover:not(:disabled) {
+  opacity: 0.85;
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  padding: 0.75rem 1.5rem;
+  color: var(--muted);
+  font-size: 0.875rem;
+  transition: color 0.15s;
+}
+
+.btn-secondary:hover:not(:disabled) {
+  color: var(--text);
+}
+
+.btn-secondary:disabled {
+  cursor: not-allowed;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20%       { transform: translateX(-10px); }

@@ -1,15 +1,12 @@
 <script lang="ts">
   import type { Lesson, Stats } from './types'
   import { getMedal, EMOJI } from './medals'
+  import { formatTime } from './utils'
 
   interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; onNext: () => void; onBack: () => void }
   let { lesson, hasNext, stats, onNext, onBack }: Props = $props()
 
   const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1)) : null)
-
-  function formatTime(s: number) {
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-  }
 
   $effect(() => {
     function onKeydown(e: KeyboardEvent) {
@@ -129,27 +126,5 @@
     margin-top: 0.5rem;
   }
 
-  .btn-primary {
-    padding: 0.75rem 1.5rem;
-    background: var(--accent);
-    color: var(--cursor-text);
-    border-radius: 6px;
-    font-size: 0.875rem;
-    transition: opacity 0.15s;
-  }
 
-  .btn-primary:hover {
-    opacity: 0.85;
-  }
-
-  .btn-secondary {
-    padding: 0.75rem 1.5rem;
-    color: var(--muted);
-    font-size: 0.875rem;
-    transition: color 0.15s;
-  }
-
-  .btn-secondary:hover {
-    color: var(--text);
-  }
 </style>

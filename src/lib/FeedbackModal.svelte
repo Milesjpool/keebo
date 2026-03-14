@@ -195,34 +195,8 @@
     margin-top: 0.25rem;
   }
 
-  .btn-primary {
-    padding: 0.6rem 1.25rem;
-    background: var(--accent);
-    color: var(--cursor-text);
-    border-radius: 6px;
-    font-size: 0.875rem;
-  }
-
-  .btn-primary:hover:not(:disabled) {
-    opacity: 0.9;
-  }
-
-  .btn-primary:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
-  }
-
+  .btn-primary,
   .btn-secondary {
     padding: 0.6rem 1.25rem;
-    color: var(--muted);
-    font-size: 0.875rem;
-  }
-
-  .btn-secondary:hover:not(:disabled) {
-    color: var(--text);
-  }
-
-  .btn-secondary:disabled {
-    cursor: not-allowed;
   }
 </style>

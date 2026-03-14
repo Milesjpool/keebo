@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Lesson, Stats } from './types'
   import FingerIndicator from './FingerIndicator.svelte'
+  import { formatTime } from './utils'
 
   interface Props { lesson: Lesson; onComplete: (s: Stats) => void; onBack: () => void; strictMode?: boolean }
   let { lesson, onComplete, onBack, strictMode = false }: Props = $props()
@@ -27,10 +28,6 @@
     const id = setInterval(() => { elapsed = Math.floor((Date.now() - startTime!) / 1000) }, 500)
     return () => clearInterval(id)
   })
-
-  function formatTime(s: number) {
-    return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
-  }
 
   $effect(() => {
     function onKeydown(e: KeyboardEvent) {
