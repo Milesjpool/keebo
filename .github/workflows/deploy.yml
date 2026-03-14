@@ -53,3 +53,14 @@ jobs:
       - run: npx firebase-tools@latest deploy --only firestore:rules --project ${{ secrets.FIREBASE_PROJECT_ID }}
         env:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
+
+  deploy-functions:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm install --prefix functions
+      - run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 -d > /tmp/sa.json
+      - run: npx firebase-tools@latest deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
