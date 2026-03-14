@@ -175,6 +175,7 @@
     {progress}
     onSelect={openGroup}
     bind:focused={groupFocused}
+    context={{ screen: 'groups', groupIdx: groupFocused }}
     {user}
     {authReady}
     onSignIn={signIn}
@@ -182,6 +183,8 @@
     {source}
   />
 {:else if screen === "lessons"}
+  {@const lessonIdx = lessonFocused[currentGroupIdx]}
+  {@const focusedLesson = lessonIdx >= 0 ? groups[currentGroupIdx].lessons[lessonIdx] : undefined}
   <LessonList
     group={groups[currentGroupIdx]}
     groupIdx={currentGroupIdx}
@@ -189,6 +192,12 @@
     onSelect={startLesson}
     onBack={goToGroups}
     bind:focused={lessonFocused[currentGroupIdx]}
+    context={{
+      screen: 'lessons',
+      groupIdx: currentGroupIdx,
+      flatIdx: focusedLesson?.flatIdx,
+      lessonId: focusedLesson?.id,
+    }}
     {user}
     {authReady}
     onSignIn={signIn}

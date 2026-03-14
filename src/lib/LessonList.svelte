@@ -5,12 +5,19 @@
   import AuthButton from './AuthButton.svelte'
 
   interface Props {
-    group: Group; groupIdx: number; progress: Progress
-    onSelect: (fi: number) => void; onBack: () => void; focused: number
-    user: User | null; authReady: boolean
-    onSignIn: (p: string) => Promise<void>; onSignOut: () => Promise<void>
+    group: Group
+    groupIdx: number
+    progress: Progress
+    onSelect: (fi: number) => void
+    onBack: () => void
+    focused: number
+    context: { screen: string; groupIdx: number; flatIdx?: number; lessonId?: string }
+    user: User | null
+    authReady: boolean
+    onSignIn: (p: string) => Promise<void>
+    onSignOut: () => Promise<void>
   }
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), user, authReady, onSignIn, onSignOut }: Props = $props()
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let topHeight = $state(0)
@@ -79,7 +86,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {onSignIn} {onSignOut} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->
@@ -138,7 +145,7 @@
     flex-shrink: 0;
     display: flex;
     justify-content: space-between;
-    align-items: flex-start;
+    align-items: flex-end;
   }
 
   .header-left {

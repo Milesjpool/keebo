@@ -1,62 +1,121 @@
 <script lang="ts">
-  import type { User } from 'firebase/auth'
+  import type { User } from "firebase/auth";
+  import { getAnonName } from "./anonNames";
+  import FeedbackModal from "./FeedbackModal.svelte";
+
+  interface FeedbackContext {
+    screen?: string;
+    lessonId?: string;
+    groupIdx?: number;
+    flatIdx?: number;
+  }
 
   interface Props {
-    user: User | null; authReady: boolean
-    onSignIn: (p: string) => Promise<void>; onSignOut: () => Promise<void>
+    user: User | null;
+    authReady: boolean;
+    context?: FeedbackContext;
+    onSignIn: (p: string) => Promise<void>;
+    onSignOut: () => Promise<void>;
   }
-  let { user, authReady, onSignIn, onSignOut }: Props = $props()
+  let { user, authReady, context, onSignIn, onSignOut }: Props = $props();
 
-  let open = $state(false)
+  let open = $state(false);
+  let feedbackOpen = $state(false);
+  let anonName = $state(getAnonName());
 
   function toggle() {
-    open = !open
+    open = !open;
   }
 
   function signInWith(provider: string) {
-    open = false
-    onSignIn(provider)
+    open = false;
+    onSignIn(provider);
   }
 
+  function openFeedback() {
+    open = false;
+    feedbackOpen = true;
+  }
+
+
   function onDocClick(e: MouseEvent) {
-    if (!(e.target as Element).closest('.auth-wrap')) open = false
+    if (!(e.target as Element).closest(".auth-wrap")) open = false;
   }
 
   $effect(() => {
     if (open) {
-      document.addEventListener('click', onDocClick)
-      return () => document.removeEventListener('click', onDocClick)
+      document.addEventListener("click", onDocClick);
+      return () => document.removeEventListener("click", onDocClick);
     }
-  })
+  });
 </script>
 
 <div class="auth-wrap">
-  <button class="auth-btn" onclick={toggle} aria-label={user ? 'sign out' : 'sign in'} disabled={!authReady}>
+  <button
+    class="auth-btn"
+    onclick={toggle}
+    aria-label={"account menu"}
+    disabled={!authReady}
+  >
     <div class="avatar">
       {#if authReady}
         {#if user?.photoURL}
           <img src={user.photoURL} alt="" referrerpolicy="no-referrer" />
         {:else}
-          👤
+          <svg
+            class="anon-avatar"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="1.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+          >
+            <circle cx="12" cy="8" r="3.5" />
+            <path d="M5 21a7 7 0 0 1 14 0" />
+          </svg>
         {/if}
       {/if}
     </div>
-    <span class="auth-label" class:redacted={!authReady}>{authReady ? (user ? user.displayName?.toLowerCase() ?? user.email : 'sign in') : 'sign in'}</span>
+
+    {#if !authReady}
+      <span class="auth-label">█████ ████</span>
+    {:else if user}
+      <span class="auth-label"
+        >{user.displayName?.toLowerCase() ?? user.email}</span
+      >
+    {:else}
+      <span class="auth-label">{anonName}</span>
+    {/if}
   </button>
 
   {#if open}
     <div class="dropdown">
       {#if user}
-        <span class="dropdown-label">{user.displayName?.toLowerCase() ?? user.email}</span>
-        <button onclick={() => { open = false; onSignOut() }}>sign out</button>
+        <span class="dropdown-label">my account</span>
+        <button
+          onclick={() => {
+            open = false;
+            onSignOut();
+          }}>sign out</button
+        >
       {:else}
-        <span class="dropdown-label">sign in with</span>
-        <button onclick={() => signInWith('google')}>Google</button>
-        <button onclick={() => signInWith('github')}>GitHub</button>
+        <span class="dropdown-label">sign in</span>
+        <button onclick={() => signInWith("google")}>Google</button>
+        <button onclick={() => signInWith("github")}>GitHub</button>
       {/if}
+      <button class="dropdown-feedback" onclick={openFeedback}>feedback</button>
     </div>
   {/if}
 </div>
+
+<FeedbackModal
+  open={feedbackOpen}
+  onClose={() => (feedbackOpen = false)}
+  {context}
+  {user}
+/>
 
 <style>
   .auth-wrap {
@@ -71,6 +130,7 @@
     flex-direction: column;
     align-items: flex-end;
     gap: 0.25rem;
+    font-size: inherit;
     color: var(--muted);
     transition: color 0.15s;
   }
@@ -86,14 +146,6 @@
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-  }
-
-  .auth-label.redacted {
-    color: transparent;
-    background: var(--muted);
-    border-radius: 3px;
-    opacity: 0.3;
-    user-select: none;
   }
 
   .avatar {
@@ -116,6 +168,12 @@
     object-fit: cover;
   }
 
+  .anon-avatar {
+    width: 1.125rem;
+    height: 1.125rem;
+    opacity: 0.7;
+  }
+
   .dropdown {
     position: absolute;
     top: calc(100% + 0.4rem);
@@ -129,6 +187,7 @@
     z-index: 10;
     overflow: hidden;
   }
+
 
   .dropdown-label {
     display: block;
@@ -148,5 +207,11 @@
 
   .dropdown button:hover {
     background: var(--surface-hover);
+  }
+
+  .dropdown-feedback {
+    border-top: 1px solid var(--border);
+    margin-top: 0.25rem;
+    padding-top: 0.5rem !important;
   }
 </style>
