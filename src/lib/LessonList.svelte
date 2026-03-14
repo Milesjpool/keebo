@@ -20,6 +20,7 @@
   let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
+  let authFocusEl = $state<HTMLElement | null>(null)
   let topHeight = $state(0)
   let bottomHeight = $state(0)
 
@@ -66,7 +67,8 @@
       } else if (e.key === 'ArrowUp' || e.key === 'w') {
         e.preventDefault()
         if (focused > 0) focused--
-        else focused = -1
+        else if (focused === 0) focused = -1
+        else { authFocusEl?.focus(); focused = -2 }
       } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
         if (focused === -1) onBack()
         else if (!isLocked(focused)) onSelect(group.lessons[focused].flatIdx)
@@ -86,7 +88,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->

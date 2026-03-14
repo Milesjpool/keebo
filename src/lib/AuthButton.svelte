@@ -16,15 +16,22 @@
     context?: FeedbackContext;
     onSignIn: (p: string) => Promise<void>;
     onSignOut: () => Promise<void>;
+    focusEl?: HTMLElement | null;
+    onDescend?: () => void;
   }
-  let { user, authReady, context, onSignIn, onSignOut }: Props = $props();
+  let { user, authReady, context, onSignIn, onSignOut, focusEl = $bindable<HTMLElement | null>(null), onDescend }: Props = $props();
 
   let open = $state(false);
   let feedbackOpen = $state(false);
   let anonName = $state(getAnonName());
+  let nameFocused = $state(false);
   let nameInputEl = $state<HTMLInputElement | null>(null);
   let authBtnEl = $state<HTMLButtonElement | null>(null);
   let dropdownEl = $state<HTMLDivElement | null>(null);
+
+  $effect(() => {
+    focusEl = (authReady && !user) ? nameInputEl : authBtnEl;
+  });
 
   function dropdownButtons() {
     return Array.from(dropdownEl?.querySelectorAll<HTMLButtonElement>('button') ?? []);
@@ -45,6 +52,7 @@
       btns[idx + 1]?.focus();
     } else {
       if (idx > 0) btns[idx - 1]?.focus();
+      else { if (user) authBtnEl?.focus(); else nameInputEl?.focus(); }
     }
   }
 
@@ -97,6 +105,7 @@
   {#if authReady && !user}
     <button
       class="auth-btn"
+      class:active={nameFocused}
       onclick={() => nameInputEl?.focus()}
       aria-label="account menu"
     >
@@ -122,10 +131,10 @@
       value={anonName}
       size={Math.max(10, anonName.length + 1)}
       bind:this={nameInputEl}
-      onfocus={(e) => { open = true; (e.target as HTMLInputElement).select() }}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { open = false; nameInputEl?.blur() } else if (e.key === 'ArrowDown') { e.preventDefault(); dropdownButtons()[0]?.focus() } }}
+      onfocus={(e) => { open = true; nameFocused = true; (e.target as HTMLInputElement).select() }}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape' || e.key === 'Enter') { open = false; nameInputEl?.blur() } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { nameInputEl?.blur(); onDescend?.(); } } }}
       oninput={handleNameInput}
-      onblur={handleNameBlur}
+      onblur={(e) => { nameFocused = false; handleNameBlur(e) }}
       aria-label="your name"
     />
   {:else}
@@ -133,7 +142,7 @@
       class="auth-btn"
       bind:this={authBtnEl}
       onclick={toggle}
-      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (!open) open = true; else dropdownButtons()[0]?.focus(); } }}
+      onkeydown={(e) => { e.stopPropagation(); if (e.key === 'Escape') { open = false; } else if (e.key === 'ArrowDown') { e.preventDefault(); if (open) dropdownButtons()[0]?.focus(); else { authBtnEl?.blur(); onDescend?.(); } } }}
       aria-label="account menu"
       disabled={!authReady}
     >
@@ -167,7 +176,7 @@
   {/if}
 
   {#if open}
-    <div class="dropdown" bind:this={dropdownEl} onkeydown={handleDropdownKeydown}>
+    <div class="dropdown" bind:this={dropdownEl} onkeydown={handleDropdownKeydown} onmouseover={(e) => (e.target as Element).closest('button')?.focus()}>
       {#if user}
         <span class="dropdown-label">my account</span>
         <button
@@ -211,12 +220,20 @@
     transition: color 0.15s;
   }
 
-  .auth-btn:hover {
+  .auth-btn:hover,
+  .auth-btn:focus,
+  .auth-btn.active {
     color: var(--text);
   }
 
-  .auth-btn:focus {
+  .auth-btn:focus,
+  .auth-btn.active {
     outline: none;
+  }
+
+  .auth-btn:focus .avatar,
+  .auth-btn.active .avatar {
+    border-color: var(--accent);
   }
 
   .auth-label {

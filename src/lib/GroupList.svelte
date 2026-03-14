@@ -20,6 +20,7 @@
   let { groups, progress, onSelect, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, source }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
+  let authFocusEl = $state<HTMLElement | null>(null)
   let topHeight = $state(0)
   let bottomHeight = $state(0)
 
@@ -64,7 +65,8 @@
         focused = Math.min(focused + 1, lastUnlocked())
       } else if (e.key === 'ArrowUp' || e.key === 'w') {
         e.preventDefault()
-        focused = Math.max(focused - 1, 0)
+        if (focused === 0) { authFocusEl?.focus(); focused = -1 }
+        else focused = Math.max(focused - 1, 0)
       } else if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === 'd') {
         if (!groupState(focused).locked) onSelect(focused)
       } else if (/^[1-9]$/.test(e.key)) {
@@ -83,7 +85,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} />
   </header>
 
   <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
