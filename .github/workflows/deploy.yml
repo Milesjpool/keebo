@@ -63,6 +63,8 @@ jobs:
       - run: npm run build --prefix functions
       - run: echo "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}" | base64 -d > /tmp/sa.json
       - run: npx firebase-tools@latest functions:artifacts:setpolicy --project ${{ secrets.FIREBASE_PROJECT_ID }}
+        env:
+          GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
       - run: npx firebase-tools@latest deploy --only functions --project ${{ secrets.FIREBASE_PROJECT_ID }}
         env:
           GOOGLE_APPLICATION_CREDENTIALS: /tmp/sa.json
