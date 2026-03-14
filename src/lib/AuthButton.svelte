@@ -288,6 +288,7 @@
     outline: none;
   }
 
+  .auth-btn:hover .avatar,
   .auth-btn:focus .avatar,
   .auth-btn.active .avatar {
     border-color: var(--accent);
