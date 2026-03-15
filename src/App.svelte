@@ -7,8 +7,9 @@
   import LessonList from "./screens/LessonList.svelte";
   import TypingView from "./screens/TypingView.svelte";
   import LessonComplete from "./screens/LessonComplete.svelte";
-  import { auth, googleProvider, githubProvider } from "./services/firebase";
-  import { onAuthStateChanged, signInWithPopup, signOut, linkWithPopup, linkWithCredential, OAuthCredential, GoogleAuthProvider, GithubAuthProvider, type User } from "firebase/auth";
+  import { auth, googleProvider, githubProvider, db } from "./services/firebase";
+  import { onAuthStateChanged, signInWithPopup, signOut, linkWithPopup, linkWithCredential, OAuthCredential, GoogleAuthProvider, GithubAuthProvider, deleteUser, type User } from "firebase/auth";
+  import { deleteDoc, doc } from "firebase/firestore";
   import LinkAccountModal from "./components/LinkAccountModal.svelte";
   import { getUrl, parseUrl, findGroupIdx } from "./services/router";
   import { loadProgress, saveProgress } from "./services/progress";
@@ -117,6 +118,20 @@
   async function handleSignOut() {
     await signOut(auth);
     user = null;
+  }
+
+  async function deleteAccount() {
+    const currentUser = auth.currentUser;
+    if (!currentUser) return;
+    const uid = currentUser.uid;
+    try {
+      await deleteDoc(doc(db, 'users', uid));
+    } catch {
+      // Firestore doc may not exist; proceed with auth deletion
+    }
+    await deleteUser(currentUser);
+    progress = {};
+    saveProgress({});
   }
 
   function isDone(lesson: { id: string }) {
@@ -232,6 +247,7 @@
     onSignIn={signIn}
     onSignOut={handleSignOut}
     onLinkProvider={linkProvider}
+    onDeleteAccount={deleteAccount}
     {source}
   />
 {:else if screen === "lessons"}
@@ -255,6 +271,7 @@
     onSignIn={signIn}
     onSignOut={handleSignOut}
     onLinkProvider={linkProvider}
+    onDeleteAccount={deleteAccount}
   />
 {:else if screen === "typing"}
   <TypingView
