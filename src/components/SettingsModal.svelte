@@ -2,6 +2,7 @@
   import type { User } from "firebase/auth";
   import { useKeydown } from "../services/utils";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
+  import Modal from "./Modal.svelte";
 
   interface Props {
     open: boolean;
@@ -100,37 +101,8 @@
 </script>
 
 {#if open}
-  <div class="backdrop" onclick={handleClose} role="presentation">
-    <div
-      class="modal"
-      onclick={(e) => e.stopPropagation()}
-      onkeydown={(e) => e.stopPropagation()}
-      onmouseover={(e) => {
-        (e.target as Element).closest("button:not(:disabled)")?.focus();
-      }}
-      onmouseout={(e) => {
-        (e.target as Element).closest("button:not(:disabled)")?.blur();
-      }}
-      onfocus={() => {}}
-      onblur={() => {}}
-      bind:this={modalEl}
-      role="dialog"
-      aria-labelledby="settings-title"
-      tabindex="-1"
-    >
-      <button
-        class="modal-header"
-        id="settings-title"
-        bind:this={closeBtnEl}
-        onclick={handleClose}
-        onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-        onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-      >
-        <span class="modal-title">settings</span>
-        <span class="btn-close">×</span>
-      </button>
-
-      {#if user}
+  <Modal title="settings" labelId="settings-title" onClose={handleClose} bind:closeBtnEl bind:modalEl>
+    {#if user}
         <section>
           <span class="section-label">connections</span>
           {#each [{ id: "google.com", name: "Google", svgPath: "google", action: () => onLinkProvider?.("google") }, { id: "github.com", name: "GitHub", svgPath: "github", action: () => onLinkProvider?.("github") }].sort( (a, b) => (linkedProviderIds.includes(b.id) ? 1 : -1), ) as p}
@@ -333,70 +305,13 @@
         </section>
       {/if}
 
-      <div class="footer-sep">
-        <button class="btn-feedback" onclick={onFeedback}>feedback</button>
-      </div>
+    <div class="footer-sep">
+      <button class="btn-feedback" onclick={onFeedback}>feedback</button>
     </div>
-  </div>
+  </Modal>
 {/if}
 
 <style>
-  .backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 1rem;
-  }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    max-width: 360px;
-    width: 100%;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-  }
-
-  .modal-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
-    margin-top: -2rem;
-    padding: 0.75rem 2rem;
-    margin-bottom: -1rem;
-    background: none;
-    font-family: inherit;
-    border: none;
-    cursor: pointer;
-    outline: none;
-    transition: background 0.1s;
-  }
-
-  .modal-header:focus {
-    background: var(--surface-hover);
-  }
-
-  .modal-title {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: var(--correct);
-  }
-
-  .btn-close {
-    font-size: 1.1rem;
-    color: var(--muted);
-    line-height: 1;
-  }
-
   section {
     display: flex;
     flex-direction: column;
@@ -412,7 +327,7 @@
     color: var(--muted);
     text-transform: lowercase;
     background: var(--surface-hover);
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.5rem;
   }
 
   .provider-row {
@@ -603,7 +518,7 @@
     border-top: 1px solid var(--border);
     padding-top: 0.5rem;
     padding-bottom: 1rem;
-    margin-bottom: -2rem;
+    margin-bottom: -1rem;
   }
 
   .btn-feedback {
