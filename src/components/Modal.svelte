@@ -18,7 +18,7 @@
     class="modal"
     onclick={(e) => e.stopPropagation()}
     onkeydown={(e) => e.stopPropagation()}
-    onmouseover={(e) => { (e.target as Element).closest('button:not(:disabled)')?.focus() }}
+    onmouseover={(e) => { if (!(document.activeElement instanceof HTMLInputElement)) (e.target as Element).closest('button:not(:disabled)')?.focus() }}
     onmouseout={(e) => { (e.target as Element).closest('button:not(:disabled)')?.blur() }}
     onfocus={() => {}}
     onblur={() => {}}

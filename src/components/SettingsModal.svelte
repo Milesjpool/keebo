@@ -40,7 +40,7 @@
 
   function modalButtons() {
     return Array.from(
-      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled), input.name-input') ?? []
+      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled):not(.name-blur-btn), input.name-input') ?? []
     );
   }
 
@@ -276,7 +276,7 @@
             class="rename-row"
             tabindex="-1"
             bind:this={renameRowEl}
-            onmouseenter={() => renameRowEl?.focus()}
+            onmouseenter={() => { if (document.activeElement !== nameInputEl) renameRowEl?.focus() }}
             onmouseleave={() => renameRowEl?.blur()}
           >
             <input
@@ -298,6 +298,11 @@
               }}
               placeholder="your name"
             />
+            <button
+              class="name-blur-btn"
+              tabindex="-1"
+              onmousedown={(e) => { e.preventDefault(); renameRowEl?.focus() }}
+            >×</button>
           </div>
           {#if confirmDelete}
             <div class="confirm-delete">
@@ -462,6 +467,7 @@
   }
 
   .rename-row {
+    position: relative;
     padding: 0.5rem 2rem;
     width: calc(100% + 4rem);
     margin-left: -2rem;
@@ -473,6 +479,28 @@
     background: var(--surface-hover);
   }
 
+  .name-blur-btn {
+    position: absolute;
+    right: 2rem;
+    bottom: 0.65rem;
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.875rem;
+    color: var(--muted);
+    padding: 0;
+    line-height: 1.4;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.1s;
+  }
+
+  .rename-row:has(input:focus) .name-blur-btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
   .name-input {
     width: 100%;
     font-family: inherit;
@@ -482,7 +510,7 @@
     border-bottom: 1px solid var(--border);
     color: var(--text);
     outline: none;
-    padding: 0.2rem 0;
+    padding: 0.2rem 1.2rem 0.2rem 0;
   }
 
   .name-input:focus {
