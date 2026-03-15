@@ -120,6 +120,11 @@
     user = null;
   }
 
+  function deleteProgress() {
+    progress = {};
+    saveProgress({});
+  }
+
   async function deleteAccount() {
     const currentUser = auth.currentUser;
     if (!currentUser) return;
@@ -248,6 +253,7 @@
     onSignOut={handleSignOut}
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
+    onDeleteProgress={deleteProgress}
     {source}
   />
 {:else if screen === "lessons"}
@@ -272,6 +278,7 @@
     onSignOut={handleSignOut}
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
+    onDeleteProgress={deleteProgress}
   />
 {:else if screen === "typing"}
   <TypingView

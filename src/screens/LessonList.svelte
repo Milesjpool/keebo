@@ -18,8 +18,9 @@
     onSignOut: () => Promise<void>
     onLinkProvider: (p: string) => Promise<void>
     onDeleteAccount?: () => Promise<void>
+    onDeleteProgress?: () => void
   }
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, onDeleteAccount }: Props = $props()
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, onDeleteAccount, onDeleteProgress }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
@@ -101,7 +102,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->
