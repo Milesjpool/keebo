@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
   import { getAnonName } from "../services/anonNames";
+  import { ui } from "../services/ui.svelte";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -119,8 +120,8 @@
 </script>
 
 <div class="auth-wrap"
-  onmouseenter={() => { if (!document.body.classList.contains('keyboard-nav')) onAscend?.() }}
-  onmouseleave={() => { if (!document.body.classList.contains('keyboard-nav')) authBtnEl?.blur() }}
+  onmouseenter={() => { if (!ui.keyboardNav) onAscend?.() }}
+  onmouseleave={() => { if (!ui.keyboardNav) authBtnEl?.blur() }}
 >
   <button
     class="auth-btn"
@@ -154,7 +155,7 @@
       tabindex="-1"
       bind:this={dropdownEl}
       onkeydown={handleDropdownKeydown}
-      onmouseover={(e) => (e.target as Element).closest("button")?.focus()}
+      onmouseover={(e) => { if (!ui.keyboardNav) (e.target as Element).closest("button")?.focus() }}
       onfocus={(e) => (e.target as Element).closest("button")?.focus()}
     >
       {#if user}

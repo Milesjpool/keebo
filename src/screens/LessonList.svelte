@@ -2,6 +2,7 @@
   import type { Group, Progress } from '../services/types'
   import type { User } from 'firebase/auth'
   import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
+  import { ui } from '../services/ui.svelte'
   import AuthButton from '../components/AuthButton.svelte'
 
   interface Props {
@@ -107,7 +108,7 @@
 
   <!-- Group header card — pinned, acts as back button -->
   <div class="group-header">
-    <button class="group-card" class:complete={doneCount === group.lessons.length} class:focused={focused === -1} onclick={onBack} onmouseenter={() => { if (!document.body.classList.contains('keyboard-nav')) focused = -1 }}>
+    <button class="group-card" class:complete={doneCount === group.lessons.length} class:focused={focused === -1} onclick={onBack} onmouseenter={() => { if (!ui.keyboardNav) focused = -1 }}>
       <span class="group-num">←</span>
       <div class="group-info">
         <span class="group-title">{group.title}</span>
@@ -131,7 +132,7 @@
             class:locked
             class:focused={focused === i}
             onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
-            onmouseenter={() => { if (!locked && !document.body.classList.contains('keyboard-nav')) focused = i }}
+            onmouseenter={() => { if (!locked && !ui.keyboardNav) focused = i }}
             disabled={locked}
           >
             <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>

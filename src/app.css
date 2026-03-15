@@ -100,6 +100,7 @@ body {
 body.keyboard-nav,
 body.keyboard-nav * {
   cursor: none !important;
+  pointer-events: none !important;
 }
 
 button {

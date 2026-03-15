@@ -20,6 +20,12 @@
   let confirmDelete = $state(false)
   let deleting = $state(false)
   let nameVal = $state('')
+  let modalEl = $state<HTMLDivElement | null>(null)
+  let backBtnEl = $state<HTMLButtonElement | null>(null)
+
+  function modalButtons() {
+    return Array.from(modalEl?.querySelectorAll<HTMLButtonElement>('button:not(:disabled)') ?? [])
+  }
 
   function handleSignIn(provider: string) {
     onClose()
@@ -51,7 +57,12 @@
   $effect(() => {
     if (!open) { confirmDelete = false; return }
     if (!user) nameVal = getAnonName()
-    return useKeydown({ Escape: () => handleClose() }, { capture: true, stopAll: true })
+    setTimeout(() => backBtnEl?.focus(), 0)
+    return useKeydown({
+      Escape: () => handleClose(),
+      ArrowDown: (e) => { e.preventDefault(); const btns = modalButtons(); btns[btns.indexOf(document.activeElement as HTMLButtonElement) + 1]?.focus() },
+      ArrowUp: (e) => { e.preventDefault(); const btns = modalButtons(); const i = btns.indexOf(document.activeElement as HTMLButtonElement); if (i > 0) btns[i - 1]?.focus() },
+    }, { capture: true, stopAll: true })
   })
 </script>
 
@@ -61,11 +72,14 @@
       class="modal"
       onclick={(e) => e.stopPropagation()}
       onkeydown={(e) => e.stopPropagation()}
+      bind:this={modalEl}
       role="dialog"
       aria-labelledby="settings-title"
       tabindex="-1"
     >
-      <h2 id="settings-title">settings</h2>
+      <button class="modal-back" id="settings-title" bind:this={backBtnEl} onclick={handleClose}>
+        <span class="back-arrow">←</span> settings
+      </button>
 
       {#if user}
         <section>
@@ -203,17 +217,39 @@
     gap: 1.5rem;
   }
 
-  h2 {
+  .modal-back {
     font-size: 1.25rem;
     font-weight: 500;
-    color: var(--correct);
-    margin: 0;
+    color: var(--muted);
+    font-family: inherit;
+    background: none;
+    border: none;
+    text-align: left;
     width: calc(100% + 4rem);
     margin-left: -2rem;
     margin-top: -2rem;
-    padding: 1.25rem 2rem 0.75rem;
-    background: var(--surface-hover);
+    padding: 0.75rem 2rem 0.75rem 1.25rem;
     margin-bottom: -1rem;
+    cursor: pointer;
+    transition: background 0.1s, color 0.1s;
+    outline: none;
+  }
+
+  .modal-back:hover,
+  .modal-back:focus {
+    background: var(--surface-hover);
+    color: var(--correct);
+  }
+
+  .back-arrow {
+    font-size: 0.75rem;
+    color: var(--muted);
+    margin-right: 0.75rem;
+  }
+
+  .modal-back:hover .back-arrow,
+  .modal-back:focus .back-arrow {
+    color: var(--correct);
   }
 
   section {

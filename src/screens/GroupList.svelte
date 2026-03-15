@@ -4,6 +4,7 @@
   import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
   import AuthButton from '../components/AuthButton.svelte'
   import Attribution from '../components/Attribution.svelte'
+  import { ui } from '../services/ui.svelte'
 
   interface Props {
     groups: Group[]
@@ -108,7 +109,7 @@
           class:complete={state.complete}
           class:focused={focused === i}
           onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
-          onmouseenter={() => { if (!state.locked && !document.body.classList.contains('keyboard-nav')) focused = i }}
+          onmouseenter={() => { if (!state.locked && !ui.keyboardNav) focused = i }}
           disabled={state.locked}
         >
           <span class="group-num">{String(i + 1).padStart(2, '0')}</span>
