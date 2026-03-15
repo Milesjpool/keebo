@@ -35,11 +35,12 @@
   let nameVal = $state("");
   let modalEl = $state<HTMLDivElement | null>(null);
   let closeBtnEl = $state<HTMLButtonElement | null>(null);
+  let nameInputEl = $state<HTMLInputElement | null>(null);
+  let renameRowEl = $state<HTMLDivElement | null>(null);
 
   function modalButtons() {
     return Array.from(
-      modalEl?.querySelectorAll<HTMLButtonElement>("button:not(:disabled)") ??
-        [],
+      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled), input.name-input') ?? []
     );
   }
 
@@ -80,17 +81,27 @@
     const cleanup = useKeydown(
       {
         Escape: () => handleClose(),
+        Enter: (e) => {
+          if (document.activeElement === nameInputEl) {
+            e.preventDefault();
+            renameRowEl?.focus();
+          } else if (document.activeElement === renameRowEl) {
+            e.preventDefault();
+            nameInputEl?.focus();
+          }
+        },
         ArrowDown: (e) => {
           e.preventDefault();
           const btns = modalButtons();
-          btns[
-            btns.indexOf(document.activeElement as HTMLButtonElement) + 1
-          ]?.focus();
+          const active = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+          const i = btns.indexOf(active as HTMLElement);
+          btns[i + 1]?.focus();
         },
         ArrowUp: (e) => {
           e.preventDefault();
           const btns = modalButtons();
-          const i = btns.indexOf(document.activeElement as HTMLButtonElement);
+          const active = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+          const i = btns.indexOf(active as HTMLElement);
           if (i > 0) btns[i - 1]?.focus();
         },
       },
@@ -261,9 +272,16 @@
 
         <section>
           <span class="section-label">account</span>
-          <div class="rename-row">
+          <div
+            class="rename-row"
+            tabindex="-1"
+            bind:this={renameRowEl}
+            onmouseenter={() => renameRowEl?.focus()}
+            onmouseleave={() => renameRowEl?.blur()}
+          >
             <input
               class="name-input"
+              bind:this={nameInputEl}
               type="text"
               value={nameVal}
               onfocus={(e) => (e.target as HTMLInputElement).select()}
@@ -447,6 +465,12 @@
     padding: 0.5rem 2rem;
     width: calc(100% + 4rem);
     margin-left: -2rem;
+    transition: background 0.1s;
+    outline: none;
+  }
+
+  .rename-row:focus-within {
+    background: var(--surface-hover);
   }
 
   .name-input {
