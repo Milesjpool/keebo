@@ -136,8 +136,9 @@ button {
   transition: color 0.15s;
 }
 
-.btn-secondary:hover:not(:disabled) {
+.btn-secondary:focus:not(:disabled) {
   color: var(--text);
+  outline: none;
 }
 
 .btn-secondary:disabled {

@@ -118,10 +118,6 @@
     align-self: flex-end;
   }
 
-  .btn-secondary {
-    padding: 0.6rem 1.25rem;
-  }
-
   .btn-danger {
     padding: 0.6rem 1.25rem;
     font-size: 0.875rem;
