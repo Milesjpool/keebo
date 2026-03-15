@@ -46,13 +46,15 @@
   target="_blank"
   rel="noreferrer"
   onclick={(e) => e.currentTarget.blur()}
-  onmouseenter={() => {
+  onmouseenter={(e) => {
     hovered = true;
     animateIn(AI_LABEL);
+    (e.currentTarget as HTMLAnchorElement).focus();
   }}
-  onmouseleave={() => {
+  onmouseleave={(e) => {
     hovered = false;
     animateOut();
+    (e.currentTarget as HTMLAnchorElement).blur();
   }}><span class="emoji">🤖</span><span class="label">{label}</span></a
 >
 
@@ -61,7 +63,9 @@
   href="https://www.milesjpool.com"
   target="_blank"
   rel="noreferrer"
-  onclick={(e) => e.currentTarget.blur()}><span class="emoji">👾</span> Miles</a
+  onclick={(e) => e.currentTarget.blur()}
+  onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
+  onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}><span class="emoji">👾</span> Miles</a
 >
 
 <ThemeToggle />
@@ -80,9 +84,10 @@
     transition: color 0.15s;
   }
 
-  .ai-link:hover {
+  .ai-link:focus {
     color: var(--text);
     cursor: pointer;
+    outline: none;
   }
 
   .author {
@@ -96,8 +101,9 @@
     white-space: nowrap;
   }
 
-  .author:hover {
+  .author:focus {
     color: var(--text);
+    outline: none;
   }
 
   .emoji {

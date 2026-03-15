@@ -1,35 +1,41 @@
 <script lang="ts">
-  import type { User } from 'firebase/auth'
-  import { submitFeedback } from '../services/feedback'
-  import { useKeydown } from '../services/utils'
+  import type { User } from "firebase/auth";
+  import { submitFeedback } from "../services/feedback";
+  import { useKeydown } from "../services/utils";
 
   interface Props {
-    open: boolean
-    onClose: () => void
-    context?: { screen?: string; lessonId?: string; groupIdx?: number; flatIdx?: number }
-    user: User | null
+    open: boolean;
+    onClose: () => void;
+    context?: {
+      screen?: string;
+      lessonId?: string;
+      groupIdx?: number;
+      flatIdx?: number;
+    };
+    user: User | null;
   }
-  let { open, onClose, context = {}, user }: Props = $props()
+  let { open, onClose, context = {}, user }: Props = $props();
 
-  let text = $state('')
-  let email = $state('')
-  let loading = $state(false)
-  let error = $state<string | null>(null)
-  let success = $state(false)
+  let text = $state("");
+  let email = $state("");
+  let loading = $state(false);
+  let error = $state<string | null>(null);
+  let success = $state(false);
+  let textareaEl = $state<HTMLTextAreaElement | null>(null);
 
   function handleSubmit(e: Event) {
-    e.preventDefault()
-    const trimmed = text.trim()
+    e.preventDefault();
+    const trimmed = text.trim();
     if (!trimmed) {
-      error = 'Please enter your feedback.'
-      return
+      error = "Please enter your feedback.";
+      return;
     }
     if (trimmed.length > 2000) {
-      error = 'Feedback must be 2000 characters or less.'
-      return
+      error = "Feedback must be 2000 characters or less.";
+      return;
     }
-    error = null
-    loading = true
+    error = null;
+    loading = true;
     submitFeedback({
       text: trimmed,
       userId: user?.uid,
@@ -40,52 +46,69 @@
       flatIdx: context?.flatIdx,
     })
       .then(() => {
-        success = true
-        text = ''
-        email = ''
+        success = true;
+        text = "";
+        email = "";
         setTimeout(() => {
-          success = false
-          onClose()
-        }, 1500)
+          success = false;
+          onClose();
+        }, 1500);
       })
       .catch((err) => {
-        error = err?.message ?? 'Something went wrong. Please try again.'
+        error = err?.message ?? "Something went wrong. Please try again.";
       })
       .finally(() => {
-        loading = false
-      })
+        loading = false;
+      });
   }
 
   function handleClose() {
-    if (!loading) onClose()
+    if (!loading) onClose();
   }
 
   $effect(() => {
-    if (!open) return
-    return useKeydown({
-      Escape: () => handleClose(),
-      Enter: (e) => { if (e.metaKey || e.ctrlKey) handleSubmit(e) },
-    }, { capture: true, stopAll: true })
-  })
+    if (!open) return;
+    setTimeout(() => textareaEl?.focus(), 0);
+    const cleanup = useKeydown(
+      {
+        Escape: () => handleClose(),
+        Enter: (e) => {
+          if (e.metaKey || e.ctrlKey) handleSubmit(e);
+        },
+      },
+      { capture: true, stopAll: true },
+    );
+    return () => cleanup();
+  });
 </script>
 
 {#if open}
   <div class="backdrop" onclick={handleClose} role="presentation">
     <div
-  class="modal"
-  onclick={(e) => e.stopPropagation()}
-  onkeydown={(e) => e.stopPropagation()}
-  role="dialog"
-  aria-labelledby="feedback-title"
-  tabindex="-1"
->
+      class="modal"
+      onclick={(e) => e.stopPropagation()}
+      onkeydown={(e) => e.stopPropagation()}
+      role="dialog"
+      aria-labelledby="feedback-title"
+      tabindex="-1"
+    >
       {#if success}
         <p class="success">thanks for your feedback</p>
       {:else}
-        <h2 id="feedback-title">feedback</h2>
+        <button
+          class="modal-header"
+          id="feedback-title"
+          onclick={handleClose}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        >
+          <span class="modal-title">feedback</span>
+          <span class="btn-close">×</span>
+        </button>
         <form onsubmit={handleSubmit}>
           <textarea
             bind:value={text}
+            bind:this={textareaEl}
             placeholder="share your feedback…"
             rows="4"
             maxlength="2000"
@@ -105,11 +128,16 @@
             <p class="error">{error}</p>
           {/if}
           <div class="actions">
-            <button type="submit" class="btn-primary" disabled={loading}>
-              {loading ? 'sending…' : 'send'}
-            </button>
-            <button type="button" class="btn-secondary" onclick={handleClose} disabled={loading}>
-              cancel
+            <button
+              type="submit"
+              class="btn-primary"
+              disabled={loading}
+              onmouseenter={(e) =>
+                (e.currentTarget as HTMLButtonElement).focus()}
+              onmouseleave={(e) =>
+                (e.currentTarget as HTMLButtonElement).blur()}
+            >
+              {loading ? "sending…" : "send"}
             </button>
           </div>
         </form>
@@ -137,13 +165,42 @@
     max-width: 380px;
     width: 100%;
     padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
   }
 
-  h2 {
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    margin-top: -2rem;
+    padding: 0.75rem 2rem;
+    margin-bottom: -0.5rem;
+    background: none;
+    font-family: inherit;
+    border: none;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.1s;
+  }
+
+  .modal-header:focus {
+    background: var(--surface-hover);
+  }
+
+  .modal-title {
     font-size: 1.25rem;
     font-weight: 500;
     color: var(--correct);
-    margin-bottom: 1rem;
+  }
+
+  .btn-close {
+    font-size: 1.1rem;
+    color: var(--muted);
+    line-height: 1;
   }
 
   .success {
@@ -189,12 +246,32 @@
 
   .actions {
     display: flex;
-    gap: 0.75rem;
+    justify-content: flex-end;
     margin-top: 0.25rem;
   }
 
-  .btn-primary,
-  .btn-secondary {
+  .btn-primary {
     padding: 0.6rem 1.25rem;
+    background: none;
+    color: var(--accent);
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    font-size: 0.875rem;
+    font-family: inherit;
+    transition:
+      background 0.1s,
+      color 0.1s;
+    outline: none;
+  }
+
+  .btn-primary:focus:not(:disabled) {
+    background: var(--accent);
+    color: var(--cursor-text);
+    opacity: 1;
+  }
+
+  .btn-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
   }
 </style>

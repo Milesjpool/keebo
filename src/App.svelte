@@ -15,7 +15,6 @@
   import { loadProgress, saveProgress } from "./services/progress";
   import { subscribeToProgress, writeProgress } from "./services/sync";
   import Footer from "./components/Footer.svelte";
-  import { ui } from "./services/ui.svelte";
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;
@@ -47,20 +46,6 @@
     saveProgress(progress);
   });
 
-  $effect(() => {
-    const hide = () => { ui.keyboardNav = true }
-    const show = () => { ui.keyboardNav = false }
-    window.addEventListener('keydown', hide, { capture: true })
-    window.addEventListener('mousemove', show)
-    return () => {
-      window.removeEventListener('keydown', hide, { capture: true })
-      window.removeEventListener('mousemove', show)
-    }
-  });
-
-  $effect(() => {
-    document.body.classList.toggle('keyboard-nav', ui.keyboardNav)
-  });
 
   $effect(() => {
     let unsubProgress: (() => void) | undefined;

@@ -43,8 +43,8 @@
 <button
   class="theme-toggle"
   onclick={toggle}
-  onmouseenter={() => { hovered = true; animateIn(theme) }}
-  onmouseleave={() => { hovered = false; animateOut() }}
+  onmouseenter={(e) => { hovered = true; animateIn(theme); (e.currentTarget as HTMLButtonElement).focus() }}
+  onmouseleave={(e) => { hovered = false; animateOut(); (e.currentTarget as HTMLButtonElement).blur() }}
 >
   <span class="label">{label}</span><span class="emoji">{ICONS[theme]}</span>
 </button>
@@ -62,8 +62,9 @@
     transition: color 0.15s;
   }
 
-  .theme-toggle:hover {
+  .theme-toggle:focus {
     color: var(--text);
+    outline: none;
   }
 
   .label {

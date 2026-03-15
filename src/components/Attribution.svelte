@@ -18,7 +18,7 @@
   }
 </script>
 
-<span class="attribution">{#each parse(text) as part}{#if part.type === 'link'}<a href={part.url} target="_blank" rel="noreferrer">{part.label}</a>{:else}{part.content}{/if}{/each}</span>
+<span class="attribution">{#each parse(text) as part}{#if part.type === 'link'}<a href={part.url} target="_blank" rel="noreferrer" onclick={(e) => (e.currentTarget as HTMLAnchorElement).blur()} onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()} onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}>{part.label}</a>{:else}{part.content}{/if}{/each}</span>
 
 <style>
   .attribution {
@@ -31,7 +31,8 @@
     text-decoration: none;
   }
 
-  a:hover {
+  a:focus {
     color: var(--muted);
+    outline: none;
   }
 </style>

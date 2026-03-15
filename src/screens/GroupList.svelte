@@ -4,7 +4,6 @@
   import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
   import AuthButton from '../components/AuthButton.svelte'
   import Attribution from '../components/Attribution.svelte'
-  import { ui } from '../services/ui.svelte'
 
   interface Props {
     groups: Group[]
@@ -25,6 +24,7 @@
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
+  let btnEls = $state<(HTMLButtonElement | null)[]>([])
   let topHeight = $state(0)
   let bottomHeight = $state(0)
 
@@ -44,6 +44,11 @@
   $effect(() => {
     if (!listEl) return
     listEl.querySelectorAll('li')[focused]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  })
+
+  $effect(() => {
+    if (focused < 0) authFocusEl?.focus({ preventScroll: true })
+    else btnEls[focused]?.focus({ preventScroll: true })
   })
 
   function groupState(i: number) {
@@ -66,7 +71,7 @@
     function moveDown(e: KeyboardEvent) { e.preventDefault(); focused = Math.min(focused + 1, lastUnlocked()) }
     function moveUp(e: KeyboardEvent) {
       e.preventDefault()
-      if (focused === 0) { authFocusEl?.focus(); focused = -1 }
+      if (focused === 0) { focused = -1 }
       else focused = Math.max(focused - 1, 0)
     }
     function select() { if (!groupState(focused).locked) onSelect(focused) }
@@ -74,7 +79,7 @@
     const keymap: Record<string, (e: KeyboardEvent) => void> = {
       ArrowDown: moveDown, s: moveDown,
       ArrowUp: moveUp,    w: moveUp,
-      Enter: select,      ArrowRight: select, d: select,
+      Enter: (e) => { e.preventDefault(); select() }, ArrowRight: select, d: select,
     }
 
     function onKeydown(e: KeyboardEvent) {
@@ -107,9 +112,11 @@
           class="group-btn"
           class:locked={state.locked}
           class:complete={state.complete}
-          class:focused={focused === i}
+          bind:this={btnEls[i]}
           onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
-          onmouseenter={() => { if (!state.locked && !ui.keyboardNav) focused = i }}
+          onfocus={() => { focused = i }}
+          onmouseenter={() => { if (!state.locked) btnEls[i]?.focus() }}
+          onmouseleave={() => btnEls[i]?.blur()}
           disabled={state.locked}
         >
           <span class="group-num">{String(i + 1).padStart(2, '0')}</span>
@@ -227,16 +234,17 @@
     transition: border-color 0.15s, background 0.15s;
   }
 
-  .group-btn:not(.locked).focused {
+  .group-btn:not(.locked):focus {
     border-color: var(--accent);
     background: var(--surface-hover);
+    outline: none;
   }
 
   .group-btn.complete {
     border-color: var(--border-done);
   }
 
-  .group-btn.complete.focused {
+  .group-btn.complete:focus {
     border-color: var(--accent);
   }
 

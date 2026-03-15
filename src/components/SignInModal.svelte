@@ -25,6 +25,10 @@
       class="modal"
       onclick={(e) => e.stopPropagation()}
       onkeydown={(e) => e.stopPropagation()}
+      onmouseover={(e) => { (e.target as Element).closest('button:not(:disabled)')?.focus() }}
+      onmouseout={(e) => { (e.target as Element).closest('button:not(:disabled)')?.blur() }}
+      onfocus={() => {}}
+      onblur={() => {}}
       role="dialog"
       aria-labelledby="signin-title"
       tabindex="-1"
@@ -110,13 +114,11 @@
     transition: background 0.1s;
   }
 
-  .provider-row:hover,
   .provider-row:focus {
     background: var(--surface-hover);
     outline: none;
   }
 
-  .provider-row:hover .provider-icon,
   .provider-row:focus .provider-icon {
     color: var(--text);
   }
@@ -134,7 +136,6 @@
     color: var(--muted);
   }
 
-  .provider-row:hover .provider-name,
   .provider-row:focus .provider-name {
     color: var(--text);
   }
@@ -151,7 +152,6 @@
     color: var(--muted);
   }
 
-  .provider-row:hover .plus-icon,
   .provider-row:focus .plus-icon {
     color: var(--text);
   }

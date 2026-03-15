@@ -2,7 +2,6 @@
   import type { Group, Progress } from '../services/types'
   import type { User } from 'firebase/auth'
   import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
-  import { ui } from '../services/ui.svelte'
   import AuthButton from '../components/AuthButton.svelte'
 
   interface Props {
@@ -25,6 +24,8 @@
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
+  let backBtnEl = $state<HTMLButtonElement | null>(null)
+  let btnEls = $state<(HTMLButtonElement | null)[]>([])
   let topHeight = $state(0)
   let bottomHeight = $state(0)
 
@@ -43,6 +44,12 @@
   $effect(() => {
     if (!listEl) return
     listEl.querySelectorAll('li')[focused]?.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+  })
+
+  $effect(() => {
+    if (focused === -2) authFocusEl?.focus({ preventScroll: true })
+    else if (focused === -1) backBtnEl?.focus({ preventScroll: true })
+    else btnEls[focused]?.focus({ preventScroll: true })
   })
 
   function isLocked(i: number) {
@@ -71,7 +78,7 @@
       e.preventDefault()
       if (focused > 0) focused--
       else if (focused === 0) focused = -1
-      else { authFocusEl?.focus(); focused = -2 }
+      else { focused = -2 }
     }
     function select() {
       if (focused === -1) onBack()
@@ -82,7 +89,7 @@
       Escape: onBack,    ArrowLeft: onBack, a: onBack,
       ArrowDown: moveDown, s: moveDown,
       ArrowUp: moveUp,     w: moveUp,
-      Enter: select,       ArrowRight: select, d: select,
+      Enter: (e) => { e.preventDefault(); select() }, ArrowRight: select, d: select,
     }
 
     function onKeydown(e: KeyboardEvent) {
@@ -108,7 +115,7 @@
 
   <!-- Group header card — pinned, acts as back button -->
   <div class="group-header">
-    <button class="group-card" class:complete={doneCount === group.lessons.length} class:focused={focused === -1} onclick={onBack} onmouseenter={() => { if (!ui.keyboardNav) focused = -1 }}>
+    <button class="group-card" class:complete={doneCount === group.lessons.length} bind:this={backBtnEl} onclick={onBack} onfocus={() => { focused = -1 }} onmouseenter={() => backBtnEl?.focus()} onmouseleave={() => backBtnEl?.blur()}>
       <span class="group-num">←</span>
       <div class="group-info">
         <span class="group-title">{group.title}</span>
@@ -130,9 +137,11 @@
             class="lesson-btn"
             class:done
             class:locked
-            class:focused={focused === i}
+            bind:this={btnEls[i]}
             onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
-            onmouseenter={() => { if (!locked && !ui.keyboardNav) focused = i }}
+            onfocus={() => { focused = i }}
+            onmouseenter={() => { if (!locked) btnEls[i]?.focus() }}
+            onmouseleave={() => btnEls[i]?.blur()}
             disabled={locked}
           >
             <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
@@ -240,9 +249,10 @@
     transition: opacity 0.15s, border-color 0.15s;
   }
 
-  .group-card.focused {
+  .group-card:focus {
     opacity: 1;
     border-color: var(--accent);
+    outline: none;
   }
 
   .group-num {
@@ -298,16 +308,17 @@
     transition: border-color 0.15s, background 0.15s;
   }
 
-  .lesson-btn:not(.locked).focused {
+  .lesson-btn:not(.locked):focus {
     border-color: var(--accent);
     background: var(--surface-hover);
+    outline: none;
   }
 
   .lesson-btn.done {
     border-color: var(--border-done);
   }
 
-  .lesson-btn.done.focused {
+  .lesson-btn.done:focus {
     border-color: var(--accent);
   }
 

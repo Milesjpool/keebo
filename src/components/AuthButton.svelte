@@ -1,7 +1,6 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
   import { getAnonName } from "../services/anonNames";
-  import { ui } from "../services/ui.svelte";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -120,8 +119,8 @@
 </script>
 
 <div class="auth-wrap"
-  onmouseenter={() => { if (!ui.keyboardNav) onAscend?.() }}
-  onmouseleave={() => { if (!ui.keyboardNav) authBtnEl?.blur() }}
+  onmouseenter={() => { authBtnEl?.focus() }}
+  onmouseleave={() => { authBtnEl?.blur() }}
 >
   <button
     class="auth-btn"
@@ -155,7 +154,7 @@
       tabindex="-1"
       bind:this={dropdownEl}
       onkeydown={handleDropdownKeydown}
-      onmouseover={(e) => { if (!ui.keyboardNav) (e.target as Element).closest("button")?.focus() }}
+      onmouseover={(e) => { (e.target as Element).closest("button")?.focus() }}
       onfocus={(e) => (e.target as Element).closest("button")?.focus()}
     >
       {#if user}
@@ -220,16 +219,11 @@
     transition: color 0.15s;
   }
 
-  .auth-btn:hover,
   .auth-btn:focus {
     color: var(--text);
-  }
-
-  .auth-btn:focus {
     outline: none;
   }
 
-  .auth-btn:hover .avatar,
   .auth-btn:focus .avatar {
     border-color: var(--accent);
   }
@@ -301,7 +295,6 @@
       color 0.1s;
   }
 
-  .dropdown button:hover,
   .dropdown button:focus {
     background: var(--surface-hover);
     color: var(--text);

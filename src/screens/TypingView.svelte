@@ -86,7 +86,10 @@
 
 <div class="typing-view">
   <nav>
-    <button class="back-btn" onclick={onBack}>← back</button>
+    <button class="back-btn" onclick={onBack}
+      onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+      onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+    >← back</button>
     <span class="timer">{startTime ? formatTime(elapsed) : ''}</span>
     <span class="accuracy">{startTime ? Math.round(accuracy() * 100) + '%' : ''}</span>
   </nav>
@@ -134,8 +137,9 @@
     transition: color 0.15s;
   }
 
-  .back-btn:hover {
+  .back-btn:focus {
     color: var(--text);
+    outline: none;
   }
 
   .timer {
