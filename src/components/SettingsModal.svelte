@@ -32,6 +32,8 @@
     user?.providerData.map((p) => p.providerId) ?? [],
   );
   let confirmOpen = $state(false);
+  let confirmCancelEl = $state<HTMLButtonElement | null>(null);
+  let confirmConfirmEl = $state<HTMLButtonElement | null>(null);
   let deleting = $state(false);
   let nameVal = $state("");
   let modalEl = $state<HTMLDivElement | null>(null);
@@ -96,6 +98,12 @@
             e.preventDefault();
             nameInputEl?.focus();
           }
+        },
+        ArrowLeft: (e) => {
+          if (confirmOpen) { e.preventDefault(); confirmCancelEl?.focus(); }
+        },
+        ArrowRight: (e) => {
+          if (confirmOpen) { e.preventDefault(); confirmConfirmEl?.focus(); }
         },
         ArrowDown: (e) => {
           e.preventDefault();
@@ -207,6 +215,8 @@
             onConfirm={handleDelete}
             disabled={deleting}
             bind:open={confirmOpen}
+            bind:cancelEl={confirmCancelEl}
+            bind:confirmEl={confirmConfirmEl}
           />
         </section>
       {:else}
@@ -300,6 +310,8 @@
             confirmLabel="confirm reset"
             onConfirm={handleDelete}
             bind:open={confirmOpen}
+            bind:cancelEl={confirmCancelEl}
+            bind:confirmEl={confirmConfirmEl}
           />
         </section>
       {/if}

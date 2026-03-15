@@ -7,6 +7,8 @@
     disabled?: boolean;
     loadingLabel?: string;
     open?: boolean;
+    cancelEl?: HTMLButtonElement | null;
+    confirmEl?: HTMLButtonElement | null;
   }
 
   let {
@@ -17,10 +19,16 @@
     disabled = false,
     loadingLabel,
     open = $bindable(false),
+    cancelEl = $bindable<HTMLButtonElement | null>(null),
+    confirmEl = $bindable<HTMLButtonElement | null>(null),
   }: Props = $props();
 
   let triggerBtnEl = $state<HTMLButtonElement | null>(null);
   let cancelBtnEl = $state<HTMLButtonElement | null>(null);
+  let confirmBtnEl = $state<HTMLButtonElement | null>(null);
+
+  $effect(() => { cancelEl = cancelBtnEl; });
+  $effect(() => { confirmEl = confirmBtnEl; });
 
   let prevOpen = false;
   $effect(() => {
@@ -56,6 +64,7 @@
       >cancel</button>
       <button
         class="btn-danger"
+        bind:this={confirmBtnEl}
         onclick={onConfirm}
         {disabled}
         onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
