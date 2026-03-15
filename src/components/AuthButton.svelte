@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
-  import { getAnonName, rollNewName, setAnonName } from "../services/anonNames";
+  import { getAnonName } from "../services/anonNames";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -24,6 +24,7 @@
     onDeleteProgress?: () => void;
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
+    onAscend?: () => void;
   }
   let {
     user,
@@ -36,6 +37,7 @@
     onDeleteProgress,
     focusEl = $bindable<HTMLElement | null>(null),
     onDescend,
+    onAscend,
   }: Props = $props();
 
   let linkedProviderIds = $derived(user?.providerData.map(p => p.providerId) ?? []);
@@ -45,8 +47,6 @@
   let settingsOpen = $state(false);
   let signInOpen = $state(false);
   let anonName = $state(getAnonName());
-  let nameFocused = $state(false);
-  let nameInputEl = $state<HTMLInputElement | null>(null);
   let authBtnEl = $state<HTMLButtonElement | null>(null);
   let dropdownEl = $state<HTMLDivElement | null>(null);
 
@@ -75,21 +75,12 @@
       btns[idx + 1]?.focus();
     } else {
       if (idx > 0) btns[idx - 1]?.focus();
-      else {
-        if (user) authBtnEl?.focus();
-        else {
-          nameInputEl?.focus();
-        }
-      }
+      else authBtnEl?.focus();
     }
   }
 
   function toggle() {
     open = !open;
-  }
-
-  function focusOnMount(node: HTMLInputElement) {
-    node.focus();
   }
 
   function handleBtnKeydown(e: KeyboardEvent) {
@@ -99,49 +90,9 @@
       open = false;
     } else if (e.key === "ArrowDown") {
       e.preventDefault();
-      if (open) (user ? dropdownButtons()[0] : nameInputEl)?.focus();
+      if (open) dropdownButtons()[0]?.focus();
       else { authBtnEl?.blur(); onDescend?.(); }
     }
-  }
-
-  function handleNameKeydown(e: KeyboardEvent) {
-    e.stopPropagation();
-    if (e.key === "Escape" || e.key === "Enter") {
-      e.preventDefault();
-      if (!nameInputEl?.value.trim()) {
-        anonName = rollNewName();
-      }
-      open = false;
-      setTimeout(() => authBtnEl?.focus(), 0);
-    } else if (e.key === "ArrowDown") {
-      e.preventDefault();
-      dropdownButtons()[0]?.focus();
-    } else if (e.key === "ArrowUp") {
-      e.preventDefault();
-      authBtnEl?.focus();
-    }
-  }
-
-  function handleNameInput(e: Event) {
-    const val = (e.target as HTMLInputElement).value;
-    setAnonName(val);
-    anonName = val || anonName;
-  }
-
-  function handleNameBlur(e: FocusEvent) {
-    const val = (e.target as HTMLInputElement).value.trim();
-    if (!val) {
-      const newName = rollNewName();
-      anonName = newName;
-      (e.target as HTMLInputElement).value = newName;
-    } else {
-      anonName = val;
-    }
-  }
-
-  function signInWith(provider: string) {
-    open = false;
-    onSignIn(provider);
   }
 
   function openFeedback() {
@@ -167,12 +118,15 @@
 
 </script>
 
-<div class="auth-wrap">
+<div class="auth-wrap"
+  onmouseenter={() => { if (!document.body.classList.contains('keyboard-nav')) onAscend?.() }}
+  onmouseleave={() => { if (!document.body.classList.contains('keyboard-nav')) authBtnEl?.blur() }}
+>
   <button
     class="auth-btn"
-    class:active={nameFocused}
     bind:this={authBtnEl}
     onclick={toggle}
+    onfocus={() => onAscend?.()}
     disabled={!authReady}
     onkeydown={handleBtnKeydown}
     aria-label="account menu"
@@ -188,31 +142,10 @@
       <span class="auth-label">█████ ████</span>
     {:else if user}
       <span class="auth-label">{user.displayName?.toLowerCase() ?? user.email}</span>
-    {:else if !open}
+    {:else}
       <span class="auth-label">{anonName}</span>
     {/if}
   </button>
-  {#if open && !user}
-    <input
-      class="anon-name-input"
-      type="text"
-      value={anonName}
-      size={Math.max(10, anonName.length + 1)}
-      bind:this={nameInputEl}
-      use:focusOnMount
-      onfocus={(e) => {
-        nameFocused = true;
-        (e.target as HTMLInputElement).select();
-      }}
-      onkeydown={handleNameKeydown}
-      oninput={handleNameInput}
-      onblur={(e) => {
-        nameFocused = false;
-        handleNameBlur(e);
-      }}
-      aria-label="your name"
-    />
-  {/if}
 
   {#if open}
     <div
@@ -287,19 +220,16 @@
   }
 
   .auth-btn:hover,
-  .auth-btn:focus,
-  .auth-btn.active {
+  .auth-btn:focus {
     color: var(--text);
   }
 
-  .auth-btn:focus,
-  .auth-btn.active {
+  .auth-btn:focus {
     outline: none;
   }
 
   .auth-btn:hover .avatar,
-  .auth-btn:focus .avatar,
-  .auth-btn.active .avatar {
+  .auth-btn:focus .avatar {
     border-color: var(--accent);
   }
 
@@ -382,36 +312,4 @@
     padding-top: 0.5rem !important;
   }
 
-  .anon-name-input {
-    font-family: inherit;
-    font-size: 0.875rem;
-    background: transparent;
-    border: none;
-    border-bottom: 1px solid transparent;
-    color: var(--muted);
-    text-align: right;
-    outline: none;
-    padding: 0.1rem 0;
-    margin-top: 0.25rem;
-    min-width: 7rem;
-    cursor: text;
-    transition:
-      color 0.15s,
-      border-bottom-color 0.15s;
-  }
-
-  .anon-name-input::selection {
-    background: var(--accent);
-    color: var(--cursor-text);
-  }
-
-  .anon-name-input:hover {
-    color: var(--text);
-    border-bottom-color: var(--border);
-  }
-
-  .anon-name-input:focus {
-    color: var(--text);
-    border-bottom-color: var(--accent);
-  }
 </style>

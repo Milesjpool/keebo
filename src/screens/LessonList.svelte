@@ -102,7 +102,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} onAscend={() => { focused = -2 }} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->
