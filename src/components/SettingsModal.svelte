@@ -3,6 +3,7 @@
   import { useKeydown } from "../services/utils";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
   import Modal from "./Modal.svelte";
+  import ConfirmExpander from "./ConfirmExpander.svelte";
 
   interface Props {
     open: boolean;
@@ -30,7 +31,7 @@
   let linkedProviderIds = $derived(
     user?.providerData.map((p) => p.providerId) ?? [],
   );
-  let confirmDelete = $state(false);
+  let confirmOpen = $state(false);
   let deleting = $state(false);
   let nameVal = $state("");
   let modalEl = $state<HTMLDivElement | null>(null);
@@ -52,13 +53,13 @@
   async function handleDelete() {
     if (!user) {
       onDeleteProgress?.();
-      confirmDelete = false;
+      confirmOpen = false;
       onClose();
     } else {
       deleting = true;
       try {
         await onDeleteAccount?.();
-        confirmDelete = false;
+        confirmOpen = false;
         onClose();
       } finally {
         deleting = false;
@@ -67,20 +68,26 @@
   }
 
   function handleClose() {
-    confirmDelete = false;
+    confirmOpen = false;
     onClose();
   }
 
   $effect(() => {
     if (!open) {
-      confirmDelete = false;
+      confirmOpen = false;
       return;
     }
     if (!user) nameVal = getAnonName();
     setTimeout(() => closeBtnEl?.focus(), 0);
     const cleanup = useKeydown(
       {
-        Escape: () => handleClose(),
+        Escape: () => {
+          if (confirmOpen) {
+            confirmOpen = false;
+          } else {
+            handleClose();
+          }
+        },
         Enter: (e) => {
           if (document.activeElement === nameInputEl) {
             e.preventDefault();
@@ -192,32 +199,15 @@
               onSignOut?.();
             }}>sign out</button
           >
-          {#if confirmDelete}
-            <div class="confirm-delete">
-              <p class="warning-text">
-                this will permanently delete your account and all progress.
-              </p>
-              <div class="confirm-actions">
-                <button
-                  class="btn-secondary"
-                  onclick={() => (confirmDelete = false)}
-                  disabled={deleting}>cancel</button
-                >
-                <button
-                  class="btn-danger"
-                  onclick={handleDelete}
-                  disabled={deleting}
-                >
-                  {deleting ? "deleting…" : "confirm delete"}
-                </button>
-              </div>
-            </div>
-          {:else}
-            <button
-              class="btn-delete action-btn"
-              onclick={() => (confirmDelete = true)}>delete account</button
-            >
-          {/if}
+          <ConfirmExpander
+            label="delete account"
+            warningText="this will permanently delete your account and all progress."
+            confirmLabel="confirm delete"
+            loadingLabel="deleting…"
+            onConfirm={handleDelete}
+            disabled={deleting}
+            bind:open={confirmOpen}
+          />
         </section>
       {:else}
         <section>
@@ -304,27 +294,13 @@
               onmousedown={(e) => { e.preventDefault(); renameRowEl?.focus() }}
             >×</button>
           </div>
-          {#if confirmDelete}
-            <div class="confirm-delete">
-              <p class="warning-text">
-                this will permanently erase all your scores and history.
-              </p>
-              <div class="confirm-actions">
-                <button
-                  class="btn-secondary"
-                  onclick={() => (confirmDelete = false)}>cancel</button
-                >
-                <button class="btn-danger" onclick={handleDelete}
-                  >confirm reset</button
-                >
-              </div>
-            </div>
-          {:else}
-            <button
-              class="btn-delete action-btn"
-              onclick={() => (confirmDelete = true)}>reset progress</button
-            >
-          {/if}
+          <ConfirmExpander
+            label="reset progress"
+            warningText="this will permanently erase all your scores and history."
+            confirmLabel="confirm reset"
+            onConfirm={handleDelete}
+            bind:open={confirmOpen}
+          />
         </section>
       {/if}
 
@@ -447,25 +423,6 @@
     outline: none;
   }
 
-  .btn-delete {
-    font-size: 0.875rem;
-    color: var(--error);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
-    text-align: left;
-    transition: background 0.1s;
-  }
-
-  .btn-delete:focus {
-    background: var(--surface-hover);
-    outline: none;
-  }
-
   .rename-row {
     position: relative;
     padding: 0.5rem 2rem;
@@ -522,48 +479,6 @@
     color: var(--cursor-text);
   }
 
-  .confirm-delete {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
-    padding-top: 0.5rem;
-  }
-
-  .warning-text {
-    font-size: 0.8rem;
-    color: var(--error);
-    margin: 0;
-    line-height: 1.4;
-  }
-
-  .confirm-actions {
-    display: flex;
-    gap: 0.75rem;
-    align-self: flex-end;
-  }
-
-  .btn-danger {
-    padding: 0.6rem 1.25rem;
-    font-size: 0.875rem;
-    font-family: inherit;
-    background: none;
-    border: 1px solid var(--error);
-    border-radius: 6px;
-    color: var(--error);
-    cursor: pointer;
-    transition: background 0.15s;
-  }
-
-  .btn-danger:focus:not(:disabled) {
-    background: color-mix(in srgb, var(--error) 10%, transparent);
-    outline: none;
-  }
-
-  .btn-danger:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
   .footer-sep {
     width: calc(100% + 4rem);
     margin-left: -2rem;
@@ -594,7 +509,4 @@
     outline: none;
   }
 
-  .btn-secondary {
-    padding: 0.6rem 1.25rem;
-  }
 </style>
