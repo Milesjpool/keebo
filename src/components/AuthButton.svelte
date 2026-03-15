@@ -25,6 +25,7 @@
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
     onAscend?: () => void;
+    onModalClose?: () => void;
   }
   let {
     user,
@@ -38,6 +39,7 @@
     focusEl = $bindable<HTMLElement | null>(null),
     onDescend,
     onAscend,
+    onModalClose,
   }: Props = $props();
 
   let linkedProviderIds = $derived(user?.providerData.map(p => p.providerId) ?? []);
@@ -120,7 +122,8 @@
 
 <div class="auth-wrap"
   onmouseenter={() => { authBtnEl?.focus() }}
-  onmouseleave={() => { authBtnEl?.blur() }}
+  onmouseleave={() => { if (!open) authBtnEl?.blur() }}
+  onfocusout={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) open = false; }}
 >
   <button
     class="auth-btn"
@@ -178,7 +181,7 @@
 
 <FeedbackModal
   open={feedbackOpen}
-  onClose={() => (feedbackOpen = false)}
+  onClose={() => { feedbackOpen = false; onModalClose?.(); }}
   {context}
   {user}
 />
@@ -192,13 +195,13 @@
   {onDeleteAccount}
   {onDeleteProgress}
   onFeedback={() => { settingsOpen = false; feedbackOpen = true; }}
-  onClose={() => { settingsOpen = false; if (!user) anonName = getAnonName() }}
+  onClose={() => { settingsOpen = false; if (!user) anonName = getAnonName(); onModalClose?.(); }}
 />
 
 <SignInModal
   open={signInOpen}
   {onSignIn}
-  onClose={() => (signInOpen = false)}
+  onClose={() => { signInOpen = false; onModalClose?.(); }}
 />
 
 <style>

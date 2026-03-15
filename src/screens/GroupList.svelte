@@ -100,7 +100,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} onAscend={() => { focused = -1 }} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} onAscend={() => { focused = -1 }} onModalClose={() => { focused = 0 }} />
   </header>
 
   <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
