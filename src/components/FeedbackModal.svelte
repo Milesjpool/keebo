@@ -23,6 +23,11 @@
   let error = $state<string | null>(null);
   let success = $state(false);
   let textareaEl = $state<HTMLTextAreaElement | null>(null);
+  let textareaRowEl = $state<HTMLDivElement | null>(null);
+  let emailInputEl = $state<HTMLInputElement | null>(null);
+  let emailRowEl = $state<HTMLDivElement | null>(null);
+  let submitBtnEl = $state<HTMLButtonElement | null>(null);
+  let closeBtnEl = $state<HTMLButtonElement | null>(null);
 
   function handleSubmit(e: Event) {
     e.preventDefault();
@@ -76,6 +81,55 @@
         Enter: (e) => {
           if (e.metaKey || e.ctrlKey) handleSubmit(e);
         },
+        ArrowDown: (e) => {
+          const active = document.activeElement;
+          if (active === document.body || !active) {
+            e.preventDefault();
+            closeBtnEl?.focus();
+          } else if (active === closeBtnEl) {
+            e.preventDefault();
+            textareaEl?.focus();
+          } else if (active === textareaRowEl) {
+            e.preventDefault();
+            textareaEl?.focus();
+          } else if (active === emailRowEl) {
+            e.preventDefault();
+            emailInputEl?.focus();
+          } else if (active === emailInputEl) {
+            e.preventDefault();
+            submitBtnEl?.focus();
+          } else if (
+            active === textareaEl &&
+            textareaEl.selectionStart === textareaEl.value.length &&
+            textareaEl.selectionEnd === textareaEl.value.length
+          ) {
+            e.preventDefault();
+            (emailInputEl ?? submitBtnEl)?.focus();
+          }
+        },
+        ArrowUp: (e) => {
+          const active = document.activeElement;
+          if (active === document.body || !active) {
+            e.preventDefault();
+            submitBtnEl?.focus();
+          } else if (active === textareaRowEl) {
+            e.preventDefault();
+            closeBtnEl?.focus();
+          } else if (active === emailRowEl || active === emailInputEl) {
+            e.preventDefault();
+            textareaEl?.focus();
+          } else if (active === submitBtnEl) {
+            e.preventDefault();
+            (emailInputEl ?? textareaEl)?.focus();
+          } else if (
+            active === textareaEl &&
+            textareaEl.selectionStart === 0 &&
+            textareaEl.selectionEnd === 0
+          ) {
+            e.preventDefault();
+            closeBtnEl?.focus();
+          }
+        },
       },
       { capture: true, stopAll: true },
     );
@@ -84,28 +138,35 @@
 </script>
 
 {#if open}
-  <Modal title="feedback" labelId="feedback-title" onClose={handleClose} style="--modal-max-width: 380px; --modal-gap: 1rem">
+  <Modal title="feedback" labelId="feedback-title" onClose={handleClose} bind:closeBtnEl>
     {#if success}
       <p class="success">thanks for your feedback</p>
     {:else}
       <form onsubmit={handleSubmit}>
-        <textarea
-          bind:value={text}
-          bind:this={textareaEl}
-          placeholder="share your feedback…"
-          rows="4"
-          maxlength="2000"
-          disabled={loading}
-          aria-label="Feedback"
-        ></textarea>
-        {#if !user}
-          <input
-            type="email"
-            bind:value={email}
-            placeholder="email (optional)"
+        <div class="field-row" tabindex="-1" bind:this={textareaRowEl}
+          onmouseenter={() => { if (document.activeElement !== textareaEl) textareaRowEl?.focus() }}>
+          <textarea
+            bind:value={text}
+            bind:this={textareaEl}
+            placeholder="share your feedback…"
+            rows="4"
+            maxlength="2000"
             disabled={loading}
-            aria-label="Email (optional)"
-          />
+            aria-label="Feedback"
+          ></textarea>
+        </div>
+        {#if !user}
+          <div class="field-row" tabindex="-1" bind:this={emailRowEl}
+            onmouseenter={() => { if (document.activeElement !== emailInputEl) emailRowEl?.focus() }}>
+            <input
+              type="email"
+              bind:value={email}
+              bind:this={emailInputEl}
+              placeholder="email (optional)"
+              disabled={loading}
+              aria-label="Email (optional)"
+            />
+          </div>
         {/if}
         {#if error}
           <p class="error">{error}</p>
@@ -114,6 +175,7 @@
           <button
             type="submit"
             class="btn-primary"
+            bind:this={submitBtnEl}
             disabled={loading}
             onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
             onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
@@ -136,42 +198,66 @@
   form {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem;
+    gap: 0;
+  }
+
+  .field-row {
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    padding: 0.5rem 2rem;
+    transition: background 0.1s;
+    outline: none;
+  }
+
+  .field-row:focus-within {
+    background: var(--surface-hover);
   }
 
   textarea,
-  input {
+  input[type="email"] {
+    width: 100%;
     font-family: inherit;
     font-size: 0.875rem;
-    padding: 0.6rem 0.75rem;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--border);
     color: var(--text);
-    resize: vertical;
+    outline: none;
+    padding: 0.2rem 0;
+    display: block;
+  }
+
+  textarea {
+    resize: none;
   }
 
   textarea::placeholder,
-  input::placeholder {
+  input[type="email"]::placeholder {
     color: var(--muted);
   }
 
   textarea:focus,
-  input:focus {
-    outline: none;
-    border-color: var(--accent);
+  input[type="email"]:focus {
+    border-bottom-color: var(--accent);
+  }
+
+  textarea::selection,
+  input[type="email"]::selection {
+    background: var(--accent);
+    color: var(--cursor-text);
   }
 
   .error {
     font-size: 0.8rem;
     color: var(--error);
     margin: 0;
+    padding: 0.25rem 0 0;
   }
 
   .actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 0.25rem;
+    padding-top: 0.5rem;
   }
 
   .btn-primary {
