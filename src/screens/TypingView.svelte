@@ -3,7 +3,7 @@
   import type { User } from "firebase/auth";
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
-  import { formatTime } from "../services/utils";
+  import { formatTime, calcScrollOffset } from "../services/utils";
 
   interface Props {
     lesson: Lesson;
@@ -34,12 +34,36 @@
 
   let lineIndex = $state(0);
   let typed = $state("");
-  let shaking = $state(false);
   let startTime = $state<number | null>(null);
   let elapsed = $state(0);
   let lineResults = $state<{ correct: number; total: number }[]>([]);
   const line = $derived(lesson.lines[lineIndex]);
   const total = $derived(lesson.lines.length);
+
+  let wrapEl = $state<HTMLDivElement | null>(null);
+  let charWidth = $state(0);
+  let wrapWidth = $state(0);
+
+  $effect(() => {
+    // Re-measure when line changes or wrapEl mounts
+    void line;
+    if (!wrapEl) return;
+    const span = wrapEl.querySelector('.char') as HTMLElement | null;
+    charWidth = span?.offsetWidth || 0;
+    const style = getComputedStyle(wrapEl);
+    wrapWidth = wrapEl.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
+  });
+
+  const scrollOffset = $derived(
+    // +1 for the ↵ character at the end
+    calcScrollOffset(typed.length, line.length + 1, charWidth, wrapWidth)
+  );
+
+  const lineWidthPx = $derived((line.length + 1) * charWidth);
+  const overflowLeft = $derived(scrollOffset > 0);
+  const overflowRight = $derived(
+    wrapWidth > 0 && lineWidthPx > wrapWidth && scrollOffset < lineWidthPx - wrapWidth
+  );
 
   const accuracy = $derived(() => {
     const cc = lineResults.reduce((n, r) => n + r.correct, 0);
@@ -68,15 +92,7 @@
         e.preventDefault();
         if (typed.length < line.length) return;
         const match = typed === line;
-        if (!match) {
-          if (!shaking) {
-            shaking = true;
-            setTimeout(() => {
-              shaking = false;
-            }, 400);
-          }
-          if (strictMode) return;
-        }
+        if (!match && strictMode) return;
         lineResults.push({
           correct: [...typed].filter((c, i) => c === line[i]).length,
           total: line.length,
@@ -162,7 +178,7 @@
 
   <div class="progress-bar">
     {#each lesson.lines as _, i}
-      <div class="segment">
+      <div class="segment" class:active={i === lineIndex}>
         <div
           class="fill"
           style:width="{i < lineIndex
@@ -175,9 +191,9 @@
     {/each}
   </div>
 
-  <main>
-    <div class="line-wrap" class:shaking>
-      <div class="line-display">
+  <main class:overflow-left={overflowLeft} class:overflow-right={overflowRight}>
+    <div class="line-wrap" bind:this={wrapEl}>
+      <div class="line-display" style:transform="translateX(-{scrollOffset}px)">
         {#each line.split("") as char, i}{@const state = charState(i)}<span
             class="char {state}"
             >{char === " "
@@ -204,6 +220,7 @@
     display: flex;
     flex-direction: column;
     min-height: 100vh;
+    overflow-x: clip;
   }
 
   nav {
@@ -264,19 +281,56 @@
     align-items: center;
     justify-content: center;
     gap: 3rem;
-    padding: 2rem;
+    padding: 2rem 0;
+    width: 100%;
+    position: relative;
+  }
+
+  main::before,
+  main::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 4rem;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.15s;
+    z-index: 1;
+  }
+
+  main::before {
+    left: 0;
+    background: linear-gradient(to right, var(--bg), transparent);
+  }
+
+  main::after {
+    right: 0;
+    background: linear-gradient(to left, var(--bg), transparent);
+  }
+
+  main.overflow-left::before,
+  main.overflow-right::after {
+    opacity: 1;
   }
 
   .progress-bar {
     display: flex;
     gap: 2px;
     height: 3px;
+    align-items: flex-start;
   }
 
   .segment {
     flex: 1;
+    height: 100%;
     background: var(--border);
     overflow: hidden;
+    transition: height 0.15s;
+  }
+
+  .segment.active {
+    height: 5px;
   }
 
   .fill {
@@ -286,11 +340,8 @@
   }
 
   .line-wrap {
-    padding: 1rem;
-  }
-
-  .line-wrap.shaking {
-    animation: shake 0.4s ease-in-out;
+    padding: 1rem 8rem;
+    max-width: 100%;
   }
 
   .line-display {
@@ -298,6 +349,7 @@
     letter-spacing: 0.05em;
     white-space: pre;
     line-height: 1;
+    transition: transform 0.12s ease-out;
   }
 
   .char {

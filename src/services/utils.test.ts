@@ -1,4 +1,4 @@
-import { formatTime, useKeydown } from './utils'
+import { formatTime, useKeydown, calcScrollOffset } from './utils'
 
 describe('formatTime', () => {
   it('formats 0 seconds as 0:00', () => {
@@ -92,5 +92,52 @@ describe('useKeydown', () => {
     expect(second).not.toHaveBeenCalled()
 
     cleanup1()
+  })
+})
+
+describe('calcScrollOffset', () => {
+  const charWidth = 16.8
+
+  it('returns 0 for a short line that fits in the container', () => {
+    expect(calcScrollOffset(3, 10, charWidth, 800)).toBe(0)
+  })
+
+  it('returns 0 for a single-char line', () => {
+    expect(calcScrollOffset(0, 1, charWidth, 800)).toBe(0)
+  })
+
+  it('returns 0 when cursor is at start of a long line (lead-in)', () => {
+    expect(calcScrollOffset(0, 200, charWidth, 800)).toBe(0)
+  })
+
+  it('returns 0 during lead-in while cursor is before center', () => {
+    // halfWrap = 400, cursorPx = 10 * 16.8 = 168 → 168 - 400 < 0 → clamped to 0
+    expect(calcScrollOffset(10, 200, charWidth, 800)).toBe(0)
+  })
+
+  it('starts scrolling once cursor passes center', () => {
+    // halfWrap = 400, cursorPx = 30 * 16.8 = 504 → 504 - 400 = 104
+    const offset = calcScrollOffset(30, 200, charWidth, 800)
+    expect(offset).toBeCloseTo(104, 0)
+  })
+
+  it('keeps cursor centered in the middle of a long line', () => {
+    // halfWrap = 400, cursorPx = 100 * 16.8 = 1680 → 1680 - 400 = 1280
+    const offset = calcScrollOffset(100, 200, charWidth, 800)
+    expect(offset).toBeCloseTo(1280, 0)
+  })
+
+  it('clamps at the end of line (lead-out)', () => {
+    // lineWidthPx = 200 * 16.8 = 3360, maxOffset = 3360 - 800 = 2560
+    // cursorPx = 199 * 16.8 = 3343.2, 3343.2 - 400 = 2943.2 → clamped to 2560
+    const offset = calcScrollOffset(199, 200, charWidth, 800)
+    expect(offset).toBeCloseTo(2560, 0)
+  })
+
+  it('handles cursor at exact line length (typing enter)', () => {
+    // cursorIdx = lineLength = 200
+    // cursorPx = 200 * 16.8 = 3360, 3360 - 400 = 2960 → clamped to 2560
+    const offset = calcScrollOffset(200, 200, charWidth, 800)
+    expect(offset).toBeCloseTo(2560, 0)
   })
 })

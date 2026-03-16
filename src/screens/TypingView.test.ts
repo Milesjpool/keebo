@@ -126,7 +126,7 @@ describe('TypingView', () => {
     expect(correctChars.length).toBe(1) // 'a' still correct
   })
 
-  it('shakes on Enter when typed does not match line', async () => {
+  it('does not shake on Enter when typed does not match line', async () => {
     renderTypingView()
     await fireEvent.keyDown(window, { key: 'x' })
     await fireEvent.keyDown(window, { key: 'y' })
@@ -134,7 +134,7 @@ describe('TypingView', () => {
     await fireEvent.keyDown(window, { key: 'Enter' })
 
     const shaking = document.querySelector('.line-wrap.shaking')
-    expect(shaking).not.toBeNull()
+    expect(shaking).toBeNull()
   })
 
   it('calls onComplete with stats when last line is completed', async () => {

@@ -31,3 +31,13 @@ export function useKeydown(
   window.addEventListener('keydown', handler, options?.capture)
   return () => window.removeEventListener('keydown', handler, options?.capture)
 }
+
+export function calcScrollOffset(
+  cursorIdx: number, lineLength: number, charWidth: number, wrapWidth: number
+): number {
+  const lineWidthPx = lineLength * charWidth
+  if (lineWidthPx <= wrapWidth) return 0
+  const cursorPx = cursorIdx * charWidth
+  const halfWrap = wrapWidth / 2
+  return Math.max(0, Math.min(cursorPx - halfWrap, lineWidthPx - wrapWidth))
+}
