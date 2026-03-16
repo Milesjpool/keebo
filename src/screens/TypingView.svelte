@@ -253,7 +253,8 @@
   }
 
   .sep {
-    color: var(--border);
+    font-weight: bold;
+    color: var(--accent);
   }
 
   main {
