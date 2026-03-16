@@ -53,12 +53,7 @@
     })
       .then(() => {
         success = true;
-        text = "";
-        email = "";
-        setTimeout(() => {
-          success = false;
-          onClose();
-        }, 1500);
+        setTimeout(() => onClose(), 1500);
       })
       .catch((err) => {
         error = err?.message ?? "Something went wrong. Please try again.";
@@ -74,6 +69,11 @@
 
   $effect(() => {
     if (!open) return;
+    text = "";
+    email = "";
+    success = false;
+    error = null;
+    loading = false;
     setTimeout(() => textareaEl?.focus(), 0);
     const cleanup = useKeydown(
       {
@@ -139,60 +139,92 @@
 
 {#if open}
   <Modal title="feedback" labelId="feedback-title" onClose={handleClose} bind:closeBtnEl>
+    <form onsubmit={handleSubmit}>
+      <div class="field-row" tabindex="-1" bind:this={textareaRowEl}
+        onmouseenter={() => { if (document.activeElement !== textareaEl) textareaRowEl?.focus() }}>
+        <textarea
+          bind:value={text}
+          bind:this={textareaEl}
+          placeholder="share your feedback…"
+          rows="4"
+          maxlength="2000"
+          disabled={loading || success}
+          aria-label="Feedback"
+        ></textarea>
+      </div>
+      {#if !user}
+        <div class="field-row" tabindex="-1" bind:this={emailRowEl}
+          onmouseenter={() => { if (document.activeElement !== emailInputEl) emailRowEl?.focus() }}>
+          <input
+            type="email"
+            bind:value={email}
+            bind:this={emailInputEl}
+            placeholder="email (optional)"
+            disabled={loading || success}
+            aria-label="Email (optional)"
+          />
+        </div>
+      {/if}
+      {#if error}
+        <p class="error">{error}</p>
+      {/if}
+      <div class="actions">
+        <button
+          type="submit"
+          class="btn-primary"
+          bind:this={submitBtnEl}
+          disabled={loading || success}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        >
+          {#if loading}<span class="spinner" aria-hidden="true"></span>{:else}send{/if}
+        </button>
+      </div>
+    </form>
     {#if success}
-      <p class="success">thanks for your feedback</p>
-    {:else}
-      <form onsubmit={handleSubmit}>
-        <div class="field-row" tabindex="-1" bind:this={textareaRowEl}
-          onmouseenter={() => { if (document.activeElement !== textareaEl) textareaRowEl?.focus() }}>
-          <textarea
-            bind:value={text}
-            bind:this={textareaEl}
-            placeholder="share your feedback…"
-            rows="4"
-            maxlength="2000"
-            disabled={loading}
-            aria-label="Feedback"
-          ></textarea>
-        </div>
-        {#if !user}
-          <div class="field-row" tabindex="-1" bind:this={emailRowEl}
-            onmouseenter={() => { if (document.activeElement !== emailInputEl) emailRowEl?.focus() }}>
-            <input
-              type="email"
-              bind:value={email}
-              bind:this={emailInputEl}
-              placeholder="email (optional)"
-              disabled={loading}
-              aria-label="Email (optional)"
-            />
-          </div>
-        {/if}
-        {#if error}
-          <p class="error">{error}</p>
-        {/if}
-        <div class="actions">
-          <button
-            type="submit"
-            class="btn-primary"
-            bind:this={submitBtnEl}
-            disabled={loading}
-            onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-            onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-          >
-            {loading ? "sending…" : "send"}
-          </button>
-        </div>
-      </form>
+      <div class="success-overlay"><span class="success-text">Thanks! 🎉</span></div>
     {/if}
   </Modal>
 {/if}
 
 <style>
-  .success {
-    font-size: 1rem;
-    color: var(--correct);
-    margin: 0;
+  .success-overlay {
+    position: absolute;
+    inset: 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 2rem;
+    color: var(--green);
+    z-index: 10;
+    animation: fadeIn 0.35s ease;
+  }
+
+  .success-text {
+    box-shadow: 0 0 2.5rem 2rem var(--surface);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+
+  @keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+    border: 2px solid currentColor;
+    border-top-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    vertical-align: middle;
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
   }
 
   form {
@@ -239,6 +271,11 @@
   textarea:focus,
   input[type="email"]:focus {
     border-bottom-color: var(--accent);
+  }
+
+  textarea:disabled,
+  input[type="email"]:disabled {
+    opacity: 0.45;
   }
 
   textarea::selection,
