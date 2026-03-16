@@ -288,6 +288,13 @@
     onComplete={completeLesson}
     onBack={goToLessons}
     strictMode={false}
+    {user}
+    {authReady}
+    onSignIn={signIn}
+    onSignOut={handleSignOut}
+    onLinkProvider={linkProvider}
+    onDeleteAccount={deleteAccount}
+    onDeleteProgress={deleteProgress}
   />
 {:else if screen === "complete"}
   <LessonComplete

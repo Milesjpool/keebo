@@ -26,6 +26,7 @@
     onDescend?: () => void;
     onAscend?: () => void;
     onModalClose?: () => void;
+    avatarOnly?: boolean;
   }
   let {
     user,
@@ -40,6 +41,7 @@
     onDescend,
     onAscend,
     onModalClose,
+    avatarOnly = false,
   }: Props = $props();
 
   let linkedProviderIds = $derived(user?.providerData.map(p => p.providerId) ?? []);
@@ -141,12 +143,14 @@
         <AnonAvatar />
       {/if}
     </div>
-    {#if !authReady}
-      <span class="auth-label">█████ ████</span>
-    {:else if user}
-      <span class="auth-label">{user.displayName?.toLowerCase() ?? user.email}</span>
-    {:else}
-      <span class="auth-label">{anonName}</span>
+    {#if !avatarOnly}
+      {#if !authReady}
+        <span class="auth-label">█████ ████</span>
+      {:else if user}
+        <span class="auth-label">{user.displayName?.toLowerCase() ?? user.email}</span>
+      {:else}
+        <span class="auth-label">{anonName}</span>
+      {/if}
     {/if}
   </button>
 
