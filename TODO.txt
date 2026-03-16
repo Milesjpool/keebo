@@ -1,11 +1,12 @@
+- show incorrectly typed letter
 - Animate prompt enter/exit.
 - next-line preview (configurable)
 - difficulty (gutters [no mistakes], normal, strict [no corrections])
-- show incorrectly typed letter
 - more lessons.
 - User settings page
   - Keyboard settings  (track clicks, leading indicator, before feature is added).
-  - toggle submit line score
+  - toggle submit line score ghost.
+  - toggle incorrect letter ghost.
   - difficulty settings
 - Auto-resolve 'linked account already exists'?
 - (hover +) 'KEEBO' easter egg.

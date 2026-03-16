@@ -40,6 +40,8 @@
   let elapsed = $state(0);
   let lineResults = $state<{ correct: number; total: number }[]>([]);
   let floatingScore = $state<{ wpm: number; accuracy: number; color: string } | null>(null);
+  let floatingErrors = $state<{ id: number; char: string; left: number }[]>([]);
+  let errorId = 0;
 
   function ragColor(score: number): string {
     if (score >= THRESHOLDS.gold) return 'var(--green)';
@@ -141,7 +143,18 @@
         const now = Date.now();
         if (!startTime) startTime = now;
         if (!lineStartTime) lineStartTime = now;
-        if (typed.length < line.length) typed += e.key;
+        if (typed.length < line.length) {
+          const idx = typed.length;
+          typed += e.key;
+          if (e.key !== line[idx]) {
+            const thisId = errorId++;
+            const left = idx * charWidth - scrollOffset;
+            floatingErrors = [...floatingErrors, { id: thisId, char: e.key, left }];
+            setTimeout(() => {
+              floatingErrors = floatingErrors.filter(f => f.id !== thisId);
+            }, 900);
+          }
+        }
       }
     }
 
@@ -222,6 +235,9 @@
         </div>
       {/if}
       <div class="line-wrap" bind:this={wrapEl}>
+        {#each floatingErrors as err (err.id)}
+          <span class="floating-error" style:left="{err.left}px">{err.char}</span>
+        {/each}
           <div class="line-display" style:transform="translateX(-{scrollOffset}px)">
             {#each line.split("") as char, i}{@const state = charState(i)}<span
                 class="char {state}"
@@ -375,6 +391,7 @@
   }
 
   .line-wrap {
+    position: relative;
     padding: 1rem 8rem;
     max-width: 100%;
   }
@@ -409,6 +426,23 @@
     color: var(--cursor-text);
     background: var(--cursor-bg);
     animation: blink 1s step-end infinite;
+  }
+
+  .floating-error {
+    position: absolute;
+    top: 1rem;
+    margin-left: 8rem;
+    font-size: 1.75rem;
+    letter-spacing: 0.05em;
+    line-height: 1;
+    color: var(--error);
+    pointer-events: none;
+    animation: error-float 0.8s ease-out forwards;
+  }
+
+  @keyframes error-float {
+    0%   { opacity: 0.7; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(-2rem); }
   }
 
   .floating-score {
