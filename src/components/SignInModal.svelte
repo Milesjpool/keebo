@@ -2,6 +2,8 @@
   import { useKeydown } from '../services/utils'
   import Modal from './Modal.svelte'
   import ProviderIcon from './ProviderIcon.svelte'
+  import Icon from './Icon.svelte'
+  import iconPlus from '../assets/icon-plus.svg?raw'
 
   interface Props {
     open: boolean
@@ -53,14 +55,14 @@
         <ProviderIcon provider="google" />
         <span class="provider-name">Google</span>
         <span class="provider-status">
-          <svg class="plus-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <Icon svg={iconPlus} class="plus-icon" />
         </span>
       </button>
       <button class="provider-row" onclick={() => handleSignIn('github')}>
         <ProviderIcon provider="github" />
         <span class="provider-name">GitHub</span>
         <span class="provider-status">
-          <svg class="plus-icon" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+          <Icon svg={iconPlus} class="plus-icon" />
         </span>
       </button>
     </section>
@@ -114,14 +116,18 @@
     align-items: center;
   }
 
-  .plus-icon {
-    width: 11px;
-    height: 11px;
-    flex-shrink: 0;
+  :global(.plus-icon) {
+    display: flex;
     color: var(--muted);
   }
 
-  .provider-row:focus .plus-icon {
+  :global(.plus-icon svg) {
+    width: 11px;
+    height: 11px;
+    flex-shrink: 0;
+  }
+
+  .provider-row:focus :global(.plus-icon) {
     color: var(--text);
   }
 </style>

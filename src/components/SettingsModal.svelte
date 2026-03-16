@@ -6,6 +6,9 @@
   import Modal from "./Modal.svelte";
   import ConfirmExpander from "./ConfirmExpander.svelte";
   import ProviderIcon from "./ProviderIcon.svelte";
+  import Icon from "./Icon.svelte";
+  import iconPlus from "../assets/icon-plus.svg?raw";
+  import iconCheck from "../assets/icon-check.svg?raw";
 
   const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
   const commitHash = import.meta.env.VITE_COMMIT_HASH;
@@ -163,32 +166,9 @@
           <span class="provider-name">{p.name}</span>
           <span class="provider-status">
             {#if connected}
-              <svg
-                class="connected-icon"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                ><circle cx="8" cy="8" r="7.5" stroke="currentColor" /><path
-                  d="M5 8l2 2 4-4"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                /></svg
-              >
+              <Icon svg={iconCheck} class="connected-icon" />
             {:else}
-              <svg
-                class="plus-icon"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-                ><path
-                  d="M8 3v10M3 8h10"
-                  stroke="currentColor"
-                  stroke-width="1.5"
-                  stroke-linecap="round"
-                /></svg
-              >
+              <Icon svg={iconPlus} class="plus-icon" />
             {/if}
           </span>
         </svelte:element>
@@ -328,10 +308,7 @@
     outline: none;
   }
 
-  .provider-unlinked:focus :global(.provider-icon) {
-    color: var(--text);
-  }
-
+  .provider-unlinked:focus :global(.provider-icon),
   .provider-row:not(.provider-unlinked) :global(.provider-icon) {
     color: var(--text);
   }
@@ -351,21 +328,27 @@
     align-items: center;
   }
 
-  .connected-icon {
+  :global(.connected-icon),
+  :global(.plus-icon) {
+    display: flex;
+  }
+
+  :global(.connected-icon svg),
+  :global(.plus-icon svg) {
     width: 11px;
     height: 11px;
     flex-shrink: 0;
+  }
+
+  :global(.connected-icon) {
     color: var(--green);
   }
 
-  .plus-icon {
-    width: 11px;
-    height: 11px;
-    flex-shrink: 0;
+  :global(.plus-icon) {
     color: var(--muted);
   }
 
-  .provider-unlinked:focus .plus-icon {
+  .provider-unlinked:focus :global(.plus-icon) {
     color: var(--text);
   }
 
