@@ -91,6 +91,39 @@
     onClose();
   }
 
+  function isEditing() {
+    const tag = document.activeElement?.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA';
+  }
+
+  function goLeft(e: KeyboardEvent) {
+    if (confirmOpen) { e.preventDefault(); confirmCancelEl?.focus(); }
+  }
+
+  function goRight(e: KeyboardEvent) {
+    if (confirmOpen) { e.preventDefault(); confirmConfirmEl?.focus(); }
+  }
+
+  function goDown(e: KeyboardEvent) {
+    e.preventDefault();
+    const btns = modalButtons();
+    const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+    const active = isConfirmBtn ? confirmTriggerEl : raw;
+    const i = btns.indexOf(active as HTMLElement);
+    btns[i + 1]?.focus();
+  }
+
+  function goUp(e: KeyboardEvent) {
+    e.preventDefault();
+    const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+    const active = isConfirmBtn ? confirmTriggerEl : raw;
+    const btns = modalButtons();
+    const i = btns.indexOf(active as HTMLElement);
+    if (i > 0) btns[i - 1]?.focus();
+  }
+
   $effect(() => {
     if (!open) {
       confirmOpen = false;
@@ -119,30 +152,14 @@
             confirmOpen = !confirmOpen;
           }
         },
-        ArrowLeft: (e) => {
-          if (confirmOpen) { e.preventDefault(); confirmCancelEl?.focus(); }
-        },
-        ArrowRight: (e) => {
-          if (confirmOpen) { e.preventDefault(); confirmConfirmEl?.focus(); }
-        },
-        ArrowDown: (e) => {
-          e.preventDefault();
-          const btns = modalButtons();
-          const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
-          const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
-          const active = isConfirmBtn ? confirmTriggerEl : raw;
-          const i = btns.indexOf(active as HTMLElement);
-          btns[i + 1]?.focus();
-        },
-        ArrowUp: (e) => {
-          e.preventDefault();
-          const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
-          const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
-          const active = isConfirmBtn ? confirmTriggerEl : raw;
-          const btns = modalButtons();
-          const i = btns.indexOf(active as HTMLElement);
-          if (i > 0) btns[i - 1]?.focus();
-        },
+        ArrowLeft: goLeft,
+        a: (e) => { if (!isEditing()) goLeft(e); },
+        ArrowRight: goRight,
+        d: (e) => { if (!isEditing()) goRight(e); },
+        ArrowDown: goDown,
+        s: (e) => { if (!isEditing()) goDown(e); },
+        ArrowUp: goUp,
+        w: (e) => { if (!isEditing()) goUp(e); },
       },
       { capture: true, stopAll: true },
     );

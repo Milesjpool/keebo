@@ -63,6 +63,62 @@
     if (!loading) onClose();
   }
 
+  function isEditing() {
+    const tag = document.activeElement?.tagName;
+    return tag === 'INPUT' || tag === 'TEXTAREA';
+  }
+
+  function goDown(e: KeyboardEvent) {
+    const active = document.activeElement;
+    if (active === document.body || !active) {
+      e.preventDefault();
+      closeBtnEl?.focus();
+    } else if (active === closeBtnEl) {
+      e.preventDefault();
+      textareaEl?.focus();
+    } else if (active === textareaRowEl) {
+      e.preventDefault();
+      textareaEl?.focus();
+    } else if (active === emailRowEl) {
+      e.preventDefault();
+      emailInputEl?.focus();
+    } else if (active === emailInputEl) {
+      e.preventDefault();
+      submitBtnEl?.focus();
+    } else if (
+      active === textareaEl &&
+      textareaEl.selectionStart === textareaEl.value.length &&
+      textareaEl.selectionEnd === textareaEl.value.length
+    ) {
+      e.preventDefault();
+      (emailInputEl ?? submitBtnEl)?.focus();
+    }
+  }
+
+  function goUp(e: KeyboardEvent) {
+    const active = document.activeElement;
+    if (active === document.body || !active) {
+      e.preventDefault();
+      submitBtnEl?.focus();
+    } else if (active === textareaRowEl) {
+      e.preventDefault();
+      closeBtnEl?.focus();
+    } else if (active === emailRowEl || active === emailInputEl) {
+      e.preventDefault();
+      textareaEl?.focus();
+    } else if (active === submitBtnEl) {
+      e.preventDefault();
+      (emailInputEl ?? textareaEl)?.focus();
+    } else if (
+      active === textareaEl &&
+      textareaEl.selectionStart === 0 &&
+      textareaEl.selectionEnd === 0
+    ) {
+      e.preventDefault();
+      closeBtnEl?.focus();
+    }
+  }
+
   $effect(() => {
     if (!open) return;
     text = "";
@@ -77,55 +133,10 @@
         Enter: (e) => {
           if (e.metaKey || e.ctrlKey) handleSubmit(e);
         },
-        ArrowDown: (e) => {
-          const active = document.activeElement;
-          if (active === document.body || !active) {
-            e.preventDefault();
-            closeBtnEl?.focus();
-          } else if (active === closeBtnEl) {
-            e.preventDefault();
-            textareaEl?.focus();
-          } else if (active === textareaRowEl) {
-            e.preventDefault();
-            textareaEl?.focus();
-          } else if (active === emailRowEl) {
-            e.preventDefault();
-            emailInputEl?.focus();
-          } else if (active === emailInputEl) {
-            e.preventDefault();
-            submitBtnEl?.focus();
-          } else if (
-            active === textareaEl &&
-            textareaEl.selectionStart === textareaEl.value.length &&
-            textareaEl.selectionEnd === textareaEl.value.length
-          ) {
-            e.preventDefault();
-            (emailInputEl ?? submitBtnEl)?.focus();
-          }
-        },
-        ArrowUp: (e) => {
-          const active = document.activeElement;
-          if (active === document.body || !active) {
-            e.preventDefault();
-            submitBtnEl?.focus();
-          } else if (active === textareaRowEl) {
-            e.preventDefault();
-            closeBtnEl?.focus();
-          } else if (active === emailRowEl || active === emailInputEl) {
-            e.preventDefault();
-            textareaEl?.focus();
-          } else if (active === submitBtnEl) {
-            e.preventDefault();
-            (emailInputEl ?? textareaEl)?.focus();
-          } else if (
-            active === textareaEl &&
-            textareaEl.selectionStart === 0 &&
-            textareaEl.selectionEnd === 0
-          ) {
-            e.preventDefault();
-            closeBtnEl?.focus();
-          }
-        },
+        ArrowDown: goDown,
+        s: (e) => { if (!isEditing()) goDown(e); },
+        ArrowUp: goUp,
+        w: (e) => { if (!isEditing()) goUp(e); },
       },
       { capture: true, stopAll: true },
     );

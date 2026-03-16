@@ -22,7 +22,9 @@
     return useKeydown({
       Escape: () => onCancel(),
       ArrowDown: () => dismissBtnEl?.focus(),
+      s: () => dismissBtnEl?.focus(),
       ArrowUp: () => dismissBtnEl?.focus(),
+      w: () => dismissBtnEl?.focus(),
     }, { capture: true, stopAll: true })
   })
 </script>

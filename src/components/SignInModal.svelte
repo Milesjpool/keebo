@@ -24,23 +24,29 @@
     onSignIn(provider)
   }
 
+  function moveDown(e: KeyboardEvent) {
+    e.preventDefault()
+    const btns = modalButtons()
+    btns[btns.indexOf(document.activeElement as HTMLButtonElement) + 1]?.focus()
+  }
+
+  function moveUp(e: KeyboardEvent) {
+    e.preventDefault()
+    const btns = modalButtons()
+    const i = btns.indexOf(document.activeElement as HTMLButtonElement)
+    if (i > 0) btns[i - 1]?.focus()
+  }
+
   $effect(() => {
     if (!open) return
     setTimeout(() => closeBtnEl?.focus(), 0)
     const cleanup = useKeydown(
       {
         Escape: () => onClose(),
-        ArrowDown: (e) => {
-          e.preventDefault()
-          const btns = modalButtons()
-          btns[btns.indexOf(document.activeElement as HTMLButtonElement) + 1]?.focus()
-        },
-        ArrowUp: (e) => {
-          e.preventDefault()
-          const btns = modalButtons()
-          const i = btns.indexOf(document.activeElement as HTMLButtonElement)
-          if (i > 0) btns[i - 1]?.focus()
-        },
+        ArrowDown: moveDown,
+        s: moveDown,
+        ArrowUp: moveUp,
+        w: moveUp,
       },
       { capture: true, stopAll: true },
     )

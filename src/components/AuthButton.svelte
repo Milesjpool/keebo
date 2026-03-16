@@ -71,11 +71,11 @@
       setTimeout(() => authBtnEl?.focus(), 0);
       return;
     }
-    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    if (e.key !== "ArrowDown" && e.key !== "s" && e.key !== "ArrowUp" && e.key !== "w") return;
     e.preventDefault();
     const btns = dropdownButtons();
     const idx = btns.indexOf(e.target as HTMLButtonElement);
-    if (e.key === "ArrowDown") {
+    if (e.key === "ArrowDown" || e.key === "s") {
       btns[idx + 1]?.focus();
     } else {
       if (idx > 0) btns[idx - 1]?.focus();
@@ -92,7 +92,7 @@
     if (e.key === "Escape" || (e.key === "Enter" && open)) {
       e.preventDefault();
       open = false;
-    } else if (e.key === "ArrowDown") {
+    } else if (e.key === "ArrowDown" || e.key === "s") {
       e.preventDefault();
       if (open) dropdownButtons()[0]?.focus();
       else { authBtnEl?.blur(); onDescend?.(); }
