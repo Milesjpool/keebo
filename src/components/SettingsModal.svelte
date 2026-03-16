@@ -554,11 +554,6 @@
     height: 16px;
     object-fit: contain;
     flex-shrink: 0;
-    opacity: 0.6;
-  }
-
-  .btn-footer-link:focus .kofi-logo {
-    opacity: 1;
   }
 
 </style>
