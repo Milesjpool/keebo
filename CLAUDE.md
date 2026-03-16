@@ -67,6 +67,15 @@ If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 - **When modifying source, update or add corresponding tests**
 - CI runs tests before build — all tests must pass for deploy
 
+## SVGs / icons
+- Static SVGs live as standalone `.svg` files in `src/assets/` (e.g. `logo-google.svg`, `icon-plus.svg`)
+- Import with Vite `?raw` suffix: `import svg from '../assets/foo.svg?raw'`
+- Render via `src/components/Icon.svelte`: `<Icon {svg} class="my-icon" />` — wraps `{@html}` in a `<span>`
+- Parent controls sizing/color via CSS on the class (target `:global(.my-icon svg)` for dimensions)
+- SVGs use `currentColor` for fill/stroke so they inherit color from the parent
+- **Exception:** `Fingers.svelte` is a Svelte component with dynamic per-finger opacity props and CSS var gradients — it cannot use `?raw`
+- Never put SVGs in `public/` — only `?raw` imports from `src/assets/`
+
 ## Conventions
 - Svelte runes only — no `$:`, no `writable()`
 - Inline event handlers → named functions when non-trivial
