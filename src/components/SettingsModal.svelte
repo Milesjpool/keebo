@@ -327,6 +327,18 @@
       {/if}
 
     <div class="footer-sep">
+      <a
+        class="btn-footer-link"
+        href="https://ko-fi.com/milesjpool"
+        target="_blank"
+        rel="noopener noreferrer"
+        data-keynav-item
+        onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
+        onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}
+      >
+        <img src="/logo-ko-fi.png" class="kofi-logo" alt="" />
+        support keebo
+      </a>
       <button class="btn-feedback" onclick={onFeedback}>feedback</button>
     </div>
   </Modal>
@@ -510,6 +522,7 @@
     margin-bottom: -1rem;
   }
 
+  .btn-footer-link,
   .btn-feedback {
     font-size: 0.875rem;
     color: var(--muted);
@@ -523,12 +536,29 @@
     transition:
       background 0.1s,
       color 0.1s;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
   }
 
+  .btn-footer-link:focus,
   .btn-feedback:focus {
     color: var(--text);
     background: var(--surface-hover);
     outline: none;
+  }
+
+  .kofi-logo {
+    width: 16px;
+    height: 16px;
+    object-fit: contain;
+    flex-shrink: 0;
+    opacity: 0.6;
+  }
+
+  .btn-footer-link:focus .kofi-logo {
+    opacity: 1;
   }
 
 </style>
