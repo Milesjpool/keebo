@@ -13,13 +13,13 @@ If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 
 ## Stack
 - Svelte 5 runes mode: `$state`, `$derived`, `$effect` (no legacy stores)
-- TypeScript strict — shared types in `src/lib/types.ts`
+- TypeScript strict — shared types in `src/services/types.ts`
 - Vite 7
 
 ## Key decisions / invariants
 - Lessons unlock sequentially; completing lesson N unlocks N+1
-- Progress: `localStorage['keebo-progress']` = `{ [lessonUUID]: { wpm, elapsed } }` — presence = done, best WPM kept on retake
-- Typing: backspace to correct; Enter advances only when typed === line exactly (shakes on mismatch)
+- Progress: `localStorage['keebo-progress']` = `{ [lessonUUID]: { wpm, elapsed, accuracy, score } }` — presence = done, best score kept on retake
+- Typing: backspace to correct; Enter advances line (shakes on mismatch); `strictMode` blocks advance on mismatch (currently off)
 - Spaces rendered as `\u00a0` in spans to preserve whitespace
 - `--finger` CSS var for active-finger highlight (softer than `--accent` in dark mode)
 
@@ -31,7 +31,7 @@ If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 - Any `keydown` → `ui.keyboardNav = true`; any `mousemove` → `false`
 - Setter in `src/services/ui.svelte.ts` syncs `body.keyboard-nav` class synchronously
 - `body.keyboard-nav *` has `pointer-events: none !important` — suppresses all hover events globally
-- In modals using `useKeydown({ stopAll: true })`, register a `ui.keyboardNav = true` capture listener *before* calling `useKeydown` so it fires before `stopImmediatePropagation`
+- `useKeydown({ stopAll: true })` handlers automatically set `ui.keyboardNav = true` via the global `stopAllStack` listener in `utils.ts`
 
 ### Mouse → focus
 - `onmouseenter`: `el.focus()` — no keyboardNav guard needed (pointer-events handles it)
@@ -62,7 +62,6 @@ If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 - Shared fixtures in `src/test/fixtures.ts`
 - vitest globals (`describe`, `it`, `expect`, `vi`) — no imports needed
 - Mock Firebase: always mock `./firebase` and `firebase/firestore` — never import real Firebase in tests
-- Mock Svelte components with `vi.mock('path', () => ({ default: function($$anchor, $$props) {} }))`
 - No snapshot tests — test behavior, not markup
 - One behavior per `it()` block; name tests as sentences
 - **When modifying source, update or add corresponding tests**
