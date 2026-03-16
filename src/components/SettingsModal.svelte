@@ -1,10 +1,17 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
+  import { version } from "../../package.json";
   import { useKeydown } from "../services/utils";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
   import Modal from "./Modal.svelte";
   import ConfirmExpander from "./ConfirmExpander.svelte";
   import ProviderIcon from "./ProviderIcon.svelte";
+
+  const buildNumber = import.meta.env.VITE_BUILD_NUMBER;
+  const commitHash = import.meta.env.VITE_COMMIT_HASH;
+  const appVersion = buildNumber
+    ? `v${version.split(".").slice(0, 2).join(".")}.${buildNumber}-${commitHash.slice(0, 7)}`
+    : `v${version}`;
 
   const providers = [
     { id: "google.com", key: "google" as const, name: "Google" },
@@ -273,6 +280,7 @@
         <img src="{import.meta.env.BASE_URL}logo-ko-fi.png" class="kofi-logo" alt="" />
         support keebo
       </a>
+      <span class="version">{appVersion}</span>
     </div>
   </Modal>
 {/if}
@@ -480,6 +488,14 @@
     height: 16px;
     object-fit: contain;
     flex-shrink: 0;
+  }
+
+  .version {
+    display: block;
+    text-align: center;
+    font-size: 0.65rem;
+    color: var(--muted);
+    padding-top: 0.5rem;
   }
 
 </style>
