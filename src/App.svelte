@@ -120,11 +120,13 @@
   async function handleSignOut() {
     await signOut(auth);
     user = null;
+    goToGroups();
   }
 
   function deleteProgress() {
     progress = {};
     saveProgress({});
+    goToGroups();
   }
 
   async function deleteAccount() {
@@ -139,6 +141,7 @@
     await deleteUser(currentUser);
     progress = {};
     saveProgress({});
+    goToGroups();
   }
 
   function isDone(lesson: { id: string }) {
