@@ -327,6 +327,7 @@
       {/if}
 
     <div class="footer-sep">
+      <button class="btn-feedback" onclick={onFeedback}>feedback</button>
       <a
         class="btn-footer-link"
         href="https://ko-fi.com/milesjpool"
@@ -339,7 +340,6 @@
         <img src="{import.meta.env.BASE_URL}logo-ko-fi.png" class="kofi-logo" alt="" />
         support keebo
       </a>
-      <button class="btn-feedback" onclick={onFeedback}>feedback</button>
     </div>
   </Modal>
 {/if}
