@@ -6,6 +6,8 @@ Touch-typing SPA. Svelte 5 + Vite + TypeScript + Firebase. Run with bun.
 ```
 bun run dev      # dev server
 bun run build    # production build (also copies dist/index.html → dist/404.html)
+bun run test     # run tests (single run)
+bun run test:watch  # run tests in watch mode
 ```
 If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 
@@ -52,6 +54,19 @@ If `bun` isn't in PATH, it's at `~/.bun/bin/bun`.
 ### No `:hover` CSS anywhere
 - Every `:hover` rule must be replaced with `:focus`
 - Hover visuals work because `onmouseenter` → `.focus()` → `:focus` CSS applies
+
+## Testing
+- **Vitest** + **jsdom** + **@testing-library/svelte** — config in `vitest.config.ts`
+- Co-located test files: `<module>.test.ts` next to source
+- Global setup in `src/test/setup.ts` (localStorage mock, Firebase mock, jest-dom matchers)
+- Shared fixtures in `src/test/fixtures.ts`
+- vitest globals (`describe`, `it`, `expect`, `vi`) — no imports needed
+- Mock Firebase: always mock `./firebase` and `firebase/firestore` — never import real Firebase in tests
+- Mock Svelte components with `vi.mock('path', () => ({ default: function($$anchor, $$props) {} }))`
+- No snapshot tests — test behavior, not markup
+- One behavior per `it()` block; name tests as sentences
+- **When modifying source, update or add corresponding tests**
+- CI runs tests before build — all tests must pass for deploy
 
 ## Conventions
 - Svelte runes only — no `$:`, no `writable()`
