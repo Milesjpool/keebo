@@ -19,7 +19,11 @@
   $effect(() => {
     if (!open) return
     setTimeout(() => (errorMode ? dismissBtnEl : confirmBtnEl)?.focus(), 0)
-    return useKeydown({ Escape: () => onCancel() }, { capture: true, stopAll: true })
+    return useKeydown({
+      Escape: () => onCancel(),
+      ArrowDown: () => dismissBtnEl?.focus(),
+      ArrowUp: () => dismissBtnEl?.focus(),
+    }, { capture: true, stopAll: true })
   })
 </script>
 
@@ -29,6 +33,7 @@
     labelId="link-modal-title"
     onClose={onCancel}
     style="--modal-gap: 1rem"
+    closeable={false}
   >
     {#if errorMode}
       <p>This {label} account is already linked to another keebo account.</p>
@@ -45,7 +50,7 @@
           onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
           onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
         >sign in with {label}</button>
-        <button class="btn-secondary" onclick={onCancel}
+        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel}
           onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
           onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
         >cancel</button>

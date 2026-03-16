@@ -9,8 +9,9 @@
     closeBtnEl?: HTMLButtonElement | null
     modalEl?: HTMLDivElement | null
     style?: string
+    closeable?: boolean
   }
-  let { title, labelId, onClose, children, closeBtnEl = $bindable(null), modalEl = $bindable(null), style }: Props = $props()
+  let { title, labelId, onClose, children, closeBtnEl = $bindable(null), modalEl = $bindable(null), style, closeable = true }: Props = $props()
 </script>
 
 <div class="backdrop" onclick={onClose} role="presentation" {style}>
@@ -27,10 +28,16 @@
     aria-labelledby={labelId}
     tabindex="-1"
   >
-    <button class="modal-header" id={labelId} bind:this={closeBtnEl} onclick={onClose}>
-      <span class="modal-title">{title}</span>
-      <span class="btn-close">×</span>
-    </button>
+    {#if closeable}
+      <button class="modal-header" id={labelId} bind:this={closeBtnEl} onclick={onClose}>
+        <span class="modal-title">{title}</span>
+        <span class="btn-close">×</span>
+      </button>
+    {:else}
+      <div class="modal-header modal-header-static" id={labelId}>
+        <span class="modal-title">{title}</span>
+      </div>
+    {/if}
     {@render children()}
   </div>
 </div>
@@ -79,6 +86,11 @@
 
   .modal-header:focus {
     background: var(--surface-hover);
+  }
+
+  .modal-header-static {
+    cursor: default;
+    pointer-events: none;
   }
 
   .modal-title {

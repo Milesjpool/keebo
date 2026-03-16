@@ -1,15 +1,33 @@
+import { ui } from './ui.svelte.ts'
+
 export function formatTime(s: number): string {
   return `${Math.floor(s / 60)}:${String(s % 60).padStart(2, '0')}`
 }
 
+type KeyMap = Record<string, (e: KeyboardEvent) => void>
+
+// Stack for stopAll handlers — last registered wins (highest priority)
+const stopAllStack: KeyMap[] = []
+
+window.addEventListener('keydown', (e: KeyboardEvent) => {
+  if (stopAllStack.length === 0) return
+  ui.keyboardNav = true
+  e.stopImmediatePropagation()
+  stopAllStack[stopAllStack.length - 1][e.key]?.(e)
+}, true)
+
 export function useKeydown(
-  map: Record<string, (e: KeyboardEvent) => void>,
+  map: KeyMap,
   options?: { capture?: boolean; stopAll?: boolean }
 ): () => void {
-  const handler = (e: KeyboardEvent) => {
-    if (options?.stopAll) e.stopImmediatePropagation()
-    map[e.key]?.(e)
+  if (options?.stopAll) {
+    stopAllStack.push(map)
+    return () => {
+      const idx = stopAllStack.lastIndexOf(map)
+      if (idx !== -1) stopAllStack.splice(idx, 1)
+    }
   }
+  const handler = (e: KeyboardEvent) => map[e.key]?.(e)
   window.addEventListener('keydown', handler, options?.capture)
   return () => window.removeEventListener('keydown', handler, options?.capture)
 }
