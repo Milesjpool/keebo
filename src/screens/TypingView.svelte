@@ -4,6 +4,7 @@
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
   import { formatTime, calcScrollOffset } from "../services/utils";
+  import { THRESHOLDS } from "../services/medals";
 
   interface Props {
     lesson: Lesson;
@@ -35,8 +36,16 @@
   let lineIndex = $state(0);
   let typed = $state("");
   let startTime = $state<number | null>(null);
+  let lineStartTime = $state<number | null>(null);
   let elapsed = $state(0);
   let lineResults = $state<{ correct: number; total: number }[]>([]);
+  let floatingScore = $state<{ wpm: number; accuracy: number; color: string } | null>(null);
+
+  function ragColor(score: number): string {
+    if (score >= THRESHOLDS.gold) return 'var(--green)';
+    if (score >= THRESHOLDS.silver) return 'var(--text)';
+    return 'var(--error)';
+  }
   const line = $derived(lesson.lines[lineIndex]);
   const total = $derived(lesson.lines.length);
 
@@ -93,13 +102,23 @@
         if (typed.length < line.length) return;
         const match = typed === line;
         if (!match && strictMode) return;
-        lineResults.push({
-          correct: [...typed].filter((c, i) => c === line[i]).length,
-          total: line.length,
-        });
+
+        const lineCorrect = [...typed].filter((c, i) => c === line[i]).length;
+        const lineAcc = lineCorrect / line.length;
+        const lineSecs = lineStartTime ? (Date.now() - lineStartTime) / 1000 : 1;
+        const lineWpm = Math.round(line.length / 5 / (lineSecs / 60));
+        const lineScore = lineWpm * lineAcc;
+
+        // Floating score
+        floatingScore = { wpm: lineWpm, accuracy: lineAcc, color: ragColor(lineScore) };
+        setTimeout(() => { floatingScore = null; }, 1800);
+
+        lineResults.push({ correct: lineCorrect, total: line.length });
+
         if (lineIndex < total - 1) {
           lineIndex++;
           typed = "";
+          lineStartTime = Date.now();
         } else {
           const secs = startTime ? (Date.now() - startTime) / 1000 : 1;
           const chars = lesson.lines.reduce((n, l) => n + l.length, 0);
@@ -119,7 +138,9 @@
       }
 
       if (e.key.length === 1 && !e.ctrlKey && !e.metaKey && !e.altKey) {
-        if (!startTime) startTime = Date.now();
+        const now = Date.now();
+        if (!startTime) startTime = now;
+        if (!lineStartTime) lineStartTime = now;
         if (typed.length < line.length) typed += e.key;
       }
     }
@@ -192,22 +213,31 @@
   </div>
 
   <main class:overflow-left={overflowLeft} class:overflow-right={overflowRight}>
-    <div class="line-wrap" bind:this={wrapEl}>
-      <div class="line-display" style:transform="translateX(-{scrollOffset}px)">
-        {#each line.split("") as char, i}{@const state = charState(i)}<span
-            class="char {state}"
-            >{char === " "
-              ? state === "correct" || state === "error"
-                ? "·"
-                : "\u00a0"
-              : char}</span
-          >{/each}<span
-          class="char"
-          class:cursor={typed.length === line.length}
-          style:visibility={typed.length === line.length ? "visible" : "hidden"}
-          >↵</span
-        >
-      </div>
+    <div class="line-anchor">
+      {#if floatingScore}
+        <div class="floating-score" style:color={floatingScore.color}>
+          <span class="floating-score-inner">
+            {floatingScore.wpm} <span class="score-unit">wpm</span> · {Math.round(floatingScore.accuracy * 100)}%
+          </span>
+        </div>
+      {/if}
+      <div class="line-wrap" bind:this={wrapEl}>
+          <div class="line-display" style:transform="translateX(-{scrollOffset}px)">
+            {#each line.split("") as char, i}{@const state = charState(i)}<span
+                class="char {state}"
+                >{char === " "
+                  ? state === "correct" || state === "error"
+                    ? "·"
+                    : "\u00a0"
+                  : char}</span
+              >{/each}<span
+              class="char"
+              class:cursor={typed.length === line.length}
+              style:visibility={typed.length === line.length ? "visible" : "hidden"}
+              >↵</span
+            >
+          </div>
+        </div>
     </div>
     {#if lesson.fingerHints !== false}<FingerIndicator
         char={currentChar}
@@ -339,6 +369,11 @@
     transition: width 0.05s linear;
   }
 
+  .line-anchor {
+    position: relative;
+    max-width: 100%;
+  }
+
   .line-wrap {
     padding: 1rem 8rem;
     max-width: 100%;
@@ -374,5 +409,40 @@
     color: var(--cursor-text);
     background: var(--cursor-bg);
     animation: blink 1s step-end infinite;
+  }
+
+  .floating-score {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 1.75rem;
+    font-weight: bold;
+    pointer-events: none;
+    animation: float-rise 1.6s ease-out forwards;
+    z-index: 2;
+  }
+
+  .score-unit {
+    font-size: 0.6em;
+    font-weight: normal;
+    margin-left: -0.2em;
+  }
+
+  .floating-score-inner {
+    display: block;
+    animation: float-sway 1.6s ease-in-out forwards;
+  }
+
+  @keyframes float-rise {
+    0%   { opacity: 0.65; transform: translate(-50%, -3rem); }
+    100% { opacity: 0; transform: translate(-50%, -7rem); }
+  }
+
+  @keyframes float-sway {
+    0%   { transform: translateX(0); }
+    25%  { transform: translateX(2px); }
+    75%  { transform: translateX(-2px); }
+    100% { transform: translateX(0); }
   }
 </style>
