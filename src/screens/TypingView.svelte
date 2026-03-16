@@ -242,6 +242,16 @@
     outline: none;
   }
 
+  .timer {
+    min-width: 2.5rem;
+    text-align: right;
+  }
+
+  .accuracy {
+    min-width: 2.5rem;
+    text-align: left;
+  }
+
   .sep {
     color: var(--border);
   }
