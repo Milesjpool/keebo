@@ -113,7 +113,7 @@
 
         // Floating score
         floatingScore = { wpm: lineWpm, accuracy: lineAcc, color: ragColor(lineScore) };
-        setTimeout(() => { floatingScore = null; }, 1800);
+        setTimeout(() => { floatingScore = null; }, 2000);
 
         lineResults.push({ correct: lineCorrect, total: line.length });
 
@@ -229,9 +229,7 @@
     <div class="line-anchor">
       {#if floatingScore}
         <div class="floating-score" style:color={floatingScore.color}>
-          <span class="floating-score-inner">
-            {floatingScore.wpm} <span class="score-unit">wpm</span> · {Math.round(floatingScore.accuracy * 100)}%
-          </span>
+          {floatingScore.wpm} <span class="score-unit">wpm</span> · {Math.round(floatingScore.accuracy * 100)}%
         </div>
       {/if}
       <div class="line-wrap" bind:this={wrapEl}>
@@ -453,7 +451,7 @@
     font-size: 1.75rem;
     font-weight: bold;
     pointer-events: none;
-    animation: float-rise 1.6s ease-out forwards;
+    animation: float-rise 1.8s cubic-bezier(0.3, 0.2, 1, 1) forwards, float-fade 1.8s cubic-bezier(0.4, 0, 1, 1) forwards;
     z-index: 2;
   }
 
@@ -463,20 +461,13 @@
     margin-left: -0.2em;
   }
 
-  .floating-score-inner {
-    display: block;
-    animation: float-sway 1.6s ease-in-out forwards;
-  }
-
   @keyframes float-rise {
-    0%   { opacity: 0.65; transform: translate(-50%, -3rem); }
-    100% { opacity: 0; transform: translate(-50%, -7rem); }
+    0%   { transform: translate(-50%, -3rem); }
+    100% { transform: translate(-50%, -7rem); }
   }
 
-  @keyframes float-sway {
-    0%   { transform: translateX(0); }
-    25%  { transform: translateX(2px); }
-    75%  { transform: translateX(-2px); }
-    100% { transform: translateX(0); }
+  @keyframes float-fade {
+    0%   { opacity: 0.75; }
+    100% { opacity: 0; }
   }
 </style>
