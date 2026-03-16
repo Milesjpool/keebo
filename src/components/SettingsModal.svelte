@@ -32,6 +32,7 @@
     user?.providerData.map((p) => p.providerId) ?? [],
   );
   let confirmOpen = $state(false);
+  let confirmTriggerEl = $state<HTMLButtonElement | null>(null);
   let confirmCancelEl = $state<HTMLButtonElement | null>(null);
   let confirmConfirmEl = $state<HTMLButtonElement | null>(null);
   let deleting = $state(false);
@@ -43,7 +44,7 @@
 
   function modalButtons() {
     return Array.from(
-      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled):not(.name-blur-btn), input.name-input') ?? []
+      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled):not(.name-blur-btn):not([data-no-keynav]), input.name-input, [data-keynav-item]') ?? []
     );
   }
 
@@ -97,6 +98,9 @@
           } else if (document.activeElement === renameRowEl) {
             e.preventDefault();
             nameInputEl?.focus();
+          } else if (document.activeElement === confirmTriggerEl) {
+            e.preventDefault();
+            confirmOpen = !confirmOpen;
           }
         },
         ArrowLeft: (e) => {
@@ -108,14 +112,18 @@
         ArrowDown: (e) => {
           e.preventDefault();
           const btns = modalButtons();
-          const active = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+          const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+          const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+          const active = isConfirmBtn ? confirmTriggerEl : raw;
           const i = btns.indexOf(active as HTMLElement);
           btns[i + 1]?.focus();
         },
         ArrowUp: (e) => {
           e.preventDefault();
+          const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
+          const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+          const active = isConfirmBtn ? confirmTriggerEl : raw;
           const btns = modalButtons();
-          const active = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
           const i = btns.indexOf(active as HTMLElement);
           if (i > 0) btns[i - 1]?.focus();
         },
@@ -215,6 +223,7 @@
             onConfirm={handleDelete}
             disabled={deleting}
             bind:open={confirmOpen}
+            bind:triggerEl={confirmTriggerEl}
             bind:cancelEl={confirmCancelEl}
             bind:confirmEl={confirmConfirmEl}
           />
@@ -310,6 +319,7 @@
             confirmLabel="confirm reset"
             onConfirm={handleDelete}
             bind:open={confirmOpen}
+            bind:triggerEl={confirmTriggerEl}
             bind:cancelEl={confirmCancelEl}
             bind:confirmEl={confirmConfirmEl}
           />

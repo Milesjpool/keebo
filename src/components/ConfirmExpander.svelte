@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { slide } from 'svelte/transition';
   interface Props {
     label: string;
     warningText: string;
@@ -7,6 +8,7 @@
     disabled?: boolean;
     loadingLabel?: string;
     open?: boolean;
+    triggerEl?: HTMLElement | null;
     cancelEl?: HTMLButtonElement | null;
     confirmEl?: HTMLButtonElement | null;
   }
@@ -19,16 +21,20 @@
     disabled = false,
     loadingLabel,
     open = $bindable(false),
+    triggerEl = $bindable<HTMLElement | null>(null),
     cancelEl = $bindable<HTMLButtonElement | null>(null),
     confirmEl = $bindable<HTMLButtonElement | null>(null),
   }: Props = $props();
 
-  let triggerBtnEl = $state<HTMLButtonElement | null>(null);
+  let wrapperEl = $state<HTMLDivElement | null>(null);
   let cancelBtnEl = $state<HTMLButtonElement | null>(null);
   let confirmBtnEl = $state<HTMLButtonElement | null>(null);
 
+  $effect(() => { triggerEl = wrapperEl; });
   $effect(() => { cancelEl = cancelBtnEl; });
   $effect(() => { confirmEl = confirmBtnEl; });
+
+  let returnFocusOnCollapse = true;
 
   let prevOpen = false;
   $effect(() => {
@@ -37,81 +43,84 @@
       setTimeout(() => cancelBtnEl?.focus(), 0);
     } else if (!open && prevOpen) {
       prevOpen = false;
-      setTimeout(() => triggerBtnEl?.focus(), 0);
+      if (returnFocusOnCollapse) {
+        setTimeout(() => wrapperEl?.focus(), 0);
+      }
+      returnFocusOnCollapse = true;
     }
   });
+
+  function collapseFromFocusOut() {
+    if (!open) return;
+    returnFocusOnCollapse = false;
+    open = false;
+  }
 </script>
 
-<button
-  class="btn-delete"
+<div
+  class="expander-wrap"
   class:open
-  bind:this={triggerBtnEl}
+  tabindex="-1"
+  data-keynav-item
+  bind:this={wrapperEl}
   onclick={() => (open = !open)}
-  onmouseenter={() => triggerBtnEl?.focus()}
-  onmouseleave={() => triggerBtnEl?.blur()}
->{label}</button>
+  onmouseenter={() => { if (!wrapperEl?.contains(document.activeElement)) wrapperEl?.focus(); }}
+  onmouseleave={() => { if (!open && document.activeElement === wrapperEl) wrapperEl?.blur(); }}
+  onfocusout={() => { setTimeout(() => { if (!wrapperEl?.contains(document.activeElement)) collapseFromFocusOut(); }, 0); }}
+>
+  <span class="expand-label">{label}</span>
 
-{#if open}
-  <div class="confirm-section">
-    <p class="warning-text">{warningText}</p>
-    <div class="confirm-actions">
-      <button
-        class="btn-secondary"
-        bind:this={cancelBtnEl}
-        onclick={() => (open = false)}
-        onmouseenter={() => cancelBtnEl?.focus()}
-        onmouseleave={() => cancelBtnEl?.blur()}
-      >cancel</button>
-      <button
-        class="btn-danger"
-        bind:this={confirmBtnEl}
-        onclick={onConfirm}
-        {disabled}
-        onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-        onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-      >{disabled && loadingLabel ? loadingLabel : confirmLabel}</button>
+  {#if open}
+    <div class="confirm-section" transition:slide={{ duration: 150 }}>
+      <p class="warning-text">{warningText}</p>
+      <div class="confirm-actions">
+        <button
+          class="btn-secondary"
+          data-no-keynav
+          bind:this={cancelBtnEl}
+          onclick={(e) => { e.stopPropagation(); open = false; }}
+          onmouseenter={() => cancelBtnEl?.focus()}
+          onmouseleave={() => wrapperEl?.focus()}
+        >cancel</button>
+        <button
+          class="btn-danger"
+          data-no-keynav
+          bind:this={confirmBtnEl}
+          onclick={(e) => { e.stopPropagation(); onConfirm(); }}
+          {disabled}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={() => wrapperEl?.focus()}
+        >{disabled && loadingLabel ? loadingLabel : confirmLabel}</button>
+      </div>
     </div>
-  </div>
-{/if}
+  {/if}
+</div>
 
 <style>
-  .btn-delete {
+  .expander-wrap {
     font-size: 0.875rem;
-    color: var(--error);
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
     padding: 0.6rem 2rem;
     width: calc(100% + 4rem);
     margin-left: -2rem;
-    text-align: left;
-    transition: background 0.1s, opacity 0.1s;
-  }
-
-  .btn-delete:focus {
-    background: var(--surface-hover);
+    cursor: pointer;
     outline: none;
+    transition: background 0.1s;
   }
 
-  .btn-delete.open {
+  .expander-wrap:focus,
+  .expander-wrap.open {
     background: var(--surface-hover);
+  }
+
+  .expand-label {
+    color: var(--error);
   }
 
   .confirm-section {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 0.35rem 2rem 0.6rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
-    background: var(--surface-hover);
-    animation: expand-in 0.12s ease;
-  }
-
-  @keyframes expand-in {
-    from { opacity: 0; transform: translateY(-4px); }
-    to { opacity: 1; transform: translateY(0); }
+    padding: 0.35rem 0 0.6rem;
   }
 
   .warning-text {
