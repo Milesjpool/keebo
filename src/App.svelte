@@ -15,6 +15,18 @@
   import { loadProgress, saveProgress } from "./services/progress";
   import { subscribeToProgress, writeProgress } from "./services/sync";
   import Footer from "./components/Footer.svelte";
+  import { ui } from "./services/ui.svelte.ts";
+
+  $effect(() => {
+    function onKeydown() { ui.keyboardNav = true; }
+    function onMousemove() { ui.keyboardNav = false; }
+    window.addEventListener('keydown', onKeydown, { capture: true });
+    window.addEventListener('mousemove', onMousemove);
+    return () => {
+      window.removeEventListener('keydown', onKeydown, { capture: true });
+      window.removeEventListener('mousemove', onMousemove);
+    };
+  });
 
   // Annotate each group and lesson with flat indices (computed once, data is static)
   let flatIdx = 0;
