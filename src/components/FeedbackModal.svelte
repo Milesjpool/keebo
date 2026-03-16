@@ -32,12 +32,8 @@
   function handleSubmit(e: Event) {
     e.preventDefault();
     const trimmed = text.trim();
-    if (!trimmed) {
-      error = "Please enter your feedback.";
-      return;
-    }
-    if (trimmed.length > 2000) {
-      error = "Feedback must be 2000 characters or less.";
+    if (emailInputEl && !emailInputEl.checkValidity()) {
+      error = emailInputEl.validationMessage;
       return;
     }
     error = null;
@@ -139,7 +135,7 @@
 
 {#if open}
   <Modal title="feedback" labelId="feedback-title" onClose={handleClose} bind:closeBtnEl>
-    <form onsubmit={handleSubmit}>
+    <form onsubmit={handleSubmit} novalidate>
       <div class="field-row" tabindex="-1" bind:this={textareaRowEl}
         onmouseenter={() => { if (document.activeElement !== textareaEl) textareaRowEl?.focus() }}>
         <textarea
@@ -173,7 +169,7 @@
           type="submit"
           class="btn-primary"
           bind:this={submitBtnEl}
-          disabled={loading || success}
+          disabled={loading || success || !text.trim()}
           onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
           onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
         >
