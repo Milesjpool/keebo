@@ -1,5 +1,6 @@
 <script lang="ts">
   import { useKeydown } from '../services/utils'
+  import Modal from './Modal.svelte'
 
   interface Props {
     open: boolean;
@@ -12,71 +13,48 @@
 
   const label = $derived(existingProvider === 'google' ? 'Google' : 'GitHub')
 
+  let dismissBtnEl = $state<HTMLButtonElement | null>(null)
+  let confirmBtnEl = $state<HTMLButtonElement | null>(null)
+
   $effect(() => {
     if (!open) return
+    setTimeout(() => (errorMode ? dismissBtnEl : confirmBtnEl)?.focus(), 0)
     return useKeydown({ Escape: () => onCancel() }, { capture: true, stopAll: true })
   })
 </script>
 
 {#if open}
-  <div class="backdrop" onclick={onCancel} role="presentation">
-    <div
-      class="modal"
-      onclick={(e) => e.stopPropagation()}
-      onkeydown={(e) => e.stopPropagation()}
-      role="dialog"
-      aria-modal="true"
-      tabindex="-1"
-    >
-      {#if errorMode}
-        <h2>already linked</h2>
-        <p>This {label} account is already linked to another keebo account.</p>
-        <div class="actions">
-          <button class="btn-secondary" onclick={onCancel}>dismiss</button>
-        </div>
-      {:else}
-        <h2>link accounts</h2>
-        <p>An account with this email already exists. Sign in with {label} to link your accounts.</p>
-        <div class="actions">
-          <button class="btn-primary" onclick={onConfirm}>sign in with {label}</button>
-          <button class="btn-secondary" onclick={onCancel}>cancel</button>
-        </div>
-      {/if}
-    </div>
-  </div>
+  <Modal
+    title={errorMode ? 'already linked' : 'link accounts'}
+    labelId="link-modal-title"
+    onClose={onCancel}
+    style="--modal-gap: 1rem"
+  >
+    {#if errorMode}
+      <p>This {label} account is already linked to another keebo account.</p>
+      <div class="actions">
+        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        >dismiss</button>
+      </div>
+    {:else}
+      <p>An account with this email already exists. Sign in with {label} to link your accounts.</p>
+      <div class="actions">
+        <button class="btn-primary" bind:this={confirmBtnEl} onclick={onConfirm}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        >sign in with {label}</button>
+        <button class="btn-secondary" onclick={onCancel}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        >cancel</button>
+      </div>
+    {/if}
+  </Modal>
 {/if}
 
 <style>
-  .backdrop {
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.5);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 100;
-    padding: 1rem;
-  }
-
-  .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    max-width: 360px;
-    width: 100%;
-    padding: 2rem;
-    display: flex;
-    flex-direction: column;
-    gap: 1rem;
-  }
-
-  h2 {
-    font-size: 1.25rem;
-    font-weight: 500;
-    color: var(--correct);
-    margin: 0;
-  }
-
   p {
     font-size: 0.875rem;
     color: var(--muted);
@@ -88,10 +66,6 @@
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-  }
-
-  .btn-primary,
-  .btn-secondary {
-    padding: 0.6rem 1.25rem;
+    padding-bottom: 0.5rem;
   }
 </style>
