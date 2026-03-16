@@ -336,7 +336,7 @@
         onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
         onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}
       >
-        <img src="/logo-ko-fi.png" class="kofi-logo" alt="" />
+        <img src="{import.meta.env.BASE_URL}logo-ko-fi.png" class="kofi-logo" alt="" />
         support keebo
       </a>
       <button class="btn-feedback" onclick={onFeedback}>feedback</button>
