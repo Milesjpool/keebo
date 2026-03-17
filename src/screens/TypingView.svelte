@@ -467,7 +467,8 @@
   }
 
   @keyframes float-fade {
-    0%   { opacity: 0.75; }
+    0%   { opacity: 0; }
+    8%   { opacity: 0.75; }
     100% { opacity: 0; }
   }
 </style>
