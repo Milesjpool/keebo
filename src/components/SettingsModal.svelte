@@ -64,7 +64,9 @@
 
   function modalButtons() {
     return Array.from(
-      modalEl?.querySelectorAll<HTMLElement>('button:not(:disabled):not(.name-blur-btn):not([data-no-keynav]), input.name-input, [data-keynav-item]') ?? []
+      modalEl?.querySelectorAll<HTMLElement>(
+        "button:not(:disabled):not(.name-blur-btn):not([data-no-keynav]), input.name-input, [data-keynav-item]",
+      ) ?? [],
     );
   }
 
@@ -92,7 +94,7 @@
 
   function handleLayoutClick() {
     layoutOpen = !layoutOpen;
-    if (layoutOpen) submitInterest('keyboard-layout', user?.uid);
+    if (layoutOpen) submitInterest("keyboard-layout", user?.uid);
   }
 
   function handleClose() {
@@ -102,22 +104,31 @@
 
   function isEditing() {
     const tag = document.activeElement?.tagName;
-    return tag === 'INPUT' || tag === 'TEXTAREA';
+    return tag === "INPUT" || tag === "TEXTAREA";
   }
 
   function goLeft(e: KeyboardEvent) {
-    if (confirmOpen) { e.preventDefault(); confirmCancelEl?.focus(); }
+    if (confirmOpen) {
+      e.preventDefault();
+      confirmCancelEl?.focus();
+    }
   }
 
   function goRight(e: KeyboardEvent) {
-    if (confirmOpen) { e.preventDefault(); confirmConfirmEl?.focus(); }
+    if (confirmOpen) {
+      e.preventDefault();
+      confirmConfirmEl?.focus();
+    }
   }
 
   function goDown(e: KeyboardEvent) {
     e.preventDefault();
     const btns = modalButtons();
-    const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
-    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+    const raw =
+      document.activeElement === renameRowEl
+        ? nameInputEl
+        : document.activeElement;
+    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute("data-no-keynav");
     const active = isConfirmBtn ? confirmTriggerEl : raw;
     const i = btns.indexOf(active as HTMLElement);
     btns[i + 1]?.focus();
@@ -125,8 +136,11 @@
 
   function goUp(e: KeyboardEvent) {
     e.preventDefault();
-    const raw = document.activeElement === renameRowEl ? nameInputEl : document.activeElement;
-    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute('data-no-keynav');
+    const raw =
+      document.activeElement === renameRowEl
+        ? nameInputEl
+        : document.activeElement;
+    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute("data-no-keynav");
     const active = isConfirmBtn ? confirmTriggerEl : raw;
     const btns = modalButtons();
     const i = btns.indexOf(active as HTMLElement);
@@ -166,13 +180,21 @@
           }
         },
         ArrowLeft: goLeft,
-        a: (e) => { if (!isEditing()) goLeft(e); },
+        a: (e) => {
+          if (!isEditing()) goLeft(e);
+        },
         ArrowRight: goRight,
-        d: (e) => { if (!isEditing()) goRight(e); },
+        d: (e) => {
+          if (!isEditing()) goRight(e);
+        },
         ArrowDown: goDown,
-        s: (e) => { if (!isEditing()) goDown(e); },
+        s: (e) => {
+          if (!isEditing()) goDown(e);
+        },
         ArrowUp: goUp,
-        w: (e) => { if (!isEditing()) goUp(e); },
+        w: (e) => {
+          if (!isEditing()) goUp(e);
+        },
       },
       { capture: true, stopAll: true },
     );
@@ -181,7 +203,13 @@
 </script>
 
 {#if open}
-  <Modal title="settings" labelId="settings-title" onClose={handleClose} bind:closeBtnEl bind:modalEl>
+  <Modal
+    title="settings"
+    labelId="settings-title"
+    onClose={handleClose}
+    bind:closeBtnEl
+    bind:modalEl
+  >
     <section>
       <span class="section-label">connections</span>
       {#each user ? providers.toSorted((a, b) => Number(linkedProviderIds.includes(b.id)) - Number(linkedProviderIds.includes(a.id))) : providers as p}
@@ -190,7 +218,9 @@
           this={connected ? "div" : "button"}
           class="provider-row"
           class:provider-unlinked={!connected}
-          onclick={connected ? undefined : () => user ? onLinkProvider?.(p.key) : handleSignIn(p.key)}
+          onclick={connected
+            ? undefined
+            : () => (user ? onLinkProvider?.(p.key) : handleSignIn(p.key))}
         >
           <ProviderIcon provider={p.key} />
           <span class="provider-name">{p.name}</span>
@@ -214,90 +244,109 @@
         data-keynav-item
         bind:this={layoutEl}
         onclick={handleLayoutClick}
-        onmouseenter={() => { if (!layoutEl?.contains(document.activeElement)) layoutEl?.focus(); }}
-        onmouseleave={() => { if (!layoutOpen && document.activeElement === layoutEl) layoutEl?.blur(); }}
-        onfocusout={() => { setTimeout(() => { if (!layoutEl?.contains(document.activeElement)) { layoutOpen = false; } }, 0); }}
+        onmouseenter={() => {
+          if (!layoutEl?.contains(document.activeElement)) layoutEl?.focus();
+        }}
+        onmouseleave={() => {
+          if (!layoutOpen && document.activeElement === layoutEl)
+            layoutEl?.blur();
+        }}
+        onfocusout={() => {
+          setTimeout(() => {
+            if (!layoutEl?.contains(document.activeElement)) {
+              layoutOpen = false;
+            }
+          }, 0);
+        }}
       >
         <span class="setting-name">keyboard layout</span>
         <span class="setting-value">qwerty</span>
         {#if layoutOpen}
           <div class="setting-detail" transition:slide={{ duration: 150 }}>
-            <p class="setting-detail-text">thanks for your interest in future layout options! i've noted your interest.</p>
+            <p class="setting-detail-text">
+              thanks for registering your interest in alternative layout
+              options!
+            </p>
           </div>
         {/if}
       </div>
     </section>
 
     {#if user}
-        <section>
-          <span class="section-label">account</span>
+      <section>
+        <span class="section-label">account</span>
+        <button
+          class="btn-action"
+          onclick={() => {
+            onClose();
+            onSignOut?.();
+          }}>sign out</button
+        >
+        <ConfirmExpander
+          label="delete account"
+          warningText="this will permanently delete your account and all progress."
+          confirmLabel="confirm delete"
+          loadingLabel="deleting…"
+          onConfirm={handleDelete}
+          disabled={deleting}
+          bind:open={confirmOpen}
+          bind:triggerEl={confirmTriggerEl}
+          bind:cancelEl={confirmCancelEl}
+          bind:confirmEl={confirmConfirmEl}
+        />
+      </section>
+    {:else}
+      <section>
+        <span class="section-label">account</span>
+        <div
+          class="rename-row"
+          tabindex="-1"
+          bind:this={renameRowEl}
+          onmouseenter={() => {
+            if (document.activeElement !== nameInputEl) renameRowEl?.focus();
+          }}
+          onmouseleave={() => renameRowEl?.blur()}
+        >
+          <input
+            class="name-input"
+            bind:this={nameInputEl}
+            type="text"
+            value={nameVal}
+            onfocus={(e) => (e.target as HTMLInputElement).select()}
+            oninput={(e) => {
+              nameVal = (e.target as HTMLInputElement).value;
+              if (nameVal.trim()) setAnonName(nameVal);
+            }}
+            onblur={(e) => {
+              const val = (e.target as HTMLInputElement).value.trim();
+              if (!val) {
+                nameVal = rollNewName();
+                (e.target as HTMLInputElement).value = nameVal;
+              }
+            }}
+            placeholder="your name"
+          />
           <button
-            class="btn-action"
-            onclick={() => {
-              onClose();
-              onSignOut?.();
-            }}>sign out</button
-          >
-          <ConfirmExpander
-            label="delete account"
-            warningText="this will permanently delete your account and all progress."
-            confirmLabel="confirm delete"
-            loadingLabel="deleting…"
-            onConfirm={handleDelete}
-            disabled={deleting}
-            bind:open={confirmOpen}
-            bind:triggerEl={confirmTriggerEl}
-            bind:cancelEl={confirmCancelEl}
-            bind:confirmEl={confirmConfirmEl}
-          />
-        </section>
-      {:else}
-        <section>
-          <span class="section-label">account</span>
-          <div
-            class="rename-row"
+            class="name-blur-btn"
             tabindex="-1"
-            bind:this={renameRowEl}
-            onmouseenter={() => { if (document.activeElement !== nameInputEl) renameRowEl?.focus() }}
-            onmouseleave={() => renameRowEl?.blur()}
+            onmousedown={(e) => {
+              e.preventDefault();
+              renameRowEl?.focus();
+            }}>×</button
           >
-            <input
-              class="name-input"
-              bind:this={nameInputEl}
-              type="text"
-              value={nameVal}
-              onfocus={(e) => (e.target as HTMLInputElement).select()}
-              oninput={(e) => {
-                nameVal = (e.target as HTMLInputElement).value;
-                if (nameVal.trim()) setAnonName(nameVal);
-              }}
-              onblur={(e) => {
-                const val = (e.target as HTMLInputElement).value.trim();
-                if (!val) {
-                  nameVal = rollNewName();
-                  (e.target as HTMLInputElement).value = nameVal;
-                }
-              }}
-              placeholder="your name"
-            />
-            <button
-              class="name-blur-btn"
-              tabindex="-1"
-              onmousedown={(e) => { e.preventDefault(); renameRowEl?.focus() }}
-            >×</button>
-          </div>
-          <ConfirmExpander
-            label="reset progress"
-            warningText="this will permanently erase all your scores and history."
-            confirmLabel="confirm reset"
-            onConfirm={handleDelete}
-            bind:open={confirmOpen}
-            bind:triggerEl={confirmTriggerEl}
-            bind:cancelEl={confirmCancelEl}
-            bind:confirmEl={confirmConfirmEl}
-          />
-        </section>
-      {/if}
+        </div>
+        <ConfirmExpander
+          label="reset progress"
+          warningText="this will permanently erase all your scores and history."
+          confirmLabel="confirm reset"
+          onConfirm={handleDelete}
+          bind:open={confirmOpen}
+          bind:triggerEl={confirmTriggerEl}
+          bind:cancelEl={confirmCancelEl}
+          bind:confirmEl={confirmConfirmEl}
+        />
+      </section>
+    {/if}
 
     <div class="footer-sep">
       <button class="btn-feedback" onclick={onFeedback}>feedback</button>
@@ -310,7 +359,11 @@
         onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
         onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}
       >
-        <img src="{import.meta.env.BASE_URL}logo-ko-fi.png" class="kofi-logo" alt="" />
+        <img
+          src="{import.meta.env.BASE_URL}logo-ko-fi.png"
+          class="kofi-logo"
+          alt=""
+        />
         support keebo
       </a>
       <span class="version">{appVersion}</span>
@@ -578,5 +631,4 @@
     margin: 0;
     line-height: 1.4;
   }
-
 </style>
