@@ -1,5 +1,5 @@
 import { render, screen, fireEvent } from '@testing-library/svelte'
-import { mount, createRawSnippet } from 'svelte'
+import { tick, mount, createRawSnippet } from 'svelte'
 import TypingView from './TypingView.svelte'
 import type { Lesson } from '../services/types'
 
@@ -102,18 +102,22 @@ describe('TypingView', () => {
   })
 
   it('advances to next line on Enter when typed matches', async () => {
+    vi.useFakeTimers()
     renderTypingView()
     // Type 'abc' correctly
     await fireEvent.keyDown(window, { key: 'a' })
     await fireEvent.keyDown(window, { key: 'b' })
     await fireEvent.keyDown(window, { key: 'c' })
     await fireEvent.keyDown(window, { key: 'Enter' })
+    vi.advanceTimersByTime(300)
+    await tick()
 
     // Should now show 'def' — first char has cursor, rest untyped
     const untypedChars = document.querySelectorAll('.char.untyped')
     expect(untypedChars.length).toBe(2) // 'e', 'f' (cursor on 'd')
     const cursorChars = document.querySelectorAll('.char.cursor')
     expect(cursorChars.length).toBe(1) // 'd'
+    vi.useRealTimers()
   })
 
   it('does not advance on Enter when line is incomplete', async () => {
@@ -138,6 +142,7 @@ describe('TypingView', () => {
   })
 
   it('calls onComplete with stats when last line is completed', async () => {
+    vi.useFakeTimers()
     const onComplete = vi.fn()
     renderTypingView({ onComplete })
 
@@ -146,6 +151,8 @@ describe('TypingView', () => {
     await fireEvent.keyDown(window, { key: 'b' })
     await fireEvent.keyDown(window, { key: 'c' })
     await fireEvent.keyDown(window, { key: 'Enter' })
+    vi.advanceTimersByTime(300)
+    await tick()
 
     // Complete second line
     await fireEvent.keyDown(window, { key: 'd' })
@@ -159,6 +166,7 @@ describe('TypingView', () => {
     expect(stats).toHaveProperty('elapsed')
     expect(stats).toHaveProperty('accuracy')
     expect(stats.accuracy).toBe(1) // all correct
+    vi.useRealTimers()
   })
 
   it('calls onBack on Escape', async () => {
@@ -185,15 +193,19 @@ describe('TypingView', () => {
   })
 
   it('advances on mismatched line in non-strict mode', async () => {
+    vi.useFakeTimers()
     renderTypingView({ strictMode: false })
     // Type 'xyz' (all wrong)
     await fireEvent.keyDown(window, { key: 'x' })
     await fireEvent.keyDown(window, { key: 'y' })
     await fireEvent.keyDown(window, { key: 'z' })
     await fireEvent.keyDown(window, { key: 'Enter' })
+    vi.advanceTimersByTime(300)
+    await tick()
 
     // In non-strict mode, should advance (with shake)
     const untypedChars = document.querySelectorAll('.char.untyped')
     expect(untypedChars.length).toBe(2) // 'e', 'f' on second line (cursor on 'd')
+    vi.useRealTimers()
   })
 })

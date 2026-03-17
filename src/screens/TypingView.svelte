@@ -42,6 +42,9 @@
   let floatingScore = $state<{ wpm: number; accuracy: number; color: string } | null>(null);
   let floatingErrors = $state<{ id: number; char: string; left: number }[]>([]);
   let errorId = 0;
+  let rewinding = $state(false);
+  let rewindFromPx = $state(0);
+  const REWIND_MS = 120;
 
   function ragColor(score: number): string {
     if (score >= THRESHOLDS.gold) return 'var(--green)';
@@ -65,10 +68,11 @@
     wrapWidth = wrapEl.clientWidth - parseFloat(style.paddingLeft) - parseFloat(style.paddingRight);
   });
 
-  const scrollOffset = $derived(
+  const rawScrollOffset = $derived(
     // +1 for the ↵ character at the end
     calcScrollOffset(typed.length, line.length + 1, charWidth, wrapWidth)
   );
+  const scrollOffset = $derived(rewinding ? 0 : rawScrollOffset);
 
   const lineWidthPx = $derived((line.length + 1) * charWidth);
   const overflowLeft = $derived(scrollOffset > 0);
@@ -118,9 +122,14 @@
         lineResults.push({ correct: lineCorrect, total: line.length });
 
         if (lineIndex < total - 1) {
+          rewindFromPx = typed.length * charWidth - rawScrollOffset;
           lineIndex++;
           typed = "";
           lineStartTime = Date.now();
+          rewinding = true;
+          setTimeout(() => {
+            rewinding = false;
+          }, REWIND_MS);
         } else {
           const secs = startTime ? (Date.now() - startTime) / 1000 : 1;
           const chars = lesson.lines.reduce((n, l) => n + l.length, 0);
@@ -168,7 +177,7 @@
 
   function charState(i: number) {
     if (i < typed.length) return typed[i] === line[i] ? "correct" : "error";
-    if (i === typed.length) return "cursor";
+    if (i === typed.length && !rewinding) return "cursor";
     return "untyped";
   }
 </script>
@@ -236,7 +245,7 @@
         {#each floatingErrors as err (err.id)}
           <span class="floating-error" style:left="{err.left}px">{err.char}</span>
         {/each}
-          <div class="line-display" style:transform="translateX(-{scrollOffset}px)">
+          <div class="line-display" class:rewinding style:transform="translateX(-{scrollOffset}px)">
             {#each line.split("") as char, i}{@const state = charState(i)}<span
                 class="char {state}"
                 >{char === " "
@@ -246,11 +255,14 @@
                   : char}</span
               >{/each}<span
               class="char"
-              class:cursor={typed.length === line.length}
-              style:visibility={typed.length === line.length ? "visible" : "hidden"}
+              class:cursor={typed.length === line.length && !rewinding}
+              style:visibility={typed.length === line.length && !rewinding ? "visible" : "hidden"}
               >↵</span
             >
           </div>
+          {#if rewinding}
+            <span class="rewind-cursor" style:--from="{rewindFromPx}px" style:--to="{typed.length * charWidth}px"></span>
+          {/if}
         </div>
     </div>
     {#if lesson.fingerHints !== false}<FingerIndicator
@@ -400,6 +412,26 @@
     white-space: pre;
     line-height: 1;
     transition: transform 0.12s ease-out;
+  }
+
+  .line-display.rewinding {
+    transition: transform 120ms ease-in-out;
+  }
+
+  .rewind-cursor {
+    position: absolute;
+    top: 1rem;
+    left: 8rem;
+    width: 1ch;
+    height: 1.75rem;
+    background: var(--cursor-bg);
+    border-radius: 2px;
+    animation: rewind 120ms ease-in-out forwards;
+  }
+
+  @keyframes rewind {
+    0%   { transform: translateX(var(--from)); }
+    100% { transform: translateX(var(--to)); }
   }
 
   .char {
