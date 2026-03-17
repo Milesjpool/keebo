@@ -11,5 +11,12 @@ service cloud.firestore {
         && request.resource.data.createdAt == request.time;
       allow read, update, delete: if false;
     }
+    match /interest/{id} {
+      allow create, update: if request.auth != null
+        && request.resource.data.userId == request.auth.uid
+        && request.resource.data.feature is string
+        && request.resource.data.createdAt == request.time;
+      allow read, delete: if false;
+    }
   }
 }

@@ -1,7 +1,9 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
+  import { slide } from "svelte/transition";
   import { version } from "../../package.json";
   import { useKeydown } from "../services/utils";
+  import { submitInterest } from "../services/feedback";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
   import Modal from "./Modal.svelte";
   import ConfirmExpander from "./ConfirmExpander.svelte";
@@ -57,6 +59,8 @@
   let closeBtnEl = $state<HTMLButtonElement | null>(null);
   let nameInputEl = $state<HTMLInputElement | null>(null);
   let renameRowEl = $state<HTMLDivElement | null>(null);
+  let layoutOpen = $state(false);
+  let layoutEl = $state<HTMLDivElement | null>(null);
 
   function modalButtons() {
     return Array.from(
@@ -84,6 +88,11 @@
         deleting = false;
       }
     }
+  }
+
+  function handleLayoutClick() {
+    layoutOpen = !layoutOpen;
+    if (layoutOpen) submitInterest('keyboard-layout', user?.uid);
   }
 
   function handleClose() {
@@ -130,6 +139,7 @@
       return;
     }
     if (!user) nameVal = getAnonName();
+    layoutOpen = false;
     setTimeout(() => closeBtnEl?.focus(), 0);
     const cleanup = useKeydown(
       {
@@ -147,6 +157,9 @@
           } else if (document.activeElement === renameRowEl) {
             e.preventDefault();
             nameInputEl?.focus();
+          } else if (document.activeElement === layoutEl) {
+            e.preventDefault();
+            handleLayoutClick();
           } else if (document.activeElement === confirmTriggerEl) {
             e.preventDefault();
             confirmOpen = !confirmOpen;
@@ -190,6 +203,29 @@
           </span>
         </svelte:element>
       {/each}
+    </section>
+
+    <section>
+      <span class="section-label">preferences</span>
+      <div
+        class="setting-row"
+        class:open={layoutOpen}
+        tabindex="-1"
+        data-keynav-item
+        bind:this={layoutEl}
+        onclick={handleLayoutClick}
+        onmouseenter={() => { if (!layoutEl?.contains(document.activeElement)) layoutEl?.focus(); }}
+        onmouseleave={() => { if (!layoutOpen && document.activeElement === layoutEl) layoutEl?.blur(); }}
+        onfocusout={() => { setTimeout(() => { if (!layoutEl?.contains(document.activeElement)) { layoutOpen = false; } }, 0); }}
+      >
+        <span class="setting-name">keyboard layout</span>
+        <span class="setting-value">qwerty</span>
+        {#if layoutOpen}
+          <div class="setting-detail" transition:slide={{ duration: 150 }}>
+            <p class="setting-detail-text">thanks for your interest in future layout options! i've noted your interest.</p>
+          </div>
+        {/if}
+      </div>
     </section>
 
     {#if user}
@@ -496,6 +532,51 @@
     font-size: 0.65rem;
     color: var(--muted);
     padding-top: 0.5rem;
+  }
+
+  .setting-row {
+    padding: 0.6rem 2rem;
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    cursor: pointer;
+    outline: none;
+    transition: background 0.1s;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+
+  .setting-row:focus,
+  .setting-row.open {
+    background: var(--surface-hover);
+  }
+
+  .setting-name {
+    flex: 1;
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .setting-value {
+    font-size: 0.875rem;
+    color: var(--muted);
+  }
+
+  .setting-row:focus .setting-name,
+  .setting-row:focus .setting-value {
+    color: var(--text);
+  }
+
+  .setting-detail {
+    width: 100%;
+    padding: 0.35rem 0 0.2rem;
+  }
+
+  .setting-detail-text {
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin: 0;
+    line-height: 1.4;
   }
 
 </style>
