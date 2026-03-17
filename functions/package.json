@@ -3,18 +3,17 @@
   "version": "0.0.0",
   "private": true,
   "engines": {
-    "node": "24"
+    "node": "22"
   },
   "main": "lib/index.js",
   "scripts": {
     "build": "tsc",
+    "gcp-build": "tsc",
     "deploy": "firebase deploy --only functions"
   },
   "dependencies": {
     "firebase-admin": "^13.7.0",
-    "firebase-functions": "^7.2.0"
-  },
-  "devDependencies": {
+    "firebase-functions": "^7.2.2",
     "typescript": "^5.0.0"
   }
 }
