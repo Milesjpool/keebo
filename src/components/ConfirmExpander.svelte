@@ -1,5 +1,7 @@
 <script lang="ts">
   import { slide } from 'svelte/transition';
+  import { focusNext } from '../services/utils';
+  import { hoverFocus } from '../services/actions';
   interface Props {
     label: string;
     warningText: string;
@@ -40,11 +42,11 @@
   $effect(() => {
     if (open && !prevOpen) {
       prevOpen = true;
-      setTimeout(() => cancelBtnEl?.focus(), 0);
+      focusNext(cancelBtnEl);
     } else if (!open && prevOpen) {
       prevOpen = false;
       if (returnFocusOnCollapse) {
-        setTimeout(() => wrapperEl?.focus(), 0);
+        focusNext(wrapperEl);
       }
       returnFocusOnCollapse = true;
     }
@@ -58,14 +60,17 @@
 </script>
 
 <div
-  class="expander-wrap"
+  class="expander-wrap modal-full-bleed"
   class:open
   tabindex="-1"
   data-keynav-item
   bind:this={wrapperEl}
   onclick={() => (open = !open)}
-  onmouseenter={() => { if (!wrapperEl?.contains(document.activeElement)) wrapperEl?.focus(); }}
-  onmouseleave={() => { if (!open && document.activeElement === wrapperEl) wrapperEl?.blur(); }}
+  use:hoverFocus={{
+    guard: () => !wrapperEl?.contains(document.activeElement),
+    blurGuard: () => !open && document.activeElement === wrapperEl,
+    target: () => wrapperEl,
+  }}
   onfocusout={() => { setTimeout(() => { if (!wrapperEl?.contains(document.activeElement)) collapseFromFocusOut(); }, 0); }}
 >
   <span class="expand-label">{label}</span>
@@ -100,8 +105,6 @@
   .expander-wrap {
     font-size: 0.875rem;
     padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     cursor: pointer;
     outline: none;
     transition: background 0.1s;

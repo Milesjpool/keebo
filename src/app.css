@@ -148,6 +148,11 @@ button {
   cursor: not-allowed;
 }
 
+.modal-full-bleed {
+  width: calc(100% + 4rem);
+  margin-left: -2rem;
+}
+
 @keyframes shake {
   0%, 100% { transform: translateX(0); }
   20%       { transform: translateX(-10px); }

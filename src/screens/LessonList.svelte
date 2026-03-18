@@ -2,6 +2,7 @@
   import type { Group, Progress, Difficulty } from '../services/types'
   import type { User } from 'firebase/auth'
   import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
+  import { hoverFocus } from '../services/actions'
   import AuthButton from '../components/AuthButton.svelte'
 
   interface Props {
@@ -117,7 +118,7 @@
 
   <!-- Group header card — pinned, acts as back button -->
   <div class="group-header">
-    <button class="group-card" class:complete={doneCount === group.lessons.length} bind:this={backBtnEl} onclick={onBack} onfocus={() => { focused = -1 }} onmouseenter={() => backBtnEl?.focus()} onmouseleave={() => backBtnEl?.blur()}>
+    <button class="group-card" class:complete={doneCount === group.lessons.length} bind:this={backBtnEl} onclick={onBack} onfocus={() => { focused = -1 }} use:hoverFocus={{ target: () => backBtnEl }}>
       <span class="group-num">←</span>
       <div class="group-info">
         <span class="group-title">{group.title}</span>
@@ -142,8 +143,7 @@
             bind:this={btnEls[i]}
             onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
             onfocus={() => { focused = i }}
-            onmouseenter={() => { if (!locked) btnEls[i]?.focus() }}
-            onmouseleave={() => btnEls[i]?.blur()}
+            use:hoverFocus={{ guard: () => !locked, target: () => btnEls[i] }}
             disabled={locked}
           >
             <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>

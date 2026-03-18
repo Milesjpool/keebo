@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { useKeydown } from '../services/utils'
+  import { useKeydown, focusNext } from '../services/utils'
   import Modal from './Modal.svelte'
   import ProviderIcon from './ProviderIcon.svelte'
   import Icon from './Icon.svelte'
@@ -39,7 +39,7 @@
 
   $effect(() => {
     if (!open) return
-    setTimeout(() => closeBtnEl?.focus(), 0)
+    focusNext(closeBtnEl)
     const cleanup = useKeydown(
       {
         Escape: () => onClose(),
@@ -57,14 +57,14 @@
 {#if open}
   <Modal title="sign in" labelId="signin-title" {onClose} bind:closeBtnEl bind:modalEl>
     <section>
-      <button class="provider-row" onclick={() => handleSignIn('google')}>
+      <button class="provider-row modal-full-bleed" onclick={() => handleSignIn('google')}>
         <ProviderIcon provider="google" />
         <span class="provider-name">Google</span>
         <span class="provider-status">
           <Icon svg={iconPlus} class="plus-icon" />
         </span>
       </button>
-      <button class="provider-row" onclick={() => handleSignIn('github')}>
+      <button class="provider-row modal-full-bleed" onclick={() => handleSignIn('github')}>
         <ProviderIcon provider="github" />
         <span class="provider-name">GitHub</span>
         <span class="provider-status">
@@ -87,8 +87,6 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     cursor: pointer;
     font-family: inherit;
     font-size: inherit;

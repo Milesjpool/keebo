@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
   import { submitFeedback } from "../services/feedback";
-  import { useKeydown } from "../services/utils";
+  import { useKeydown, focusNext } from "../services/utils";
+  import { hoverFocus } from "../services/actions";
   import Modal from "./Modal.svelte";
 
   interface Props {
@@ -126,7 +127,7 @@
     success = false;
     error = null;
     loading = false;
-    setTimeout(() => textareaEl?.focus(), 0);
+    focusNext(textareaEl);
     const cleanup = useKeydown(
       {
         Escape: () => handleClose(),
@@ -147,8 +148,8 @@
 {#if open}
   <Modal title="feedback" labelId="feedback-title" onClose={handleClose} bind:closeBtnEl>
     <form onsubmit={handleSubmit} novalidate>
-      <div class="field-row" tabindex="-1" bind:this={textareaRowEl}
-        onmouseenter={() => { if (document.activeElement !== textareaEl) textareaRowEl?.focus() }}>
+      <div class="field-row modal-full-bleed" tabindex="-1" bind:this={textareaRowEl}
+        use:hoverFocus={{ guard: () => document.activeElement !== textareaEl, target: () => textareaRowEl }}>
         <textarea
           bind:value={text}
           bind:this={textareaEl}
@@ -160,8 +161,8 @@
         ></textarea>
       </div>
       {#if !user}
-        <div class="field-row" tabindex="-1" bind:this={emailRowEl}
-          onmouseenter={() => { if (document.activeElement !== emailInputEl) emailRowEl?.focus() }}>
+        <div class="field-row modal-full-bleed" tabindex="-1" bind:this={emailRowEl}
+          use:hoverFocus={{ guard: () => document.activeElement !== emailInputEl, target: () => emailRowEl }}>
           <input
             type="email"
             bind:value={email}
@@ -181,8 +182,7 @@
           class="btn-primary"
           bind:this={submitBtnEl}
           disabled={loading || success || !text.trim()}
-          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+          use:hoverFocus
         >
           {#if loading}<span class="spinner" aria-hidden="true"></span>{:else}send{/if}
         </button>
@@ -241,8 +241,6 @@
   }
 
   .field-row {
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     padding: 0.5rem 2rem;
     transition: background 0.1s;
     outline: none;

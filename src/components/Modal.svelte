@@ -29,12 +29,12 @@
     tabindex="-1"
   >
     {#if closeable}
-      <button class="modal-header" id={labelId} bind:this={closeBtnEl} onclick={onClose}>
+      <button class="modal-header modal-full-bleed" id={labelId} bind:this={closeBtnEl} onclick={onClose}>
         <span class="modal-title">{title}</span>
         <span class="btn-close">×</span>
       </button>
     {:else}
-      <div class="modal-header modal-header-static" id={labelId}>
+      <div class="modal-header modal-header-static modal-full-bleed" id={labelId}>
         <span class="modal-title">{title}</span>
       </div>
     {/if}
@@ -71,8 +71,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     margin-top: -2rem;
     padding: 0.75rem 2rem;
     margin-bottom: calc(-1 * (var(--modal-gap, 1.5rem) - 0.5rem));

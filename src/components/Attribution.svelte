@@ -1,4 +1,6 @@
 <script lang="ts">
+  import { hoverFocus } from '../services/actions'
+
   interface Props { text: string }
   const { text }: Props = $props()
 
@@ -18,7 +20,7 @@
   }
 </script>
 
-<span class="attribution">{#each parse(text) as part}{#if part.type === 'link'}<a href={part.url} target="_blank" rel="noreferrer" onclick={(e) => (e.currentTarget as HTMLAnchorElement).blur()} onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()} onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}>{part.label}</a>{:else}{part.content}{/if}{/each}</span>
+<span class="attribution">{#each parse(text) as part}{#if part.type === 'link'}<a href={part.url} target="_blank" rel="noreferrer" onclick={(e) => (e.currentTarget as HTMLAnchorElement).blur()} use:hoverFocus>{part.label}</a>{:else}{part.content}{/if}{/each}</span>
 
 <style>
   .attribution {

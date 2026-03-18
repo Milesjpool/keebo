@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { hoverFocus } from "../services/actions";
   import ThemeToggle from "./ThemeToggle.svelte";
 
   const AI_LABEL = "AI Coded, Human Approved";
@@ -64,8 +65,7 @@
   target="_blank"
   rel="noreferrer"
   onclick={(e) => e.currentTarget.blur()}
-  onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
-  onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}><span class="emoji">👾</span> Miles</a
+  use:hoverFocus><span class="emoji">👾</span> Miles</a
 >
 
 <ThemeToggle />

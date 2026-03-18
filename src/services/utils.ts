@@ -32,6 +32,10 @@ export function useKeydown(
   return () => window.removeEventListener('keydown', handler, options?.capture)
 }
 
+export function focusNext(el: HTMLElement | null | undefined): void {
+  setTimeout(() => el?.focus(), 0)
+}
+
 export function calcScrollOffset(
   cursorIdx: number, lineLength: number, charWidth: number, wrapWidth: number
 ): number {

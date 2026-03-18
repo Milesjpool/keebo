@@ -4,6 +4,7 @@
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
   import { formatTime, calcScrollOffset } from "../services/utils";
+  import { hoverFocus } from "../services/actions";
   import { THRESHOLDS } from "../services/medals";
   import { DIFFICULTY_MULTIPLIER } from "../services/difficulty";
 
@@ -198,8 +199,7 @@
       <button
         class="back-btn"
         onclick={onBack}
-        onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-        onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
+        use:hoverFocus
         >← back</button
       >
     </div>

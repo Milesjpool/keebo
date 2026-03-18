@@ -2,6 +2,8 @@
   import type { User } from "firebase/auth";
   import type { Difficulty } from "../services/types";
   import { getAnonName } from "../services/anonNames";
+  import { focusNext } from "../services/utils";
+  import { hoverFocus } from "../services/actions";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -75,7 +77,7 @@
     e.stopPropagation();
     if (e.key === "Escape") {
       open = false;
-      setTimeout(() => authBtnEl?.focus(), 0);
+      focusNext(authBtnEl);
       return;
     }
     if (e.key !== "ArrowDown" && e.key !== "s" && e.key !== "ArrowUp" && e.key !== "w") return;
@@ -130,8 +132,7 @@
 </script>
 
 <div class="auth-wrap"
-  onmouseenter={() => { authBtnEl?.focus() }}
-  onmouseleave={() => { if (!open) authBtnEl?.blur() }}
+  use:hoverFocus={{ target: () => authBtnEl, blurGuard: () => !open }}
   onfocusout={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) open = false; }}
 >
   <button

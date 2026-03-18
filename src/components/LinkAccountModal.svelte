@@ -1,5 +1,6 @@
 <script lang="ts">
-  import { useKeydown } from '../services/utils'
+  import { useKeydown, focusNext } from '../services/utils'
+  import { hoverFocus } from '../services/actions'
   import Modal from './Modal.svelte'
 
   interface Props {
@@ -18,7 +19,7 @@
 
   $effect(() => {
     if (!open) return
-    setTimeout(() => (errorMode ? dismissBtnEl : confirmBtnEl)?.focus(), 0)
+    focusNext(errorMode ? dismissBtnEl : confirmBtnEl)
     return useKeydown({
       Escape: () => onCancel(),
       ArrowDown: () => dismissBtnEl?.focus(),
@@ -40,22 +41,13 @@
     {#if errorMode}
       <p>This {label} account is already linked to another keebo account.</p>
       <div class="actions">
-        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel}
-          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-        >dismiss</button>
+        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel} use:hoverFocus>dismiss</button>
       </div>
     {:else}
       <p>An account with this email already exists. Sign in with {label} to link your accounts.</p>
       <div class="actions">
-        <button class="btn-primary" bind:this={confirmBtnEl} onclick={onConfirm}
-          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-        >sign in with {label}</button>
-        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel}
-          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}
-        >cancel</button>
+        <button class="btn-primary" bind:this={confirmBtnEl} onclick={onConfirm} use:hoverFocus>sign in with {label}</button>
+        <button class="btn-secondary" bind:this={dismissBtnEl} onclick={onCancel} use:hoverFocus>cancel</button>
       </div>
     {/if}
   </Modal>

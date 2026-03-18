@@ -1,7 +1,8 @@
 <script lang="ts">
   import type { Lesson, Stats, Difficulty } from '../services/types'
   import { getMedal, EMOJI } from '../services/medals'
-  import { useKeydown } from '../services/utils'
+  import { useKeydown, focusNext } from '../services/utils'
+  import { hoverFocus } from '../services/actions'
   import { DIFFICULTY_MULTIPLIER, DIFFICULTY_LABELS } from '../services/difficulty'
   import { THRESHOLDS } from '../services/medals'
 
@@ -46,7 +47,7 @@
   }
 
   $effect(() => {
-    setTimeout(() => actionButtons()[0]?.focus(), 0)
+    focusNext(actionButtons()[0])
   })
 
   $effect(() => useKeydown({
@@ -83,13 +84,9 @@
     {/if}
     <div class="actions" bind:this={actionsEl}>
       {#if hasNext}
-        <button class="btn-primary" onclick={onNext}
-          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}>next lesson →</button>
+        <button class="btn-primary" onclick={onNext} use:hoverFocus>next lesson →</button>
       {/if}
-      <button class="btn-secondary" onclick={onBack}
-        onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
-        onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}>back to lessons</button>
+      <button class="btn-secondary" onclick={onBack} use:hoverFocus>back to lessons</button>
     </div>
   </div>
 </div>

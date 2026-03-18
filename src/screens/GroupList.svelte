@@ -2,6 +2,7 @@
   import type { Group, Progress, Difficulty } from '../services/types'
   import type { User } from 'firebase/auth'
   import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
+  import { hoverFocus } from '../services/actions'
   import AuthButton from '../components/AuthButton.svelte'
   import Attribution from '../components/Attribution.svelte'
 
@@ -117,8 +118,7 @@
           bind:this={btnEls[i]}
           onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
           onfocus={() => { focused = i }}
-          onmouseenter={() => { if (!state.locked) btnEls[i]?.focus() }}
-          onmouseleave={() => btnEls[i]?.blur()}
+          use:hoverFocus={{ guard: () => !state.locked, target: () => btnEls[i] }}
           disabled={state.locked}
         >
           <span class="group-num">{String(i + 1).padStart(2, '0')}</span>

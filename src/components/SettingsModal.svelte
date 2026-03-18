@@ -3,7 +3,8 @@
   import type { Difficulty } from "../services/types";
   import { slide } from "svelte/transition";
   import { version } from "../../package.json";
-  import { useKeydown } from "../services/utils";
+  import { useKeydown, focusNext } from "../services/utils";
+  import { hoverFocus } from "../services/actions";
   import { submitInterest } from "../services/feedback";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
   import { DIFFICULTIES, DIFFICULTY_LABELS } from "../services/difficulty";
@@ -78,7 +79,7 @@
   }
 
   function focusActiveSegment() {
-    setTimeout(() => diffSegmentEls[difficultyIdx()]?.focus(), 0);
+    focusNext(diffSegmentEls[difficultyIdx()]);
   }
 
   function isDiffSegment(el: Element | null): boolean {
@@ -90,13 +91,13 @@
     const next = idx + dir;
     if (next >= 0 && next < DIFFICULTIES.length) {
       onDifficultyChange?.(DIFFICULTIES[next]);
-      setTimeout(() => diffSegmentEls[next]?.focus(), 0);
+      focusNext(diffSegmentEls[next]);
     }
   }
 
   function collapseDifficulty() {
     difficultyOpen = false;
-    setTimeout(() => difficultyEl?.focus(), 0);
+    focusNext(difficultyEl);
   }
 
   function collapseDifficultyFromFocusOut() {
@@ -205,7 +206,7 @@
     if (!user) nameVal = getAnonName();
     layoutOpen = false;
     difficultyOpen = false;
-    setTimeout(() => closeBtnEl?.focus(), 0);
+    focusNext(closeBtnEl);
     const cleanup = useKeydown(
       {
         Escape: () => {
@@ -271,12 +272,12 @@
     bind:modalEl
   >
     <section>
-      <span class="section-label">connections</span>
+      <span class="section-label modal-full-bleed">connections</span>
       {#each user ? providers.toSorted((a, b) => Number(linkedProviderIds.includes(b.id)) - Number(linkedProviderIds.includes(a.id))) : providers as p}
         {@const connected = user !== null && linkedProviderIds.includes(p.id)}
         <svelte:element
           this={connected ? "div" : "button"}
-          class="provider-row"
+          class="provider-row modal-full-bleed"
           class:provider-unlinked={!connected}
           onclick={connected
             ? undefined
@@ -296,17 +297,20 @@
     </section>
 
     <section>
-      <span class="section-label">preferences</span>
+      <span class="section-label modal-full-bleed">preferences</span>
       <div
-        class="setting-row"
+        class="setting-row modal-full-bleed"
         class:open={difficultyOpen}
         class:locked={difficultyLocked}
         tabindex={difficultyLocked ? undefined : "-1"}
         data-keynav-item={difficultyLocked ? undefined : true}
         bind:this={difficultyEl}
         onclick={difficultyLocked ? undefined : () => { difficultyOpen = !difficultyOpen; if (difficultyOpen) focusActiveSegment(); }}
-        onmouseenter={difficultyLocked ? undefined : () => { if (!difficultyEl?.contains(document.activeElement)) difficultyEl?.focus(); }}
-        onmouseleave={difficultyLocked ? undefined : () => { if (!difficultyOpen && document.activeElement === difficultyEl) difficultyEl?.blur(); }}
+        use:hoverFocus={{
+          guard: () => !difficultyLocked && !difficultyEl?.contains(document.activeElement),
+          blurGuard: () => !difficultyLocked && !difficultyOpen && document.activeElement === difficultyEl,
+          target: () => difficultyEl,
+        }}
         onfocusout={difficultyLocked ? undefined : () => { setTimeout(() => { if (!difficultyEl?.contains(document.activeElement)) collapseDifficultyFromFocusOut(); }, 0); }}
       >
         <span class="setting-name">difficulty</span>
@@ -331,18 +335,16 @@
         {/if}
       </div>
       <div
-        class="setting-row"
+        class="setting-row modal-full-bleed"
         class:open={layoutOpen}
         tabindex="-1"
         data-keynav-item
         bind:this={layoutEl}
         onclick={handleLayoutClick}
-        onmouseenter={() => {
-          if (!layoutEl?.contains(document.activeElement)) layoutEl?.focus();
-        }}
-        onmouseleave={() => {
-          if (!layoutOpen && document.activeElement === layoutEl)
-            layoutEl?.blur();
+        use:hoverFocus={{
+          guard: () => !layoutEl?.contains(document.activeElement),
+          blurGuard: () => !layoutOpen && document.activeElement === layoutEl,
+          target: () => layoutEl,
         }}
         onfocusout={() => {
           setTimeout(() => {
@@ -367,9 +369,9 @@
 
     {#if user}
       <section>
-        <span class="section-label">account</span>
+        <span class="section-label modal-full-bleed">account</span>
         <button
-          class="btn-action"
+          class="btn-action modal-full-bleed"
           onclick={() => {
             onClose();
             onSignOut?.();
@@ -390,15 +392,12 @@
       </section>
     {:else}
       <section>
-        <span class="section-label">account</span>
+        <span class="section-label modal-full-bleed">account</span>
         <div
-          class="rename-row"
+          class="rename-row modal-full-bleed"
           tabindex="-1"
           bind:this={renameRowEl}
-          onmouseenter={() => {
-            if (document.activeElement !== nameInputEl) renameRowEl?.focus();
-          }}
-          onmouseleave={() => renameRowEl?.blur()}
+          use:hoverFocus={{ guard: () => document.activeElement !== nameInputEl, target: () => renameRowEl }}
         >
           <input
             class="name-input"
@@ -441,7 +440,7 @@
       </section>
     {/if}
 
-    <div class="footer-sep">
+    <div class="footer-sep modal-full-bleed">
       <button class="btn-feedback" onclick={onFeedback}>feedback</button>
       <a
         class="btn-footer-link"
@@ -449,8 +448,7 @@
         target="_blank"
         rel="noopener noreferrer"
         data-keynav-item
-        onmouseenter={(e) => (e.currentTarget as HTMLAnchorElement).focus()}
-        onmouseleave={(e) => (e.currentTarget as HTMLAnchorElement).blur()}
+        use:hoverFocus
       >
         <img
           src="{import.meta.env.BASE_URL}logo-ko-fi.png"
@@ -473,8 +471,6 @@
 
   .section-label {
     display: block;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     padding: 0.35rem 2rem;
     font-size: 0.7rem;
     color: var(--muted);
@@ -488,8 +484,6 @@
     align-items: center;
     gap: 0.5rem;
     padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     transition: background 0.1s;
     font-family: inherit;
     font-size: inherit;
@@ -559,8 +553,6 @@
     cursor: pointer;
     font-family: inherit;
     padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     text-align: left;
     transition:
       background 0.1s,
@@ -576,8 +568,6 @@
   .rename-row {
     position: relative;
     padding: 0.5rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     transition: background 0.1s;
     outline: none;
   }
@@ -630,8 +620,6 @@
   }
 
   .footer-sep {
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     border-top: 1px solid var(--border);
     padding-top: 0.5rem;
     padding-bottom: 1rem;
@@ -682,8 +670,6 @@
 
   .setting-row {
     padding: 0.6rem 2rem;
-    width: calc(100% + 4rem);
-    margin-left: -2rem;
     cursor: pointer;
     outline: none;
     transition: background 0.1s;

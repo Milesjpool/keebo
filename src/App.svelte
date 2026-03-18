@@ -14,7 +14,9 @@
   import { getUrl, parseUrl, findGroupIdx } from "./services/router";
   import { loadProgress, saveProgress } from "./services/progress";
   import { subscribeToProgress, writeProgress, writeDifficulty } from "./services/sync";
-  import { loadDifficulty, saveDifficulty, DIFFICULTY_MULTIPLIER } from "./services/difficulty";
+  import { loadDifficulty, saveDifficulty } from "./services/difficulty";
+  import { calculateScore } from "./services/scoring";
+  import { lastUnlockedGroup, lastUnlockedLesson } from "./services/unlock";
   import Footer from "./components/Footer.svelte";
   import { ui } from "./services/ui.svelte.ts";
 
@@ -154,36 +156,14 @@
     return lesson.id in progress;
   }
 
-  function lastUnlockedGroup() {
-    let last = 0;
-    for (let i = 0; i < groups.length; i++) {
-      const g = groups[i];
-      const locked =
-        i > 0 &&
-        !isDone(groups[i - 1].lessons[groups[i - 1].lessons.length - 1]);
-      if (!locked) last = i;
-      else break;
-    }
-    return last;
-  }
-
-  function lastUnlockedLesson(groupIdx: number) {
-    const g = groups[groupIdx];
-    for (let i = 0; i < g.lessons.length; i++) {
-      const fi = g.lessons[i].flatIdx;
-      if (fi > 0 && !isDone(flatLessons[fi - 1])) return Math.max(0, i - 1);
-    }
-    return g.lessons.length - 1;
-  }
-
   let groupFocused = $state(
-    init.screen === "groups" ? lastUnlockedGroup() : init.groupIdx,
+    init.screen === "groups" ? lastUnlockedGroup(groups, progress) : init.groupIdx,
   );
   let lessonFocused = $state(
     groups.map((_, i) => {
       if (init.screen === "typing" && i === init.groupIdx)
         return init.flatIdx - groups[i].flatStart;
-      return lastUnlockedLesson(i);
+      return lastUnlockedLesson(groups[i], flatLessons, progress);
     }),
   );
 
@@ -208,7 +188,7 @@
     const id = flatLessons[currentFlatIdx].id;
     const prev = progress[id];
     const d = stats.difficulty ?? difficulty;
-    const score = stats.wpm * (stats.accuracy ?? 1) * DIFFICULTY_MULTIPLIER[d];
+    const score = calculateScore(stats.wpm, stats.accuracy ?? 1, d);
     const newRecord = {
       wpm: stats.wpm,
       elapsed: stats.elapsed,
