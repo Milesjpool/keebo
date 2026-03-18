@@ -62,7 +62,6 @@
 
   $effect(() => {
     saveDifficulty(difficulty);
-    if (user) writeDifficulty(user.uid, difficulty);
   });
 
 
@@ -269,7 +268,7 @@
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
     {difficulty}
-    onDifficultyChange={(d) => difficulty = d}
+    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
     {source}
   />
 {:else if screen === "lessons"}
@@ -296,7 +295,7 @@
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
     {difficulty}
-    onDifficultyChange={(d) => difficulty = d}
+    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
   />
 {:else if screen === "typing"}
   <TypingView
@@ -311,7 +310,7 @@
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
-    onDifficultyChange={(d) => difficulty = d}
+    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
   />
 {:else if screen === "complete"}
   <LessonComplete

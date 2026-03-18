@@ -16,12 +16,12 @@ export function subscribeToProgress(
     const remote = (data.progress ?? {}) as Progress
     const merged = mergeProgress(getLocal(), remote)
     onUpdate(merged)
-    if (data.difficulty && onDifficultyUpdate) {
-      onDifficultyUpdate(data.difficulty as Difficulty)
-    }
-    // Push local-only data on first snapshot (same behavior as fetchAndMerge)
+    // Only sync difficulty on first snapshot (sign-in merge), not on every write-back
     if (isFirstSnapshot) {
       isFirstSnapshot = false
+      if (data.difficulty && onDifficultyUpdate) {
+        onDifficultyUpdate(data.difficulty as Difficulty)
+      }
       setDoc(ref, { progress: merged }, { merge: true })
     }
   })

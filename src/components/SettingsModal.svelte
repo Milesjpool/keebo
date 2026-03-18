@@ -68,11 +68,38 @@
   let layoutOpen = $state(false);
   let layoutEl = $state<HTMLDivElement | null>(null);
   let difficultyEl = $state<HTMLDivElement | null>(null);
+  let difficultyOpen = $state(false);
+  let diffSegmentEls = $state<(HTMLButtonElement | null)[]>([null, null, null]);
 
-  function cycleDifficulty() {
-    const idx = DIFFICULTIES.indexOf(difficulty);
-    const next = DIFFICULTIES[(idx + 1) % DIFFICULTIES.length];
-    onDifficultyChange?.(next);
+  function difficultyIdx() {
+    return DIFFICULTIES.indexOf(difficulty);
+  }
+
+  function focusActiveSegment() {
+    setTimeout(() => diffSegmentEls[difficultyIdx()]?.focus(), 0);
+  }
+
+  function isDiffSegment(el: Element | null): boolean {
+    return diffSegmentEls.some(s => s === el);
+  }
+
+  function moveDifficulty(dir: -1 | 1) {
+    const idx = difficultyIdx();
+    const next = idx + dir;
+    if (next >= 0 && next < DIFFICULTIES.length) {
+      onDifficultyChange?.(DIFFICULTIES[next]);
+      setTimeout(() => diffSegmentEls[next]?.focus(), 0);
+    }
+  }
+
+  function collapseDifficulty() {
+    difficultyOpen = false;
+    setTimeout(() => difficultyEl?.focus(), 0);
+  }
+
+  function collapseDifficultyFromFocusOut() {
+    if (!difficultyOpen) return;
+    difficultyOpen = false;
   }
 
   function modalButtons() {
@@ -121,40 +148,48 @@
   }
 
   function goLeft(e: KeyboardEvent) {
-    if (confirmOpen) {
+    if (difficultyOpen) {
+      e.preventDefault();
+      moveDifficulty(-1);
+    } else if (confirmOpen) {
       e.preventDefault();
       confirmCancelEl?.focus();
     }
   }
 
   function goRight(e: KeyboardEvent) {
-    if (confirmOpen) {
+    if (difficultyOpen) {
+      e.preventDefault();
+      moveDifficulty(1);
+    } else if (confirmOpen) {
       e.preventDefault();
       confirmConfirmEl?.focus();
     }
   }
 
-  function goDown(e: KeyboardEvent) {
-    e.preventDefault();
-    const btns = modalButtons();
+  function resolveActive(): HTMLElement | null {
     const raw =
       document.activeElement === renameRowEl
         ? nameInputEl
         : document.activeElement;
-    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute("data-no-keynav");
-    const active = isConfirmBtn ? confirmTriggerEl : raw;
+    if (isDiffSegment(raw)) return difficultyEl;
+    if ((raw as HTMLElement)?.hasAttribute("data-no-keynav")) return confirmTriggerEl;
+    return raw as HTMLElement;
+  }
+
+  function goDown(e: KeyboardEvent) {
+    e.preventDefault();
+    if (difficultyOpen) { difficultyOpen = false; }
+    const active = resolveActive();
+    const btns = modalButtons();
     const i = btns.indexOf(active as HTMLElement);
     btns[i + 1]?.focus();
   }
 
   function goUp(e: KeyboardEvent) {
     e.preventDefault();
-    const raw =
-      document.activeElement === renameRowEl
-        ? nameInputEl
-        : document.activeElement;
-    const isConfirmBtn = (raw as HTMLElement)?.hasAttribute("data-no-keynav");
-    const active = isConfirmBtn ? confirmTriggerEl : raw;
+    if (difficultyOpen) { difficultyOpen = false; }
+    const active = resolveActive();
     const btns = modalButtons();
     const i = btns.indexOf(active as HTMLElement);
     if (i > 0) btns[i - 1]?.focus();
@@ -167,11 +202,14 @@
     }
     if (!user) nameVal = getAnonName();
     layoutOpen = false;
+    difficultyOpen = false;
     setTimeout(() => closeBtnEl?.focus(), 0);
     const cleanup = useKeydown(
       {
         Escape: () => {
-          if (confirmOpen) {
+          if (difficultyOpen) {
+            collapseDifficulty();
+          } else if (confirmOpen) {
             confirmOpen = false;
           } else {
             handleClose();
@@ -186,7 +224,11 @@
             nameInputEl?.focus();
           } else if (document.activeElement === difficultyEl) {
             e.preventDefault();
-            cycleDifficulty();
+            difficultyOpen = !difficultyOpen;
+            if (difficultyOpen) focusActiveSegment();
+          } else if (isDiffSegment(document.activeElement)) {
+            e.preventDefault();
+            collapseDifficulty();
           } else if (document.activeElement === layoutEl) {
             e.preventDefault();
             handleLayoutClick();
@@ -255,15 +297,35 @@
       <span class="section-label">preferences</span>
       <div
         class="setting-row"
+        class:open={difficultyOpen}
         tabindex="-1"
         data-keynav-item
         bind:this={difficultyEl}
-        onclick={cycleDifficulty}
-        onmouseenter={() => difficultyEl?.focus()}
-        onmouseleave={() => { if (document.activeElement === difficultyEl) difficultyEl?.blur(); }}
+        onclick={() => { difficultyOpen = !difficultyOpen; if (difficultyOpen) focusActiveSegment(); }}
+        onmouseenter={() => { if (!difficultyEl?.contains(document.activeElement)) difficultyEl?.focus(); }}
+        onmouseleave={() => { if (!difficultyOpen && document.activeElement === difficultyEl) difficultyEl?.blur(); }}
+        onfocusout={() => { setTimeout(() => { if (!difficultyEl?.contains(document.activeElement)) collapseDifficultyFromFocusOut(); }, 0); }}
       >
         <span class="setting-name">difficulty</span>
-        <span class="setting-value">{DIFFICULTY_LABELS[difficulty]}</span>
+        {#if !difficultyOpen}<span class="setting-value">{DIFFICULTY_LABELS[difficulty]}</span>{/if}
+        {#if difficultyOpen}
+          <div class="diff-slider" transition:slide={{ duration: 150 }}>
+            <div class="diff-segments">
+              <div class="diff-highlight" style:transform="translateX({difficultyIdx() * 100}%)"></div>
+              {#each DIFFICULTIES as d, i}
+                <button
+                  class="diff-segment"
+                  class:active={difficulty === d}
+                  data-no-keynav
+                  bind:this={diffSegmentEls[i]}
+                  onclick={(e) => { e.stopPropagation(); onDifficultyChange?.(d); }}
+                  onmouseenter={() => diffSegmentEls[i]?.focus()}
+                  onmouseleave={() => difficultyEl?.focus()}
+                >{DIFFICULTY_LABELS[d]}</button>
+              {/each}
+            </div>
+          </div>
+        {/if}
       </div>
       <div
         class="setting-row"
@@ -644,8 +706,52 @@
   }
 
   .setting-row:focus .setting-name,
-  .setting-row:focus .setting-value {
+  .setting-row:focus .setting-value,
+  .setting-row.open .setting-name {
     color: var(--text);
+  }
+
+  .diff-slider {
+    width: 100%;
+    padding: 0.5rem 0 0.2rem;
+  }
+
+  .diff-segments {
+    position: relative;
+    display: flex;
+    border: 1px solid var(--accent);
+    border-radius: 6px;
+    overflow: hidden;
+  }
+
+  .diff-highlight {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 33.333%;
+    background: var(--accent);
+    transition: transform 0.2s ease;
+    pointer-events: none;
+  }
+
+  .diff-segment {
+    flex: 1;
+    padding: 0.5rem 0;
+    font-size: 0.8rem;
+    font-family: inherit;
+    background: none;
+    border: none;
+    color: var(--muted);
+    cursor: pointer;
+    position: relative;
+    z-index: 1;
+    outline: none;
+    transition: color 0.2s ease;
+  }
+
+  .diff-segment.active {
+    color: var(--cursor-text);
   }
 
   .setting-detail {
