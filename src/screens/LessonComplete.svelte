@@ -27,9 +27,38 @@
   const accColor = $derived(ragColor((stats?.accuracy ?? 1) * 100, 95, 80))
   const diffColor = $derived(ragColor(DIFFICULTY_MULTIPLIER[difficulty], 1.3, 1.0))
 
+  let actionsEl = $state<HTMLDivElement | null>(null)
+
+  function actionButtons(): HTMLButtonElement[] {
+    return Array.from(actionsEl?.querySelectorAll('button') ?? [])
+  }
+
+  function navigate(dir: 1 | -1) {
+    const btns = actionButtons()
+    if (btns.length === 0) return
+    const i = btns.indexOf(document.activeElement as HTMLButtonElement)
+    if (i === -1) {
+      btns[dir === 1 ? 0 : btns.length - 1]?.focus()
+    } else {
+      const next = btns[i + dir]
+      if (next) next.focus()
+    }
+  }
+
+  $effect(() => {
+    setTimeout(() => actionButtons()[0]?.focus(), 0)
+  })
+
   $effect(() => useKeydown({
-    Enter: () => hasNext ? onNext() : onBack(),
+    Enter: () => {
+      const btns = actionButtons()
+      const focused = btns.indexOf(document.activeElement as HTMLButtonElement)
+      if (focused >= 0) btns[focused].click()
+      else hasNext ? onNext() : onBack()
+    },
     Escape: () => onBack(),
+    ArrowDown: () => navigate(1),
+    ArrowUp: () => navigate(-1),
   }))
 </script>
 
@@ -52,11 +81,15 @@
       </div>
       <div class="stat"><span class="stat-value time-value">{verboseTime(stats.elapsed)}</span><span class="stat-label">elapsed</span></div>
     {/if}
-    <div class="actions">
+    <div class="actions" bind:this={actionsEl}>
       {#if hasNext}
-        <button class="btn-primary" onclick={onNext}>next lesson →</button>
+        <button class="btn-primary" onclick={onNext}
+          onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+          onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}>next lesson →</button>
       {/if}
-      <button class="btn-secondary" onclick={onBack}>back to lessons</button>
+      <button class="btn-secondary" onclick={onBack}
+        onmouseenter={(e) => (e.currentTarget as HTMLButtonElement).focus()}
+        onmouseleave={(e) => (e.currentTarget as HTMLButtonElement).blur()}>back to lessons</button>
     </div>
   </div>
 </div>
