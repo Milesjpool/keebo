@@ -1,6 +1,6 @@
 import type { Difficulty } from './types'
 
-export const DIFFICULTY_MULTIPLIER: Record<Difficulty, number> = { easy: 0.7, medium: 1.0, hard: 1.3 }
+export const DIFFICULTY_MULTIPLIER: Record<Difficulty, number> = { easy: 0.8, medium: 1.0, hard: 1.25 }
 export const DIFFICULTY_LABELS: Record<Difficulty, string> = { easy: 'assist', medium: 'normal', hard: 'strict' }
 export const DIFFICULTIES: Difficulty[] = ['easy', 'medium', 'hard']
 export const DEFAULT_DIFFICULTY: Difficulty = 'medium'

@@ -157,7 +157,13 @@
         if (!lineStartTime) lineStartTime = now;
         if (typed.length < line.length) {
           const idx = typed.length;
-          if (difficulty === 'easy' && e.key !== line[idx]) return;
+          if (difficulty === 'easy' && e.key !== line[idx]) {
+            const thisId = errorId++;
+            const left = idx * charWidth - scrollOffset;
+            floatingErrors = [...floatingErrors, { id: thisId, char: e.key, left }];
+            setTimeout(() => { floatingErrors = floatingErrors.filter(f => f.id !== thisId); }, 800);
+            return;
+          }
           typed += e.key;
           if (e.key !== line[idx]) {
             const thisId = errorId++;
