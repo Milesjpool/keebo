@@ -24,6 +24,7 @@
     onDeleteAccount?: () => Promise<void>;
     onDeleteProgress?: () => void;
     difficulty?: Difficulty;
+    difficultyLocked?: boolean;
     onDifficultyChange?: (d: Difficulty) => void;
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
@@ -41,6 +42,7 @@
     onDeleteAccount,
     onDeleteProgress,
     difficulty,
+    difficultyLocked = false,
     onDifficultyChange,
     focusEl = $bindable<HTMLElement | null>(null),
     onDescend,
@@ -204,6 +206,7 @@
   {onDeleteAccount}
   {onDeleteProgress}
   {difficulty}
+  {difficultyLocked}
   {onDifficultyChange}
   onFeedback={() => { settingsOpen = false; feedbackOpen = true; }}
   onClose={() => { settingsOpen = false; if (!user) anonName = getAnonName(); onModalClose?.(); }}

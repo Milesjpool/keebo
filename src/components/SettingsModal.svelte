@@ -34,6 +34,7 @@
     onDeleteAccount?: () => Promise<void>;
     onDeleteProgress?: () => void;
     difficulty?: Difficulty;
+    difficultyLocked?: boolean;
     onDifficultyChange?: (d: Difficulty) => void;
     onFeedback: () => void;
     onClose: () => void;
@@ -47,6 +48,7 @@
     onDeleteAccount,
     onDeleteProgress,
     difficulty = 'medium',
+    difficultyLocked = false,
     onDifficultyChange,
     onFeedback,
     onClose,
@@ -222,7 +224,7 @@
           } else if (document.activeElement === renameRowEl) {
             e.preventDefault();
             nameInputEl?.focus();
-          } else if (document.activeElement === difficultyEl) {
+          } else if (document.activeElement === difficultyEl && !difficultyLocked) {
             e.preventDefault();
             difficultyOpen = !difficultyOpen;
             if (difficultyOpen) focusActiveSegment();
@@ -298,13 +300,14 @@
       <div
         class="setting-row"
         class:open={difficultyOpen}
-        tabindex="-1"
-        data-keynav-item
+        class:locked={difficultyLocked}
+        tabindex={difficultyLocked ? undefined : "-1"}
+        data-keynav-item={difficultyLocked ? undefined : true}
         bind:this={difficultyEl}
-        onclick={() => { difficultyOpen = !difficultyOpen; if (difficultyOpen) focusActiveSegment(); }}
-        onmouseenter={() => { if (!difficultyEl?.contains(document.activeElement)) difficultyEl?.focus(); }}
-        onmouseleave={() => { if (!difficultyOpen && document.activeElement === difficultyEl) difficultyEl?.blur(); }}
-        onfocusout={() => { setTimeout(() => { if (!difficultyEl?.contains(document.activeElement)) collapseDifficultyFromFocusOut(); }, 0); }}
+        onclick={difficultyLocked ? undefined : () => { difficultyOpen = !difficultyOpen; if (difficultyOpen) focusActiveSegment(); }}
+        onmouseenter={difficultyLocked ? undefined : () => { if (!difficultyEl?.contains(document.activeElement)) difficultyEl?.focus(); }}
+        onmouseleave={difficultyLocked ? undefined : () => { if (!difficultyOpen && document.activeElement === difficultyEl) difficultyEl?.blur(); }}
+        onfocusout={difficultyLocked ? undefined : () => { setTimeout(() => { if (!difficultyEl?.contains(document.activeElement)) collapseDifficultyFromFocusOut(); }, 0); }}
       >
         <span class="setting-name">difficulty</span>
         {#if !difficultyOpen}<span class="setting-value">{DIFFICULTY_LABELS[difficulty]}</span>{/if}
@@ -709,6 +712,10 @@
   .setting-row:focus .setting-value,
   .setting-row.open .setting-name {
     color: var(--text);
+  }
+
+  .setting-row.locked {
+    cursor: default;
   }
 
   .diff-slider {

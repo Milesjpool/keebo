@@ -214,6 +214,7 @@
         {onDeleteAccount}
         {onDeleteProgress}
         {difficulty}
+        difficultyLocked={true}
         {onDifficultyChange}
         context={{
           screen: "typing",
