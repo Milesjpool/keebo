@@ -43,7 +43,7 @@ describe('LessonComplete', () => {
 
   it('displays formatted time', () => {
     renderComplete()
-    expect(document.body.textContent).toContain('0:42')
+    expect(document.body.textContent).toContain('42s')
   })
 
   it('displays accuracy percentage', () => {

@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Group, Progress } from '../services/types'
+  import type { Group, Progress, Difficulty } from '../services/types'
   import type { User } from 'firebase/auth'
   import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
   import AuthButton from '../components/AuthButton.svelte'
@@ -18,9 +18,11 @@
     onLinkProvider: (p: string) => Promise<void>
     onDeleteAccount?: () => Promise<void>
     onDeleteProgress?: () => void
+    difficulty: Difficulty
+    onDifficultyChange: (d: Difficulty) => void
     source?: string
   }
-  let { groups, progress, onSelect, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, onDeleteAccount, onDeleteProgress, source }: Props = $props()
+  let { groups, progress, onSelect, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, onDeleteAccount, onDeleteProgress, difficulty, onDifficultyChange, source }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
@@ -100,7 +102,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} onAscend={() => { focused = -1 }} onModalClose={() => { focused = 0 }} />
+    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} {difficulty} {onDifficultyChange} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} onAscend={() => { focused = -1 }} onModalClose={() => { focused = 0 }} />
   </header>
 
   <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">

@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
+  import type { Difficulty } from "../services/types";
   import { getAnonName } from "../services/anonNames";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
@@ -22,6 +23,8 @@
     onLinkProvider?: (p: string) => Promise<void>;
     onDeleteAccount?: () => Promise<void>;
     onDeleteProgress?: () => void;
+    difficulty?: Difficulty;
+    onDifficultyChange?: (d: Difficulty) => void;
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
     onAscend?: () => void;
@@ -37,6 +40,8 @@
     onLinkProvider,
     onDeleteAccount,
     onDeleteProgress,
+    difficulty,
+    onDifficultyChange,
     focusEl = $bindable<HTMLElement | null>(null),
     onDescend,
     onAscend,
@@ -198,6 +203,8 @@
   {onSignOut}
   {onDeleteAccount}
   {onDeleteProgress}
+  {difficulty}
+  {onDifficultyChange}
   onFeedback={() => { settingsOpen = false; feedbackOpen = true; }}
   onClose={() => { settingsOpen = false; if (!user) anonName = getAnonName(); onModalClose?.(); }}
 />

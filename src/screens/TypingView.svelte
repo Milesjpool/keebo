@@ -1,16 +1,17 @@
 <script lang="ts">
-  import type { Lesson, Stats } from "../services/types";
+  import type { Lesson, Stats, Difficulty } from "../services/types";
   import type { User } from "firebase/auth";
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
   import { formatTime, calcScrollOffset } from "../services/utils";
   import { THRESHOLDS } from "../services/medals";
+  import { DIFFICULTY_MULTIPLIER } from "../services/difficulty";
 
   interface Props {
     lesson: Lesson;
     onComplete: (s: Stats) => void;
     onBack: () => void;
-    strictMode?: boolean;
+    difficulty?: Difficulty;
     user: User | null;
     authReady: boolean;
     onSignIn: (p: string) => Promise<void>;
@@ -18,12 +19,13 @@
     onLinkProvider?: (p: string) => Promise<void>;
     onDeleteAccount?: () => Promise<void>;
     onDeleteProgress?: () => void;
+    onDifficultyChange?: (d: Difficulty) => void;
   }
   let {
     lesson,
     onComplete,
     onBack,
-    strictMode = false,
+    difficulty = 'medium',
     user,
     authReady,
     onSignIn,
@@ -31,6 +33,7 @@
     onLinkProvider,
     onDeleteAccount,
     onDeleteProgress,
+    onDifficultyChange,
   }: Props = $props();
 
   let lineIndex = $state(0);
@@ -106,14 +109,12 @@
       if (e.key === "Enter") {
         e.preventDefault();
         if (typed.length < line.length) return;
-        const match = typed === line;
-        if (!match && strictMode) return;
 
         const lineCorrect = [...typed].filter((c, i) => c === line[i]).length;
         const lineAcc = lineCorrect / line.length;
         const lineSecs = lineStartTime ? (Date.now() - lineStartTime) / 1000 : 1;
         const lineWpm = Math.round(line.length / 5 / (lineSecs / 60));
-        const lineScore = lineWpm * lineAcc;
+        const lineScore = lineWpm * lineAcc * DIFFICULTY_MULTIPLIER[difficulty];
 
         // Floating score
         floatingScore = { wpm: lineWpm, accuracy: lineAcc, color: ragColor(lineScore) };
@@ -137,6 +138,7 @@
             wpm: Math.round(chars / 5 / (secs / 60)),
             elapsed: Math.round(secs),
             accuracy: accuracy(),
+            difficulty,
           });
         }
         return;
@@ -144,6 +146,7 @@
 
       if (e.key === "Backspace") {
         e.preventDefault();
+        if (difficulty !== 'medium') return;
         typed = typed.slice(0, -1);
         return;
       }
@@ -154,6 +157,7 @@
         if (!lineStartTime) lineStartTime = now;
         if (typed.length < line.length) {
           const idx = typed.length;
+          if (difficulty === 'easy' && e.key !== line[idx]) return;
           typed += e.key;
           if (e.key !== line[idx]) {
             const thisId = errorId++;
@@ -209,6 +213,8 @@
         {onLinkProvider}
         {onDeleteAccount}
         {onDeleteProgress}
+        {difficulty}
+        {onDifficultyChange}
         context={{
           screen: "typing",
           lessonId: lesson.id,
@@ -490,7 +496,7 @@
   .score-unit {
     font-size: 0.6em;
     font-weight: normal;
-    margin-left: -0.2em;
+    margin-left: -0.55em;
   }
 
   @keyframes float-rise {

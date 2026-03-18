@@ -30,7 +30,7 @@ function renderTypingView(overrides = {}) {
       lesson: testLesson,
       onComplete: vi.fn(),
       onBack: vi.fn(),
-      strictMode: false,
+      difficulty: 'medium' as const,
       user: null,
       authReady: true,
       onSignIn: vi.fn(),
@@ -192,9 +192,9 @@ describe('TypingView', () => {
     expect(typedChars.length).toBe(0) // no chars typed
   })
 
-  it('advances on mismatched line in non-strict mode', async () => {
+  it('advances on mismatched line in medium mode', async () => {
     vi.useFakeTimers()
-    renderTypingView({ strictMode: false })
+    renderTypingView({ difficulty: 'medium' })
     // Type 'xyz' (all wrong)
     await fireEvent.keyDown(window, { key: 'x' })
     await fireEvent.keyDown(window, { key: 'y' })
@@ -203,9 +203,71 @@ describe('TypingView', () => {
     vi.advanceTimersByTime(300)
     await tick()
 
-    // In non-strict mode, should advance (with shake)
+    // In medium mode, should advance
     const untypedChars = document.querySelectorAll('.char.untyped')
     expect(untypedChars.length).toBe(2) // 'e', 'f' on second line (cursor on 'd')
+    vi.useRealTimers()
+  })
+
+  it('ignores incorrect keystrokes in easy mode', async () => {
+    renderTypingView({ difficulty: 'easy' })
+    await fireEvent.keyDown(window, { key: 'x' }) // wrong, should be ignored
+    await fireEvent.keyDown(window, { key: 'a' }) // correct
+
+    const correctChars = document.querySelectorAll('.char.correct')
+    const errorChars = document.querySelectorAll('.char.error')
+    expect(correctChars.length).toBe(1) // only 'a'
+    expect(errorChars.length).toBe(0) // no errors possible
+  })
+
+  it('ignores backspace in easy mode', async () => {
+    renderTypingView({ difficulty: 'easy' })
+    await fireEvent.keyDown(window, { key: 'a' })
+    await fireEvent.keyDown(window, { key: 'Backspace' })
+
+    const correctChars = document.querySelectorAll('.char.correct')
+    expect(correctChars.length).toBe(1) // 'a' still there
+  })
+
+  it('ignores backspace in hard mode', async () => {
+    renderTypingView({ difficulty: 'hard' })
+    await fireEvent.keyDown(window, { key: 'a' })
+    await fireEvent.keyDown(window, { key: 'x' }) // wrong, but typed
+    await fireEvent.keyDown(window, { key: 'Backspace' }) // should be ignored
+
+    const correctChars = document.querySelectorAll('.char.correct')
+    const errorChars = document.querySelectorAll('.char.error')
+    expect(correctChars.length).toBe(1) // 'a'
+    expect(errorChars.length).toBe(1) // 'x' error stays
+  })
+
+  it('allows wrong keystrokes in hard mode', async () => {
+    renderTypingView({ difficulty: 'hard' })
+    await fireEvent.keyDown(window, { key: 'x' }) // wrong, should be accepted
+
+    const errorChars = document.querySelectorAll('.char.error')
+    expect(errorChars.length).toBe(1)
+  })
+
+  it('includes difficulty in onComplete stats', async () => {
+    vi.useFakeTimers()
+    const onComplete = vi.fn()
+    renderTypingView({ onComplete, difficulty: 'hard' })
+
+    // Complete both lines
+    await fireEvent.keyDown(window, { key: 'a' })
+    await fireEvent.keyDown(window, { key: 'b' })
+    await fireEvent.keyDown(window, { key: 'c' })
+    await fireEvent.keyDown(window, { key: 'Enter' })
+    vi.advanceTimersByTime(300)
+    await tick()
+    await fireEvent.keyDown(window, { key: 'd' })
+    await fireEvent.keyDown(window, { key: 'e' })
+    await fireEvent.keyDown(window, { key: 'f' })
+    await fireEvent.keyDown(window, { key: 'Enter' })
+
+    expect(onComplete).toHaveBeenCalledOnce()
+    expect(onComplete.mock.calls[0][0].difficulty).toBe('hard')
     vi.useRealTimers()
   })
 })

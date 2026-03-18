@@ -1,12 +1,31 @@
 <script lang="ts">
-  import type { Lesson, Stats } from '../services/types'
+  import type { Lesson, Stats, Difficulty } from '../services/types'
   import { getMedal, EMOJI } from '../services/medals'
-  import { formatTime, useKeydown } from '../services/utils'
+  import { useKeydown } from '../services/utils'
+  import { DIFFICULTY_MULTIPLIER, DIFFICULTY_LABELS } from '../services/difficulty'
+  import { THRESHOLDS } from '../services/medals'
 
-  interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; onNext: () => void; onBack: () => void }
-  let { lesson, hasNext, stats, onNext, onBack }: Props = $props()
+  interface Props { lesson: Lesson; hasNext: boolean; stats: Stats; difficulty?: Difficulty; onNext: () => void; onBack: () => void }
+  let { lesson, hasNext, stats, difficulty = 'medium', onNext, onBack }: Props = $props()
 
-  const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1)) : null)
+  const medal = $derived(stats ? getMedal(stats.wpm * (stats.accuracy ?? 1) * DIFFICULTY_MULTIPLIER[difficulty]) : null)
+
+  function verboseTime(s: number): string {
+    const m = Math.floor(s / 60)
+    const sec = s % 60
+    if (m === 0) return `${sec}s`
+    return `${m}m ${sec}s`
+  }
+
+  function ragColor(value: number, greenAt: number, neutralAt: number): string {
+    if (value >= greenAt) return 'var(--green)'
+    if (value >= neutralAt) return 'var(--text)'
+    return 'var(--error)'
+  }
+
+  const wpmColor = $derived(ragColor(stats?.wpm ?? 0, THRESHOLDS.gold, THRESHOLDS.silver))
+  const accColor = $derived(ragColor((stats?.accuracy ?? 1) * 100, 95, 80))
+  const diffColor = $derived(ragColor(DIFFICULTY_MULTIPLIER[difficulty], 1.3, 1.0))
 
   $effect(() => useKeydown({
     Enter: () => hasNext ? onNext() : onBack(),
@@ -27,10 +46,11 @@
     {/if}
     {#if stats}
       <div class="stats">
-        <div class="stat"><span class="stat-value">{stats.wpm}</span><span class="stat-label">wpm</span></div>
-        <div class="stat"><span class="stat-value">{formatTime(stats.elapsed)}</span><span class="stat-label">time</span></div>
-        <div class="stat"><span class="stat-value">{Math.round((stats.accuracy ?? 1) * 100)}%</span><span class="stat-label">accuracy</span></div>
+        <div class="stat"><span class="stat-value" style:color={wpmColor}>{stats.wpm}</span><span class="stat-label">wpm</span></div>
+        <div class="stat"><span class="stat-value" style:color={accColor}>{Math.round((stats.accuracy ?? 1) * 100)}%</span><span class="stat-label">accuracy</span></div>
+        <div class="stat"><span class="stat-value" style:color={diffColor}>{DIFFICULTY_MULTIPLIER[difficulty]}x</span><span class="stat-label">{DIFFICULTY_LABELS[difficulty]}</span></div>
       </div>
+      <div class="stat"><span class="stat-value time-value">{verboseTime(stats.elapsed)}</span><span class="stat-label">elapsed</span></div>
     {/if}
     <div class="actions">
       {#if hasNext}
@@ -98,7 +118,6 @@
 
   .stat-value {
     font-size: 1.5rem;
-    color: var(--correct);
   }
 
   .stat-label {
@@ -110,8 +129,12 @@
   .lesson-name {
     font-size: 0.875rem;
     color: var(--muted);
-    margin-bottom: 0.5rem;
+    margin-bottom: 0;
     text-transform: lowercase;
+  }
+
+  .time-value {
+    color: var(--text);
   }
 
   .actions {
@@ -119,7 +142,7 @@
     flex-direction: column;
     gap: 0.75rem;
     width: 100%;
-    margin-top: 0.5rem;
+    margin-top: 1.5rem;
   }
 
 

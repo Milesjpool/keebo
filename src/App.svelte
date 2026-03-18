@@ -1,5 +1,5 @@
 <script lang="ts">
-  import type { Stats, Screen, Group } from "./services/types";
+  import type { Stats, Screen, Group, Difficulty } from "./services/types";
   import lessonsData from "./data/lessons.json";
   const rawGroups = lessonsData.groups;
   const source = lessonsData.source ?? undefined;
@@ -13,7 +13,8 @@
   import LinkAccountModal from "./components/LinkAccountModal.svelte";
   import { getUrl, parseUrl, findGroupIdx } from "./services/router";
   import { loadProgress, saveProgress } from "./services/progress";
-  import { subscribeToProgress, writeProgress } from "./services/sync";
+  import { subscribeToProgress, writeProgress, writeDifficulty } from "./services/sync";
+  import { loadDifficulty, saveDifficulty, DIFFICULTY_MULTIPLIER } from "./services/difficulty";
   import Footer from "./components/Footer.svelte";
   import { ui } from "./services/ui.svelte.ts";
 
@@ -49,6 +50,7 @@
   let currentFlatIdx = $state(init.flatIdx);
 
   let progress = $state(loadProgress());
+  let difficulty = $state<Difficulty>(loadDifficulty());
   let user = $state<User | null>(null);
   let authReady = $state(false);
   let linkPrompt = $state<{ pendingCred: OAuthCredential; existingProvider: string } | null>(null);
@@ -56,6 +58,11 @@
 
   $effect(() => {
     saveProgress(progress);
+  });
+
+  $effect(() => {
+    saveDifficulty(difficulty);
+    if (user) writeDifficulty(user.uid, difficulty);
   });
 
 
@@ -66,7 +73,7 @@
       authReady = true;
       unsubProgress?.();
       if (u) {
-        unsubProgress = subscribeToProgress(u.uid, () => progress, (m) => progress = m);
+        unsubProgress = subscribeToProgress(u.uid, () => progress, (m) => progress = m, (d) => difficulty = d);
       }
     });
     return () => {
@@ -201,12 +208,14 @@
   function completeLesson(stats: Stats) {
     const id = flatLessons[currentFlatIdx].id;
     const prev = progress[id];
-    const score = stats.wpm * (stats.accuracy ?? 1);
+    const d = stats.difficulty ?? difficulty;
+    const score = stats.wpm * (stats.accuracy ?? 1) * DIFFICULTY_MULTIPLIER[d];
     const newRecord = {
       wpm: stats.wpm,
       elapsed: stats.elapsed,
       accuracy: stats.accuracy ?? 1,
       score,
+      difficulty: d,
     };
     progress[id] = !prev || score > (prev.score ?? 0) ? newRecord : prev;
     if (user) writeProgress(user.uid, progress);
@@ -259,6 +268,8 @@
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
+    {difficulty}
+    onDifficultyChange={(d) => difficulty = d}
     {source}
   />
 {:else if screen === "lessons"}
@@ -284,13 +295,15 @@
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
+    {difficulty}
+    onDifficultyChange={(d) => difficulty = d}
   />
 {:else if screen === "typing"}
   <TypingView
     lesson={flatLessons[currentFlatIdx]}
     onComplete={completeLesson}
     onBack={goToLessons}
-    strictMode={false}
+    {difficulty}
     {user}
     {authReady}
     onSignIn={signIn}
@@ -298,12 +311,14 @@
     onLinkProvider={linkProvider}
     onDeleteAccount={deleteAccount}
     onDeleteProgress={deleteProgress}
+    onDifficultyChange={(d) => difficulty = d}
   />
 {:else if screen === "complete"}
   <LessonComplete
     lesson={flatLessons[currentFlatIdx]}
     hasNext={currentFlatIdx < flatLessons.length - 1}
     stats={lastStats!}
+    {difficulty}
     onNext={nextLesson}
     onBack={goToLessons}
   />

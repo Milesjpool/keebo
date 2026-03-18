@@ -1,10 +1,12 @@
 <script lang="ts">
   import type { User } from "firebase/auth";
+  import type { Difficulty } from "../services/types";
   import { slide } from "svelte/transition";
   import { version } from "../../package.json";
   import { useKeydown } from "../services/utils";
   import { submitInterest } from "../services/feedback";
   import { getAnonName, setAnonName, rollNewName } from "../services/anonNames";
+  import { DIFFICULTIES, DIFFICULTY_LABELS } from "../services/difficulty";
   import Modal from "./Modal.svelte";
   import ConfirmExpander from "./ConfirmExpander.svelte";
   import ProviderIcon from "./ProviderIcon.svelte";
@@ -31,6 +33,8 @@
     onSignOut?: () => void;
     onDeleteAccount?: () => Promise<void>;
     onDeleteProgress?: () => void;
+    difficulty?: Difficulty;
+    onDifficultyChange?: (d: Difficulty) => void;
     onFeedback: () => void;
     onClose: () => void;
   }
@@ -42,6 +46,8 @@
     onSignOut,
     onDeleteAccount,
     onDeleteProgress,
+    difficulty = 'medium',
+    onDifficultyChange,
     onFeedback,
     onClose,
   }: Props = $props();
@@ -61,6 +67,13 @@
   let renameRowEl = $state<HTMLDivElement | null>(null);
   let layoutOpen = $state(false);
   let layoutEl = $state<HTMLDivElement | null>(null);
+  let difficultyEl = $state<HTMLDivElement | null>(null);
+
+  function cycleDifficulty() {
+    const idx = DIFFICULTIES.indexOf(difficulty);
+    const next = DIFFICULTIES[(idx + 1) % DIFFICULTIES.length];
+    onDifficultyChange?.(next);
+  }
 
   function modalButtons() {
     return Array.from(
@@ -171,6 +184,9 @@
           } else if (document.activeElement === renameRowEl) {
             e.preventDefault();
             nameInputEl?.focus();
+          } else if (document.activeElement === difficultyEl) {
+            e.preventDefault();
+            cycleDifficulty();
           } else if (document.activeElement === layoutEl) {
             e.preventDefault();
             handleLayoutClick();
@@ -237,6 +253,18 @@
 
     <section>
       <span class="section-label">preferences</span>
+      <div
+        class="setting-row"
+        tabindex="-1"
+        data-keynav-item
+        bind:this={difficultyEl}
+        onclick={cycleDifficulty}
+        onmouseenter={() => difficultyEl?.focus()}
+        onmouseleave={() => { if (document.activeElement === difficultyEl) difficultyEl?.blur(); }}
+      >
+        <span class="setting-name">difficulty</span>
+        <span class="setting-value">{DIFFICULTY_LABELS[difficulty]}</span>
+      </div>
       <div
         class="setting-row"
         class:open={layoutOpen}
