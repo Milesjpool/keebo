@@ -6,8 +6,8 @@ export const testGroups: Group[] = [
     title: 'Home Row',
     flatStart: 0,
     lessons: [
-      { id: 'l1', subtitle: 'jkl;', lines: ['jjj kkk', 'lll ;;;'], flatIdx: 0, title: 'Home Row · jkl;', fingerHints: true },
-      { id: 'l2', subtitle: 'asdf', lines: ['aaa sss', 'ddd fff'], flatIdx: 1, title: 'Home Row · asdf', fingerHints: true },
+      { id: 'l1', subtitle: 'jkl;', lines: ['jjj kkk', 'lll ;;;'], flatIdx: 0, title: 'Home Row · jkl;', allowFingerHints: true },
+      { id: 'l2', subtitle: 'asdf', lines: ['aaa sss', 'ddd fff'], flatIdx: 1, title: 'Home Row · asdf', allowFingerHints: true },
     ],
   },
   {
@@ -15,8 +15,8 @@ export const testGroups: Group[] = [
     title: 'Top Row',
     flatStart: 2,
     lessons: [
-      { id: 'l3', subtitle: 'qwer', lines: ['qqq www', 'eee rrr'], flatIdx: 2, title: 'Top Row · qwer', fingerHints: true },
-      { id: 'l4', subtitle: 'tyui', lines: ['ttt yyy'], flatIdx: 3, title: 'Top Row · tyui', fingerHints: true },
+      { id: 'l3', subtitle: 'qwer', lines: ['qqq www', 'eee rrr'], flatIdx: 2, title: 'Top Row · qwer', allowFingerHints: true },
+      { id: 'l4', subtitle: 'tyui', lines: ['ttt yyy'], flatIdx: 3, title: 'Top Row · tyui', allowFingerHints: true },
     ],
   },
 ]

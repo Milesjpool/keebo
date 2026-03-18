@@ -278,7 +278,7 @@
           {/if}
         </div>
     </div>
-    {#if lesson.fingerHints !== false}<FingerIndicator
+    {#if lesson.allowFingerHints}<FingerIndicator
         char={currentChar}
       />{/if}
   </main>

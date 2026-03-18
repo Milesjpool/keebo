@@ -21,7 +21,7 @@ const testLesson: Lesson = {
   lines: ['abc', 'def'],
   flatIdx: 0,
   title: 'Test · test',
-  fingerHints: false,
+  allowFingerHints: false,
 }
 
 function renderTypingView(overrides = {}) {
