@@ -153,6 +153,10 @@
     goToGroups();
   }
 
+  function syncError(err: unknown) {
+    console.warn('[keebo sync]', (err as Error)?.message ?? 'sync failed');
+  }
+
   function isDone(lesson: { id: string }) {
     return lesson.id in progress;
   }
@@ -167,7 +171,7 @@
     onLinkProvider: linkProvider,
     onDeleteAccount: deleteAccount,
     onDeleteProgress: deleteProgress,
-    onDifficultyChange: (d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); },
+    onDifficultyChange: (d) => { difficulty = d; if (user) writeDifficulty(user.uid, d).catch(syncError); },
   });
 
   let groupFocused = $state(
@@ -211,7 +215,7 @@
       difficulty: d,
     };
     progress[id] = !prev || score > (prev.score ?? 0) ? newRecord : prev;
-    if (user) writeProgress(user.uid, progress);
+    if (user) writeProgress(user.uid, progress).catch(syncError);
     lastStats = stats;
     screen = "complete";
     // URL stays at the lesson URL (no pushState)

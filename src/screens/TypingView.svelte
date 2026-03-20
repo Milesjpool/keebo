@@ -2,7 +2,7 @@
   import type { Lesson, Stats } from "../services/types";
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
-  import { formatTime, calcScrollOffset } from "../services/utils";
+  import { formatTime, calcScrollOffset, safeTimeouts } from "../services/utils";
   import { hoverFocus } from "../services/actions";
   import { THRESHOLDS } from "../services/medals";
   import { DIFFICULTY_MULTIPLIER } from "../services/difficulty";
@@ -20,6 +20,9 @@
   }: Props = $props();
 
   const auth$ = getAuthContext();
+  const timeouts = safeTimeouts();
+
+  $effect(() => () => timeouts.clearAll());
 
   let lineIndex = $state(0);
   let typed = $state("");
@@ -103,7 +106,7 @@
 
         // Floating score
         floatingScore = { wpm: lineWpm, accuracy: lineAcc, color: ragColor(lineScore) };
-        setTimeout(() => { floatingScore = null; }, 2000);
+        timeouts.set(() => { floatingScore = null; }, 2000);
 
         lineResults.push({ correct: lineCorrect, total: line.length });
 
@@ -113,7 +116,7 @@
           typed = "";
           lineStartTime = Date.now();
           rewinding = true;
-          setTimeout(() => {
+          timeouts.set(() => {
             rewinding = false;
           }, REWIND_MS);
         } else {
@@ -146,7 +149,7 @@
             const thisId = errorId++;
             const left = idx * charWidth - scrollOffset;
             floatingErrors = [...floatingErrors, { id: thisId, char: e.key, left }];
-            setTimeout(() => { floatingErrors = floatingErrors.filter(f => f.id !== thisId); }, 800);
+            timeouts.set(() => { floatingErrors = floatingErrors.filter(f => f.id !== thisId); }, 800);
             return;
           }
           typed += e.key;
@@ -154,7 +157,7 @@
             const thisId = errorId++;
             const left = idx * charWidth - scrollOffset;
             floatingErrors = [...floatingErrors, { id: thisId, char: e.key, left }];
-            setTimeout(() => {
+            timeouts.set(() => {
               floatingErrors = floatingErrors.filter(f => f.id !== thisId);
             }, 900);
           }

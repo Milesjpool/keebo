@@ -22,7 +22,7 @@ export function subscribeToProgress(
       if (data.difficulty && onDifficultyUpdate) {
         onDifficultyUpdate(data.difficulty as Difficulty)
       }
-      setDoc(ref, { progress: merged }, { merge: true })
+      setDoc(ref, { progress: merged }, { merge: true }).catch(() => {})
     }
   })
 }

@@ -39,6 +39,7 @@ describe('subscribeToProgress', () => {
       })
       return vi.fn()
     })
+    mockSetDoc.mockResolvedValue(undefined)
 
     const local: Progress = { l2: { wpm: 50, elapsed: 25, accuracy: 1, score: 50 } }
     const onUpdate = vi.fn()
@@ -93,6 +94,7 @@ describe('subscribeToProgress', () => {
       callback({ exists: () => false, data: () => ({}) })
       return vi.fn()
     })
+    mockSetDoc.mockResolvedValue(undefined)
 
     const local: Progress = { l1: { wpm: 50, elapsed: 25, accuracy: 1, score: 50 } }
     const onUpdate = vi.fn()

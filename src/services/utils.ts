@@ -36,6 +36,20 @@ export function focusNext(el: HTMLElement | null | undefined): void {
   setTimeout(() => el?.focus(), 0)
 }
 
+export function safeTimeouts() {
+  const ids: number[] = []
+  function set(fn: () => void, ms: number) {
+    const id = setTimeout(fn, ms) as unknown as number
+    ids.push(id)
+    return id
+  }
+  function clearAll() {
+    ids.forEach(clearTimeout)
+    ids.length = 0
+  }
+  return { set, clearAll }
+}
+
 export function calcScrollOffset(
   cursorIdx: number, lineLength: number, charWidth: number, wrapWidth: number
 ): number {
