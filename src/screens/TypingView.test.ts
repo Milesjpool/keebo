@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/svelte'
 import { tick, mount, createRawSnippet } from 'svelte'
 import TypingView from './TypingView.svelte'
-import type { Lesson } from '../services/types'
+import type { Lesson, Difficulty } from '../services/types'
 
 // Mock Svelte component imports with no-op components
 function mockComponent() {
@@ -15,6 +15,23 @@ function mockComponent() {
 vi.mock('../components/AuthButton.svelte', () => mockComponent())
 vi.mock('../components/FingerIndicator.svelte', () => mockComponent())
 
+let mockDifficulty: Difficulty = 'medium'
+
+vi.mock('../services/auth-context', () => ({
+  getAuthContext: () => ({
+    get user() { return null },
+    get authReady() { return true },
+    get difficulty() { return mockDifficulty },
+    get difficultyLocked() { return true },
+    onSignIn: vi.fn(),
+    onSignOut: vi.fn(),
+    onLinkProvider: vi.fn(),
+    onDeleteAccount: vi.fn(),
+    onDeleteProgress: vi.fn(),
+    onDifficultyChange: vi.fn(),
+  }),
+}))
+
 const testLesson: Lesson = {
   id: 'l1',
   subtitle: 'test',
@@ -24,18 +41,14 @@ const testLesson: Lesson = {
   allowFingerHints: false,
 }
 
-function renderTypingView(overrides = {}) {
+function renderTypingView(overrides: { onComplete?: ReturnType<typeof vi.fn>; onBack?: ReturnType<typeof vi.fn>; difficulty?: Difficulty } = {}) {
+  if (overrides.difficulty) mockDifficulty = overrides.difficulty
+  else mockDifficulty = 'medium'
   return render(TypingView, {
     props: {
       lesson: testLesson,
-      onComplete: vi.fn(),
-      onBack: vi.fn(),
-      difficulty: 'medium' as const,
-      user: null,
-      authReady: true,
-      onSignIn: vi.fn(),
-      onSignOut: vi.fn(),
-      ...overrides,
+      onComplete: overrides.onComplete ?? vi.fn(),
+      onBack: overrides.onBack ?? vi.fn(),
     },
   })
 }

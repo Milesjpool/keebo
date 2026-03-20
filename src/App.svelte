@@ -17,6 +17,7 @@
   import { loadDifficulty, saveDifficulty } from "./services/difficulty";
   import { calculateScore } from "./services/scoring";
   import { lastUnlockedGroup, lastUnlockedLesson } from "./services/unlock";
+  import { setAuthContext } from "./services/auth-context";
   import Footer from "./components/Footer.svelte";
   import { ui } from "./services/ui.svelte.ts";
 
@@ -156,6 +157,19 @@
     return lesson.id in progress;
   }
 
+  setAuthContext({
+    get user() { return user; },
+    get authReady() { return authReady; },
+    get difficulty() { return difficulty; },
+    get difficultyLocked() { return screen === 'typing'; },
+    onSignIn: signIn,
+    onSignOut: handleSignOut,
+    onLinkProvider: linkProvider,
+    onDeleteAccount: deleteAccount,
+    onDeleteProgress: deleteProgress,
+    onDifficultyChange: (d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); },
+  });
+
   let groupFocused = $state(
     init.screen === "groups" ? lastUnlockedGroup(groups, progress) : init.groupIdx,
   );
@@ -240,15 +254,6 @@
     onSelect={openGroup}
     bind:focused={groupFocused}
     context={{ screen: 'groups', groupIdx: groupFocused }}
-    {user}
-    {authReady}
-    onSignIn={signIn}
-    onSignOut={handleSignOut}
-    onLinkProvider={linkProvider}
-    onDeleteAccount={deleteAccount}
-    onDeleteProgress={deleteProgress}
-    {difficulty}
-    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
     {source}
   />
 {:else if screen === "lessons"}
@@ -267,30 +272,12 @@
       flatIdx: focusedLesson?.flatIdx,
       lessonId: focusedLesson?.id,
     }}
-    {user}
-    {authReady}
-    onSignIn={signIn}
-    onSignOut={handleSignOut}
-    onLinkProvider={linkProvider}
-    onDeleteAccount={deleteAccount}
-    onDeleteProgress={deleteProgress}
-    {difficulty}
-    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
   />
 {:else if screen === "typing"}
   <TypingView
     lesson={flatLessons[currentFlatIdx]}
     onComplete={completeLesson}
     onBack={goToLessons}
-    {difficulty}
-    {user}
-    {authReady}
-    onSignIn={signIn}
-    onSignOut={handleSignOut}
-    onLinkProvider={linkProvider}
-    onDeleteAccount={deleteAccount}
-    onDeleteProgress={deleteProgress}
-    onDifficultyChange={(d) => { difficulty = d; if (user) writeDifficulty(user.uid, d); }}
   />
 {:else if screen === "complete"}
   <LessonComplete

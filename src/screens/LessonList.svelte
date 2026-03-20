@@ -1,6 +1,5 @@
 <script lang="ts">
-  import type { Group, Progress, Difficulty } from '../services/types'
-  import type { User } from 'firebase/auth'
+  import type { Group, Progress } from '../services/types'
   import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
   import { hoverFocus } from '../services/actions'
   import AuthButton from '../components/AuthButton.svelte'
@@ -13,17 +12,8 @@
     onBack: () => void
     focused: number
     context: { screen: string; groupIdx: number; flatIdx?: number; lessonId?: string }
-    user: User | null
-    authReady: boolean
-    onSignIn: (p: string) => Promise<void>
-    onSignOut: () => Promise<void>
-    onLinkProvider: (p: string) => Promise<void>
-    onDeleteAccount?: () => Promise<void>
-    onDeleteProgress?: () => void
-    difficulty: Difficulty
-    onDifficultyChange: (d: Difficulty) => void
   }
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context, user, authReady, onSignIn, onSignOut, onLinkProvider, onDeleteAccount, onDeleteProgress, difficulty, onDifficultyChange }: Props = $props()
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
   let authFocusEl = $state<HTMLElement | null>(null)
@@ -113,7 +103,7 @@
       <h1>keebo</h1>
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {user} {authReady} {context} {onSignIn} {onSignOut} {onLinkProvider} {onDeleteAccount} {onDeleteProgress} {difficulty} {onDifficultyChange} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} onAscend={() => { focused = -2 }} onModalClose={() => { focused = 0 }} />
+    <AuthButton {context} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} onAscend={() => { focused = -2 }} onModalClose={() => { focused = 0 }} />
   </header>
 
   <!-- Group header card — pinned, acts as back button -->

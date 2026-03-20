@@ -1,9 +1,8 @@
 <script lang="ts">
-  import type { User } from "firebase/auth";
-  import type { Difficulty } from "../services/types";
   import { getAnonName } from "../services/anonNames";
   import { focusNext } from "../services/utils";
   import { hoverFocus } from "../services/actions";
+  import { getAuthContext } from "../services/auth-context";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -17,17 +16,7 @@
   }
 
   interface Props {
-    user: User | null;
-    authReady: boolean;
     context?: FeedbackContext;
-    onSignIn: (p: string) => Promise<void>;
-    onSignOut: () => Promise<void>;
-    onLinkProvider?: (p: string) => Promise<void>;
-    onDeleteAccount?: () => Promise<void>;
-    onDeleteProgress?: () => void;
-    difficulty?: Difficulty;
-    difficultyLocked?: boolean;
-    onDifficultyChange?: (d: Difficulty) => void;
     focusEl?: HTMLElement | null;
     onDescend?: () => void;
     onAscend?: () => void;
@@ -35,17 +24,7 @@
     avatarOnly?: boolean;
   }
   let {
-    user,
-    authReady,
     context,
-    onSignIn,
-    onSignOut,
-    onLinkProvider,
-    onDeleteAccount,
-    onDeleteProgress,
-    difficulty,
-    difficultyLocked = false,
-    onDifficultyChange,
     focusEl = $bindable<HTMLElement | null>(null),
     onDescend,
     onAscend,
@@ -53,7 +32,9 @@
     avatarOnly = false,
   }: Props = $props();
 
-  let linkedProviderIds = $derived(user?.providerData.map(p => p.providerId) ?? []);
+  const auth$ = getAuthContext();
+
+  let linkedProviderIds = $derived(auth$.user?.providerData.map(p => p.providerId) ?? []);
 
   let open = $state(false);
   let feedbackOpen = $state(false);
@@ -140,22 +121,22 @@
     bind:this={authBtnEl}
     onclick={toggle}
     onfocus={() => onAscend?.()}
-    disabled={!authReady}
+    disabled={!auth$.authReady}
     onkeydown={handleBtnKeydown}
     aria-label="account menu"
   >
     <div class="avatar">
-      {#if user?.photoURL}
-        <img src={user.photoURL} alt="" referrerpolicy="no-referrer" />
+      {#if auth$.user?.photoURL}
+        <img src={auth$.user.photoURL} alt="" referrerpolicy="no-referrer" />
       {:else}
         <AnonAvatar />
       {/if}
     </div>
     {#if !avatarOnly}
-      {#if !authReady}
+      {#if !auth$.authReady}
         <span class="auth-label">█████ ████</span>
-      {:else if user}
-        <span class="auth-label">{user.displayName?.toLowerCase() ?? user.email}</span>
+      {:else if auth$.user}
+        <span class="auth-label">{auth$.user.displayName?.toLowerCase() ?? auth$.user.email}</span>
       {:else}
         <span class="auth-label">{anonName}</span>
       {/if}
@@ -172,13 +153,13 @@
       onmouseover={(e) => { (e.target as Element).closest("button")?.focus() }}
       onfocus={(e) => (e.target as Element).closest("button")?.focus()}
     >
-      {#if user}
+      {#if auth$.user}
         <span class="dropdown-label">my account</span>
         <button onclick={openSettings}>settings</button>
         <button
           onclick={() => {
             open = false;
-            onSignOut();
+            auth$.onSignOut();
           }}>sign out</button
         >
       {:else}
@@ -195,27 +176,27 @@
   open={feedbackOpen}
   onClose={() => { feedbackOpen = false; onModalClose?.(); }}
   {context}
-  {user}
+  user={auth$.user}
 />
 
 <SettingsModal
   open={settingsOpen}
-  {user}
-  {onSignIn}
-  {onLinkProvider}
-  {onSignOut}
-  {onDeleteAccount}
-  {onDeleteProgress}
-  {difficulty}
-  {difficultyLocked}
-  {onDifficultyChange}
+  user={auth$.user}
+  onSignIn={auth$.onSignIn}
+  onLinkProvider={auth$.onLinkProvider}
+  onSignOut={auth$.onSignOut}
+  onDeleteAccount={auth$.onDeleteAccount}
+  onDeleteProgress={auth$.onDeleteProgress}
+  difficulty={auth$.difficulty}
+  difficultyLocked={auth$.difficultyLocked}
+  onDifficultyChange={auth$.onDifficultyChange}
   onFeedback={() => { settingsOpen = false; feedbackOpen = true; }}
-  onClose={() => { settingsOpen = false; if (!user) anonName = getAnonName(); onModalClose?.(); }}
+  onClose={() => { settingsOpen = false; if (!auth$.user) anonName = getAnonName(); onModalClose?.(); }}
 />
 
 <SignInModal
   open={signInOpen}
-  {onSignIn}
+  onSignIn={auth$.onSignIn}
   onClose={() => { signInOpen = false; onModalClose?.(); }}
 />
 

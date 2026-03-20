@@ -1,41 +1,25 @@
 <script lang="ts">
-  import type { Lesson, Stats, Difficulty } from "../services/types";
-  import type { User } from "firebase/auth";
+  import type { Lesson, Stats } from "../services/types";
   import FingerIndicator from "../components/FingerIndicator.svelte";
   import AuthButton from "../components/AuthButton.svelte";
   import { formatTime, calcScrollOffset } from "../services/utils";
   import { hoverFocus } from "../services/actions";
   import { THRESHOLDS } from "../services/medals";
   import { DIFFICULTY_MULTIPLIER } from "../services/difficulty";
+  import { getAuthContext } from "../services/auth-context";
 
   interface Props {
     lesson: Lesson;
     onComplete: (s: Stats) => void;
     onBack: () => void;
-    difficulty?: Difficulty;
-    user: User | null;
-    authReady: boolean;
-    onSignIn: (p: string) => Promise<void>;
-    onSignOut: () => Promise<void>;
-    onLinkProvider?: (p: string) => Promise<void>;
-    onDeleteAccount?: () => Promise<void>;
-    onDeleteProgress?: () => void;
-    onDifficultyChange?: (d: Difficulty) => void;
   }
   let {
     lesson,
     onComplete,
     onBack,
-    difficulty = 'medium',
-    user,
-    authReady,
-    onSignIn,
-    onSignOut,
-    onLinkProvider,
-    onDeleteAccount,
-    onDeleteProgress,
-    onDifficultyChange,
   }: Props = $props();
+
+  const auth$ = getAuthContext();
 
   let lineIndex = $state(0);
   let typed = $state("");
@@ -115,7 +99,7 @@
         const lineAcc = lineCorrect / line.length;
         const lineSecs = lineStartTime ? (Date.now() - lineStartTime) / 1000 : 1;
         const lineWpm = Math.round(line.length / 5 / (lineSecs / 60));
-        const lineScore = lineWpm * lineAcc * DIFFICULTY_MULTIPLIER[difficulty];
+        const lineScore = lineWpm * lineAcc * DIFFICULTY_MULTIPLIER[auth$.difficulty];
 
         // Floating score
         floatingScore = { wpm: lineWpm, accuracy: lineAcc, color: ragColor(lineScore) };
@@ -139,7 +123,7 @@
             wpm: Math.round(chars / 5 / (secs / 60)),
             elapsed: Math.round(secs),
             accuracy: accuracy(),
-            difficulty,
+            difficulty: auth$.difficulty,
           });
         }
         return;
@@ -147,7 +131,7 @@
 
       if (e.key === "Backspace") {
         e.preventDefault();
-        if (difficulty !== 'medium') return;
+        if (auth$.difficulty !== 'medium') return;
         typed = typed.slice(0, -1);
         return;
       }
@@ -158,7 +142,7 @@
         if (!lineStartTime) lineStartTime = now;
         if (typed.length < line.length) {
           const idx = typed.length;
-          if (difficulty === 'easy' && e.key !== line[idx]) {
+          if (auth$.difficulty === 'easy' && e.key !== line[idx]) {
             const thisId = errorId++;
             const left = idx * charWidth - scrollOffset;
             floatingErrors = [...floatingErrors, { id: thisId, char: e.key, left }];
@@ -212,16 +196,6 @@
     </div>
     <div class="nav-right">
       <AuthButton
-        {user}
-        {authReady}
-        {onSignIn}
-        {onSignOut}
-        {onLinkProvider}
-        {onDeleteAccount}
-        {onDeleteProgress}
-        {difficulty}
-        difficultyLocked={true}
-        {onDifficultyChange}
         context={{
           screen: "typing",
           lessonId: lesson.id,
