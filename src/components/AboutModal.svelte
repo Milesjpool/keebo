@@ -132,7 +132,7 @@
 
     <hr class="divider" />
 
-    <p class="body-text">made with</p>
+    <p class="body-text tagline">🤖 AI coded, human approved</p>
     <div class="tech-logos">
       <a class="tech-logo" title="Svelte" href="https://svelte.dev" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={svelteSvg} class="tech-icon" /></a>
       <a class="tech-logo" title="TypeScript" href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={tsSvg} class="tech-icon" /></a>
@@ -202,6 +202,11 @@
     border: none;
     border-top: 1px solid var(--border);
     margin: 0;
+  }
+
+  .tagline {
+    font-size: 0.75rem;
+    letter-spacing: 0.02em;
   }
 
   .tech-logos {
