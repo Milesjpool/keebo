@@ -38,6 +38,7 @@
     difficultyLocked?: boolean;
     onDifficultyChange?: (d: Difficulty) => void;
     onFeedback: () => void;
+    onAbout: () => void;
     onClose: () => void;
   }
   let {
@@ -52,6 +53,7 @@
     difficultyLocked = false,
     onDifficultyChange,
     onFeedback,
+    onAbout,
     onClose,
   }: Props = $props();
 
@@ -441,7 +443,7 @@
     {/if}
 
     <div class="footer-sep modal-full-bleed">
-      <button class="btn-feedback" onclick={onFeedback}>feedback</button>
+      <button class="btn-feedback" onclick={onAbout}>about keebo</button>
       <a
         class="btn-footer-link"
         href="https://ko-fi.com/milesjpool"
@@ -457,7 +459,7 @@
         />
         support keebo
       </a>
-      <span class="version">{appVersion}</span>
+      <button class="btn-feedback" onclick={onFeedback}>feedback</button>
     </div>
   </Modal>
 {/if}
