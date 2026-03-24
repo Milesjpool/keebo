@@ -166,12 +166,20 @@
     pointer-events: none;
   }
 
+  :global([data-theme="light"]) .tech-logo {
+    color: #181717;
+  }
+
   :global([data-theme="light"]) .hero-bg {
     background-image: var(--hero-light);
     opacity: 0.12;
   }
 
   @media (prefers-color-scheme: light) {
+    :global([data-theme="auto"]) .tech-logo {
+      color: #181717;
+    }
+
     :global([data-theme="auto"]) .hero-bg {
       background-image: var(--hero-light);
       opacity: 0.12;
@@ -208,6 +216,7 @@
     align-items: center;
     justify-content: center;
     text-decoration: none;
+    color: #fff;
     border-radius: 4px;
     width: 28px;
     height: 28px;

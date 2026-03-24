@@ -1,13 +1,32 @@
-- show incorrectly typed letter
-- Animate prompt enter/exit.
-- next-line preview (configurable)
-- difficulty (gutters [no mistakes], normal, strict [no corrections])
-- more lessons.
+## High priority — polish & retention
 - User settings page
-  - Keyboard settings  (track clicks, leading indicator, before feature is added).
-  - toggle submit line score ghost.
-  - toggle incorrect letter ghost.
-  - difficulty settings
+  - Scrollable/collapsable sections.
+  - toggle show/hide submit line score ghost.
+  - toggle show/hide incorrect letter ghost.
+  - toggle animations
+  - toggle hands (if allowFingerHints & keyboard fingermap)
+  - toggle next line preview (if allowPreview)
+  - Keyboard settings
+  - Unlock all lessons?
+- next-line preview
+  - allow preview setting on lesson (default true)
+  - Animate prompt enter/exit (how?)
+
+## Medium priority — content & growth
+- site-maps
+- more lessons.
+  - Move configs into firebase.
+  - lesson creator.
+- share (JN, SS, JB, Reddit)
+- about section
+  - AI transparency
+
+## Lower priority — nice to have
+- Mobile UI
+  - Logo
+  - feedback
+  - about?
+- easter egg.
+  - Unlock all lessons?
+  - Unlock lesson editor?
 - Auto-resolve 'linked account already exists'?
-- (hover +) 'KEEBO' easter egg.
-- about section (github, firebase, AI, reason - Keyboard first)

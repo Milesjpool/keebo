@@ -23,6 +23,6 @@ bun run test      # run tests
 
 🤖 AI coded, human approved
 
-[![👾 miles](https://img.shields.io/badge/%F0%9F%91%BE%20miles-milesjpool.com-grey?labelColor=e8c828)](https://milesjpool.com) · [![Ko-fi](https://img.shields.io/badge/Ko--fi-support%20keebo-ff5e5b?logo=ko-fi&logoColor=white)](https://ko-fi.com/milesjpool)
+[![👾 Miles](https://img.shields.io/badge/%F0%9F%91%BE%20Miles-milesjpool.com-grey?labelColor=e8c828)](https://milesjpool.com) · [![Ko-fi](https://img.shields.io/badge/Ko--fi-support%20keebo-ff5e5b?logo=ko-fi&logoColor=white)](https://ko-fi.com/milesjpool)
 
 Initial lesson content sourced from [typingstudy.com](https://www.typingstudy.com).
