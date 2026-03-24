@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { Snippet } from 'svelte'
   import AuthButton from './AuthButton.svelte'
+  import TitleType from './TitleType.svelte'
 
   interface Props {
     context: { screen: string; groupIdx?: number; flatIdx?: number; lessonId?: string }
@@ -23,24 +24,26 @@
   let hero = $state(!sessionStorage.getItem(HERO_KEY))
   let layoutEl = $state<HTMLDivElement | null>(null)
 
-  function collapseHero() {
-    if (!hero) return
-    hero = false
-    sessionStorage.setItem(HERO_KEY, '1')
+  function onChildScroll(e: Event) {
+    const el = e.target as HTMLElement
+    if (hero && el.scrollTop > 0) {
+      hero = false
+      sessionStorage.setItem(HERO_KEY, '1')
+    }
   }
 
   // Listen for scroll events from child lists (scroll doesn't bubble, so use capture)
   $effect(() => {
     if (!layoutEl) return
-    layoutEl.addEventListener('scroll', collapseHero, true)
-    return () => layoutEl!.removeEventListener('scroll', collapseHero, true)
+    layoutEl.addEventListener('scroll', onChildScroll, true)
+    return () => layoutEl!.removeEventListener('scroll', onChildScroll, true)
   })
 </script>
 
 <div class="browse-layout" class:hero bind:this={layoutEl}>
   <header>
     <div class="header-left">
-      <h1>keebo</h1>
+      <TitleType />
       <p class="subtitle">touch typing, step by step</p>
     </div>
     <AuthButton {context} bind:focusEl={authFocusEl} onDescend={onAuthDescend} onAscend={onAuthAscend} {onModalClose} />
@@ -82,19 +85,6 @@
     flex-direction: column;
   }
 
-  h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--correct);
-    letter-spacing: 0.1em;
-    margin-left: -0.08em;
-    transition: font-size 0.5s ease;
-  }
-
-  .hero h1 {
-    font-size: 4.5rem;
-  }
-
   :global(.avatar) {
     transition: transform 0.5s ease;
   }
@@ -108,4 +98,5 @@
     font-size: 0.9rem;
     margin-top: 0.25rem;
   }
+
 </style>
