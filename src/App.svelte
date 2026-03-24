@@ -7,6 +7,7 @@
   import LessonList from "./screens/LessonList.svelte";
   import TypingView from "./screens/TypingView.svelte";
   import LessonComplete from "./screens/LessonComplete.svelte";
+  import BrowseLayout from "./components/BrowseLayout.svelte";
   import { auth, googleProvider, githubProvider, db } from "./services/firebase";
   import { onAuthStateChanged, signInWithPopup, signOut, linkWithPopup, linkWithCredential, OAuthCredential, GoogleAuthProvider, GithubAuthProvider, deleteUser, type User } from "firebase/auth";
   import { deleteDoc, doc } from "firebase/firestore";
@@ -174,6 +175,8 @@
     onDifficultyChange: (d) => { difficulty = d; if (user) writeDifficulty(user.uid, d).catch(syncError); },
   });
 
+  let browseAuthFocusEl = $state<HTMLElement | null>(null);
+
   let groupFocused = $state(
     init.screen === "groups" ? lastUnlockedGroup(groups, progress) : init.groupIdx,
   );
@@ -251,32 +254,42 @@
 
 </script>
 
-{#if screen === "groups"}
-  <GroupList
-    {groups}
-    {progress}
-    onSelect={openGroup}
-    bind:focused={groupFocused}
-    context={{ screen: 'groups', groupIdx: groupFocused }}
-    {source}
-  />
-{:else if screen === "lessons"}
-  {@const lessonIdx = lessonFocused[currentGroupIdx]}
-  {@const focusedLesson = lessonIdx >= 0 ? groups[currentGroupIdx].lessons[lessonIdx] : undefined}
-  <LessonList
-    group={groups[currentGroupIdx]}
-    groupIdx={currentGroupIdx}
-    {progress}
-    onSelect={startLesson}
-    onBack={goToGroups}
-    bind:focused={lessonFocused[currentGroupIdx]}
-    context={{
-      screen: 'lessons',
-      groupIdx: currentGroupIdx,
-      flatIdx: focusedLesson?.flatIdx,
-      lessonId: focusedLesson?.id,
-    }}
-  />
+{#if screen === "groups" || screen === "lessons"}
+  {@const browseContext = screen === "groups"
+    ? { screen: 'groups', groupIdx: groupFocused }
+    : (() => {
+        const li = lessonFocused[currentGroupIdx];
+        const fl = li >= 0 ? groups[currentGroupIdx].lessons[li] : undefined;
+        return { screen: 'lessons', groupIdx: currentGroupIdx, flatIdx: fl?.flatIdx, lessonId: fl?.id };
+      })()}
+  <BrowseLayout
+    context={browseContext}
+    bind:authFocusEl={browseAuthFocusEl}
+    onAuthDescend={() => { if (screen === 'groups') groupFocused = 0; else lessonFocused[currentGroupIdx] = -1 }}
+    onAuthAscend={() => { if (screen === 'groups') groupFocused = -1; else lessonFocused[currentGroupIdx] = -2 }}
+    onModalClose={() => { if (screen === 'groups') groupFocused = 0; else lessonFocused[currentGroupIdx] = 0 }}
+  >
+    {#if screen === "groups"}
+      <GroupList
+        {groups}
+        {progress}
+        onSelect={openGroup}
+        bind:focused={groupFocused}
+        authFocusEl={browseAuthFocusEl}
+        {source}
+      />
+    {:else}
+      <LessonList
+        group={groups[currentGroupIdx]}
+        groupIdx={currentGroupIdx}
+        {progress}
+        onSelect={startLesson}
+        onBack={goToGroups}
+        bind:focused={lessonFocused[currentGroupIdx]}
+        authFocusEl={browseAuthFocusEl}
+      />
+    {/if}
+  </BrowseLayout>
 {:else if screen === "typing"}
   <TypingView
     lesson={flatLessons[currentFlatIdx]}

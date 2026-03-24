@@ -228,7 +228,7 @@
   }
 
   .auth-label {
-    font-size: 0.875rem;
+    font-size: 0.9rem;
     margin-top: 0.25rem;
     max-width: 10rem;
     overflow: hidden;

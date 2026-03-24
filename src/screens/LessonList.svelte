@@ -2,7 +2,6 @@
   import type { Group, Progress } from '../services/types'
   import { getMedal, getGroupMedal, EMOJI } from '../services/medals'
   import { hoverFocus } from '../services/actions'
-  import AuthButton from '../components/AuthButton.svelte'
 
   interface Props {
     group: Group
@@ -11,12 +10,11 @@
     onSelect: (fi: number) => void
     onBack: () => void
     focused: number
-    context: { screen: string; groupIdx: number; flatIdx?: number; lessonId?: string }
+    authFocusEl?: HTMLElement | null
   }
-  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), context }: Props = $props()
+  let { group, groupIdx, progress, onSelect, onBack, focused = $bindable(0), authFocusEl }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
-  let authFocusEl = $state<HTMLElement | null>(null)
   let backBtnEl = $state<HTMLButtonElement | null>(null)
   let btnEls = $state<(HTMLButtonElement | null)[]>([])
   let topHeight = $state(0)
@@ -97,80 +95,48 @@
   })
 </script>
 
-<div class="lesson-list">
-  <header>
-    <div class="header-left">
-      <h1>keebo</h1>
-      <p class="subtitle">touch typing, step by step</p>
+<!-- Group header card — pinned, acts as back button -->
+<div class="group-header">
+  <button class="group-card" class:complete={doneCount === group.lessons.length} bind:this={backBtnEl} onclick={onBack} onfocus={() => { focused = -1 }} use:hoverFocus={{ target: () => backBtnEl }}>
+    <span class="group-num">←</span>
+    <div class="group-info">
+      <span class="group-title">{group.title}</span>
     </div>
-    <AuthButton {context} bind:focusEl={authFocusEl} onDescend={() => { focused = -1 }} onAscend={() => { focused = -2 }} onModalClose={() => { focused = 0 }} />
-  </header>
+    <span class="group-status">
+      {doneCount}/{group.lessons.length}{#if groupAllGold}<span class="group-medal">🏆</span>{:else if groupMedal}<span class="group-medal">{EMOJI[groupMedal]}</span>{/if}
+    </span>
+  </button>
+</div>
 
-  <!-- Group header card — pinned, acts as back button -->
-  <div class="group-header">
-    <button class="group-card" class:complete={doneCount === group.lessons.length} bind:this={backBtnEl} onclick={onBack} onfocus={() => { focused = -1 }} use:hoverFocus={{ target: () => backBtnEl }}>
-      <span class="group-num">←</span>
-      <div class="group-info">
-        <span class="group-title">{group.title}</span>
-      </div>
-      <span class="group-status">
-        {doneCount}/{group.lessons.length}{#if groupAllGold}<span class="group-medal">🏆</span>{:else if groupMedal}<span class="group-medal">{EMOJI[groupMedal]}</span>{/if}
-      </span>
-    </button>
-  </div>
-
-  <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
-    <ul bind:this={listEl} onscroll={updateFades}>
-      {#each group.lessons as lesson, i}
-        {@const done = lesson.id in progress}
-        {@const lessonStats = progress[lesson.id]}
-        {@const locked = isLocked(i)}
-        <li class="lesson-item">
-          <button
-            class="lesson-btn"
-            class:done
-            class:locked
-            bind:this={btnEls[i]}
-            onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
-            onfocus={() => { focused = i }}
-            use:hoverFocus={{ guard: () => !locked, target: () => btnEls[i] }}
-            disabled={locked}
-          >
-            <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
-            <span class="lesson-subtitle">{lesson.subtitle}</span>
-            <span class="lesson-status">
-              {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}{#if done}{@const m = getMedal(lessonStats?.score)}{#if m}<span class="lesson-medal">{EMOJI[m]}</span>{/if}{/if}
-            </span>
-          </button>
-        </li>
-      {/each}
-    </ul>
-  </div>
+<div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
+  <ul bind:this={listEl} onscroll={updateFades}>
+    {#each group.lessons as lesson, i}
+      {@const done = lesson.id in progress}
+      {@const lessonStats = progress[lesson.id]}
+      {@const locked = isLocked(i)}
+      <li class="lesson-item">
+        <button
+          class="lesson-btn"
+          class:done
+          class:locked
+          bind:this={btnEls[i]}
+          onclick={() => { focused = i; if (!locked) onSelect(lesson.flatIdx) }}
+          onfocus={() => { focused = i }}
+          use:hoverFocus={{ guard: () => !locked, target: () => btnEls[i] }}
+          disabled={locked}
+        >
+          <span class="lesson-num">{String(i + 1).padStart(2, '0')}</span>
+          <span class="lesson-subtitle">{lesson.subtitle}</span>
+          <span class="lesson-status">
+            {#if done}{lessonStats?.wpm ? `${lessonStats.wpm} wpm · ${lessonStats.accuracy != null ? Math.round(lessonStats.accuracy * 100) + '%' : '?'}` : 'done'}{:else if locked}locked{:else}start{/if}{#if done}{@const m = getMedal(lessonStats?.score)}{#if m}<span class="lesson-medal">{EMOJI[m]}</span>{/if}{/if}
+          </span>
+        </button>
+      </li>
+    {/each}
+  </ul>
 </div>
 
 <style>
-  .lesson-list {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-
-  header {
-    margin-bottom: 3rem;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .header-left {
-    display: flex;
-    flex-direction: column;
-  }
-
   .group-header {
     flex-shrink: 0;
     margin-bottom: 0.5rem;
@@ -202,19 +168,6 @@
     bottom: 0;
     height: var(--bottom-height, 0px);
     background: linear-gradient(to top, var(--bg), transparent);
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--correct);
-    letter-spacing: 0.1em;
-  }
-
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
   }
 
   ul {

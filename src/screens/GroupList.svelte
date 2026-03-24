@@ -2,7 +2,6 @@
   import type { Group, Progress } from '../services/types'
   import { getGroupMedal, getMedal, EMOJI } from '../services/medals'
   import { hoverFocus } from '../services/actions'
-  import AuthButton from '../components/AuthButton.svelte'
   import Attribution from '../components/Attribution.svelte'
 
   interface Props {
@@ -10,13 +9,12 @@
     progress: Progress
     onSelect: (i: number) => void
     focused: number
-    context: { screen: string; groupIdx: number }
+    authFocusEl?: HTMLElement | null
     source?: string
   }
-  let { groups, progress, onSelect, focused = $bindable(0), context, source }: Props = $props()
+  let { groups, progress, onSelect, focused = $bindable(0), authFocusEl, source }: Props = $props()
 
   let listEl = $state<HTMLUListElement | null>(null)
-  let authFocusEl = $state<HTMLElement | null>(null)
   let btnEls = $state<(HTMLButtonElement | null)[]>([])
   let topHeight = $state(0)
   let bottomHeight = $state(0)
@@ -87,67 +85,48 @@
   })
 </script>
 
-<div class="group-list">
-  <header>
-    <div class="header-left">
-      <h1>keebo</h1>
-      <p class="subtitle">touch typing, step by step</p>
-    </div>
-    <AuthButton {context} bind:focusEl={authFocusEl} onDescend={() => { focused = 0 }} onAscend={() => { focused = -1 }} onModalClose={() => { focused = 0 }} />
-  </header>
+<div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
+<ul bind:this={listEl} onscroll={updateFades}>
+  {#each groups as group, i}
+    {@const state = groupState(i)}
+    <li>
+      <button
+        class="group-btn"
+        class:locked={state.locked}
+        class:complete={state.complete}
+        bind:this={btnEls[i]}
+        onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
+        onfocus={() => { focused = i }}
+        use:hoverFocus={{ guard: () => !state.locked, target: () => btnEls[i] }}
+        disabled={state.locked}
+      >
+        <span class="group-num">{String(i + 1).padStart(2, '0')}</span>
+        <div class="group-info">
+          <span class="group-title">{group.title}</span>
 
-  <div class="list-wrap" style="--top-height: {topHeight}px; --bottom-height: {bottomHeight}px">
-  <ul bind:this={listEl} onscroll={updateFades}>
-    {#each groups as group, i}
-      {@const state = groupState(i)}
-      <li>
-        <button
-          class="group-btn"
-          class:locked={state.locked}
-          class:complete={state.complete}
-          bind:this={btnEls[i]}
-          onclick={() => { focused = i; if (!state.locked) onSelect(i) }}
-          onfocus={() => { focused = i }}
-          use:hoverFocus={{ guard: () => !state.locked, target: () => btnEls[i] }}
-          disabled={state.locked}
-        >
-          <span class="group-num">{String(i + 1).padStart(2, '0')}</span>
-          <div class="group-info">
-            <span class="group-title">{group.title}</span>
-  
-          </div>
-          <span class="group-status">
-            {#if state.locked}
-              locked
-            {:else}
-              {@const gm = state.complete ? getGroupMedal(groups[i], progress) : null}
-              {@const allGold = state.complete && groups[i].lessons.every(l => getMedal(progress[l.id]?.score) === 'gold')}
-              {state.done}/{state.total}{#if allGold}<span class="group-medal">🏆</span>{:else if gm}<span class="group-medal">{EMOJI[gm]}</span>{/if}
-            {/if}
-          </span>
-        </button>
-      </li>
-    {/each}
-    {#if source}
-      <li class="attribution"><Attribution text={source} /></li>
-    {/if}
-  </ul>
-  </div>
+        </div>
+        <span class="group-status">
+          {#if state.locked}
+            locked
+          {:else}
+            {@const gm = state.complete ? getGroupMedal(groups[i], progress) : null}
+            {@const allGold = state.complete && groups[i].lessons.every(l => getMedal(progress[l.id]?.score) === 'gold')}
+            {state.done}/{state.total}{#if allGold}<span class="group-medal">🏆</span>{:else if gm}<span class="group-medal">{EMOJI[gm]}</span>{/if}
+          {/if}
+        </span>
+      </button>
+    </li>
+  {/each}
+  {#if source}
+    <li class="attribution"><Attribution text={source} /></li>
+  {/if}
+</ul>
 </div>
 
 <style>
   .attribution {
     text-align: center;
     padding: 0.75rem 0 0.25rem;
-  }
-
-  .group-list {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 4rem 2rem;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
   }
 
   .list-wrap {
@@ -176,32 +155,6 @@
     bottom: 0;
     height: var(--bottom-height, 0px);
     background: linear-gradient(to top, var(--bg), transparent);
-  }
-
-  header {
-    margin-bottom: 3rem;
-    flex-shrink: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-end;
-  }
-
-  .header-left {
-    display: flex;
-    flex-direction: column;
-  }
-
-  h1 {
-    font-size: 2rem;
-    font-weight: 500;
-    color: var(--correct);
-    letter-spacing: 0.1em;
-  }
-
-  .subtitle {
-    color: var(--muted);
-    font-size: 0.875rem;
-    margin-top: 0.25rem;
   }
 
   ul {
