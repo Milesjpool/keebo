@@ -41,6 +41,8 @@
 </script>
 
 <div class="browse-layout" class:hero bind:this={layoutEl}>
+  <img class="hero-img hero-img-dark" src="{import.meta.env.BASE_URL}hero-dark.png" alt="" />
+  <img class="hero-img hero-img-light" src="{import.meta.env.BASE_URL}hero-light.png" alt="" />
   <header>
     <div class="header-left">
       <TitleType />
@@ -65,6 +67,32 @@
 
   .browse-layout.hero {
     padding-top: 15vh;
+  }
+
+  .hero-img {
+    position: absolute;
+    top: 5vh;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100vw;
+    height: 50vh;
+    object-fit: contain;
+    object-position: center top;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.5s ease;
+  }
+
+  .hero .hero-img-dark {
+    opacity: 0.15;
+  }
+
+  :global([data-theme='light']) .hero-img-dark { opacity: 0 !important; }
+  :global([data-theme='light']) .hero .hero-img-light { opacity: 0.15; }
+
+  @media (prefers-color-scheme: light) {
+    :global([data-theme='auto']) .hero-img-dark { opacity: 0 !important; }
+    :global([data-theme='auto']) .hero .hero-img-light { opacity: 0.15; }
   }
 
   header {
