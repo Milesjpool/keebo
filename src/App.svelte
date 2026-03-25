@@ -20,7 +20,13 @@
   import { lastUnlockedGroup, lastUnlockedLesson } from "./services/unlock";
   import { setAuthContext } from "./services/auth-context";
   import Footer from "./components/Footer.svelte";
+  import MobileLanding from "./components/MobileLanding.svelte";
+  import FeedbackModal from "./components/FeedbackModal.svelte";
   import { ui } from "./services/ui.svelte.ts";
+
+  const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
+  if (isMobile) document.documentElement.setAttribute('data-theme', 'auto');
+  let mobileFeedbackOpen = $state(false);
 
   $effect(() => {
     function onKeydown() { ui.keyboardNav = true; }
@@ -322,41 +328,15 @@
   onCancel={() => (linkError = null)}
 />
 
-<div class="mobile-message">
-  <p>keebo needs a real keyboard ⌨️</p>
-  <p>come back on a laptop or desktop</p>
-</div>
+{#if isMobile}
+  <MobileLanding onFeedback={() => mobileFeedbackOpen = true} />
+  <FeedbackModal
+    open={mobileFeedbackOpen}
+    onClose={() => mobileFeedbackOpen = false}
+    context={{ screen: 'mobile' }}
+    user={null}
+  />
+{:else}
+  <Footer />
+{/if}
 
-<Footer />
-
-<style>
-  .mobile-message {
-    display: none;
-  }
-
-  @media (hover: none) and (pointer: coarse) {
-    .mobile-message {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      position: fixed;
-      inset: 0;
-      background: var(--bg);
-      z-index: 100;
-      text-align: center;
-      padding: 2rem;
-    }
-
-    .mobile-message p:first-child {
-      font-size: 1.25rem;
-      color: var(--text);
-    }
-
-    .mobile-message p:last-child {
-      font-size: 0.875rem;
-      color: var(--muted);
-    }
-  }
-</style>
