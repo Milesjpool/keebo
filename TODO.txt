@@ -17,13 +17,8 @@
 - more lessons.
   - Move configs into firebase.
   - lesson creator.
-- share (JN, SS, JB, Reddit)
 
 ## Lower priority — nice to have
-- Mobile UI
-  - Logo
-  - feedback
-  - about?
 - easter egg.
   - Unlock all lessons?
   - Unlock lesson editor?
