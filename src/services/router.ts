@@ -3,6 +3,7 @@ import type { Group, Lesson, Screen, ParsedUrl } from './types'
 export const BASE = import.meta.env.BASE_URL.replace(/\/$/, '')
 
 export function getUrl(groups: Group[], scr: Screen, gi: number, fi: number): string {
+  if (scr === 'about') return `${BASE}/about`
   if (scr === 'groups') return BASE + '/'
   if (scr === 'lessons') return `${BASE}/group/${gi + 1}`
   if (scr === 'typing') {
@@ -41,5 +42,6 @@ export function parseUrl(groups: Group[], flatLessons: Lesson[], pathname: strin
     if (gi >= 0 && gi < groups.length)
       return { screen: 'lessons', groupIdx: gi, flatIdx: 0 }
   }
+  if (p === '/about') return { screen: 'about', groupIdx: 0, flatIdx: 0 }
   return { screen: 'groups', groupIdx: 0, flatIdx: 0 }
 }

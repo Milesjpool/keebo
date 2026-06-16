@@ -3,7 +3,6 @@
   import { focusNext } from "../services/utils";
   import { hoverFocus } from "../services/actions";
   import { getAuthContext } from "../services/auth-context";
-  import AboutModal from "./AboutModal.svelte";
   import FeedbackModal from "./FeedbackModal.svelte";
   import SettingsModal from "./SettingsModal.svelte";
   import SignInModal from "./SignInModal.svelte";
@@ -22,6 +21,7 @@
     onDescend?: () => void;
     onAscend?: () => void;
     onModalClose?: () => void;
+    onAbout?: () => void;
     avatarOnly?: boolean;
   }
   let {
@@ -30,6 +30,7 @@
     onDescend,
     onAscend,
     onModalClose,
+    onAbout,
     avatarOnly = false,
   }: Props = $props();
 
@@ -38,7 +39,6 @@
   let linkedProviderIds = $derived(auth$.user?.providerData.map(p => p.providerId) ?? []);
 
   let open = $state(false);
-  let aboutOpen = $state(false);
   let feedbackOpen = $state(false);
   let settingsOpen = $state(false);
   let signInOpen = $state(false);
@@ -98,7 +98,7 @@
 
   function openAbout() {
     open = false;
-    aboutOpen = true;
+    onAbout?.();
   }
 
   function openSettings() {
@@ -199,13 +199,8 @@
   difficultyLocked={auth$.difficultyLocked}
   onDifficultyChange={auth$.onDifficultyChange}
   onFeedback={() => { settingsOpen = false; feedbackOpen = true; }}
-  onAbout={() => { settingsOpen = false; aboutOpen = true; }}
+  onAbout={() => { settingsOpen = false; onAbout?.(); }}
   onClose={() => { settingsOpen = false; if (!auth$.user) anonName = getAnonName(); onModalClose?.(); }}
-/>
-
-<AboutModal
-  open={aboutOpen}
-  onClose={() => { aboutOpen = false; onModalClose?.(); }}
 />
 
 <SignInModal

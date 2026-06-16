@@ -9,6 +9,7 @@
     onAuthDescend?: () => void
     onAuthAscend?: () => void
     onModalClose?: () => void
+    onAbout?: () => void
     children: Snippet
   }
   let {
@@ -17,6 +18,7 @@
     onAuthDescend,
     onAuthAscend,
     onModalClose,
+    onAbout,
     children,
   }: Props = $props()
 
@@ -48,7 +50,7 @@
       <TitleType />
       <p class="subtitle">touch typing, step by step</p>
     </div>
-    <AuthButton {context} bind:focusEl={authFocusEl} onDescend={onAuthDescend} onAscend={onAuthAscend} {onModalClose} />
+    <AuthButton {context} bind:focusEl={authFocusEl} onDescend={onAuthDescend} onAscend={onAuthAscend} {onModalClose} {onAbout} />
   </header>
 
   {@render children()}

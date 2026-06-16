@@ -9,6 +9,10 @@ describe('getUrl', () => {
     expect(getUrl(testGroups, 'groups', 0, 0)).toBe(BASE + '/')
   })
 
+  it('returns about URL for about screen', () => {
+    expect(getUrl(testGroups, 'about', 0, 0)).toBe(`${BASE}/about`)
+  })
+
   it('returns group URL for lessons screen', () => {
     expect(getUrl(testGroups, 'lessons', 0, 0)).toBe(`${BASE}/group/1`)
   })
@@ -103,6 +107,12 @@ describe('parseUrl', () => {
   it('returns groups screen for group/0 (1-indexed)', () => {
     expect(parseUrl(testGroups, testFlatLessons, `${BASE}/group/0`)).toEqual({
       screen: 'groups', groupIdx: 0, flatIdx: 0,
+    })
+  })
+
+  it('parses about URL to about screen', () => {
+    expect(parseUrl(testGroups, testFlatLessons, `${BASE}/about`)).toEqual({
+      screen: 'about', groupIdx: 0, flatIdx: 0,
     })
   })
 })

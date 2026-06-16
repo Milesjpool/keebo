@@ -22,6 +22,7 @@
   import Footer from "./components/Footer.svelte";
   import MobileLanding from "./components/MobileLanding.svelte";
   import FeedbackModal from "./components/FeedbackModal.svelte";
+  import AboutModal from "./components/AboutModal.svelte";
   import { ui } from "./services/ui.svelte.ts";
 
   const isMobile = window.matchMedia('(hover: none) and (pointer: coarse)').matches;
@@ -260,8 +261,8 @@
 
 </script>
 
-{#if screen === "groups" || screen === "lessons"}
-  {@const browseContext = screen === "groups"
+{#if screen === "groups" || screen === "lessons" || screen === "about"}
+  {@const browseContext = screen === "groups" || screen === "about"
     ? { screen: 'groups', groupIdx: groupFocused }
     : (() => {
         const li = lessonFocused[currentGroupIdx];
@@ -273,9 +274,10 @@
     bind:authFocusEl={browseAuthFocusEl}
     onAuthDescend={() => { if (screen === 'groups') groupFocused = 0; else lessonFocused[currentGroupIdx] = -1 }}
     onAuthAscend={() => { if (screen === 'groups') groupFocused = -1; else lessonFocused[currentGroupIdx] = -2 }}
-    onModalClose={() => { if (screen === 'groups') groupFocused = 0; else lessonFocused[currentGroupIdx] = 0 }}
+    onModalClose={() => { if (screen === 'groups' || screen === 'about') groupFocused = 0; else lessonFocused[currentGroupIdx] = 0 }}
+    onAbout={() => navigate("about", 0, 0)}
   >
-    {#if screen === "groups"}
+    {#if screen === "groups" || screen === "about"}
       <GroupList
         {groups}
         {progress}
@@ -296,6 +298,10 @@
       />
     {/if}
   </BrowseLayout>
+  <AboutModal
+    open={screen === "about"}
+    onClose={goToGroups}
+  />
 {:else if screen === "typing"}
   <TypingView
     lesson={flatLessons[currentFlatIdx]}

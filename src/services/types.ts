@@ -8,7 +8,7 @@ export type Progress = Record<string, ProgressRecord>
 
 export interface Stats { wpm: number; elapsed: number; accuracy?: number; difficulty?: Difficulty }
 
-export type Screen = 'groups' | 'lessons' | 'typing' | 'complete'
+export type Screen = 'groups' | 'lessons' | 'typing' | 'complete' | 'about'
 export interface ParsedUrl { screen: Screen; groupIdx: number; flatIdx: number }
 
 export type Medal = 'bronze' | 'silver' | 'gold'
