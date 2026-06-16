@@ -60,7 +60,7 @@
       <a class="tech-logo" title="Svelte" href="https://svelte.dev" target="_blank" rel="noopener noreferrer"><Icon svg={svelteSvg} class="tech-icon" /></a>
       <a class="tech-logo" title="TypeScript" href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer"><Icon svg={tsSvg} class="tech-icon" /></a>
       <a class="tech-logo" title="Firebase" href="https://firebase.google.com" target="_blank" rel="noopener noreferrer"><Icon svg={firebaseSvg} class="tech-icon" /></a>
-      <a class="tech-logo" title="GitHub Pages" href="https://pages.github.com" target="_blank" rel="noopener noreferrer"><Icon svg={githubSvg} class="tech-icon" /></a>
+      <a class="tech-logo" title="GitHub Pages" href="https://pages.github.com" target="_blank" rel="noopener noreferrer"><Icon svg={githubSvg} class="tech-icon mono-icon" /></a>
       <a class="tech-logo" title="Claude" href="https://claude.ai" target="_blank" rel="noopener noreferrer"><Icon svg={claudeSvg} class="tech-icon" /></a>
     </div>
 
@@ -107,10 +107,6 @@
     .hero-bg {
       background-image: var(--hero-light);
       opacity: 0.12;
-    }
-
-    .tech-logo {
-      color: #181717;
     }
   }
 
@@ -202,6 +198,12 @@
     width: 28px;
     height: 28px;
     opacity: 0.7;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    .tech-logo :global(.mono-icon svg) {
+      fill: #fff;
+    }
   }
 
   :global(.tech-icon) {

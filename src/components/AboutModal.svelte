@@ -137,7 +137,7 @@
       <a class="tech-logo" title="Svelte" href="https://svelte.dev" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={svelteSvg} class="tech-icon" /></a>
       <a class="tech-logo" title="TypeScript" href="https://www.typescriptlang.org" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={tsSvg} class="tech-icon" /></a>
       <a class="tech-logo" title="Firebase" href="https://firebase.google.com" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={firebaseSvg} class="tech-icon" /></a>
-      <a class="tech-logo" title="GitHub Pages" href="https://pages.github.com" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={githubSvg} class="tech-icon" /></a>
+      <a class="tech-logo" title="GitHub Pages" href="https://pages.github.com" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={githubSvg} class="tech-icon mono-icon" /></a>
       <a class="tech-logo" title="Claude" href="https://claude.ai" target="_blank" rel="noopener noreferrer" use:hoverFocus><Icon svg={claudeSvg} class="tech-icon" /></a>
     </div>
 
@@ -166,8 +166,8 @@
     pointer-events: none;
   }
 
-  :global([data-theme="light"]) .tech-logo {
-    color: #181717;
+  :global([data-theme="dark"]) .tech-logo :global(.mono-icon svg) {
+    fill: #fff;
   }
 
   :global([data-theme="light"]) .hero-bg {
@@ -176,13 +176,15 @@
   }
 
   @media (prefers-color-scheme: light) {
-    :global([data-theme="auto"]) .tech-logo {
-      color: #181717;
-    }
-
     :global([data-theme="auto"]) .hero-bg {
       background-image: var(--hero-light);
       opacity: 0.12;
+    }
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :global([data-theme="auto"]) .tech-logo :global(.mono-icon svg) {
+      fill: #fff;
     }
   }
 
